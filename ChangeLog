@@ -1,0 +1,4 @@
+0.1 02/08/2012
+* First stable release for Linux.
+* Multithreading support.
+* 1866 port signatures supported.

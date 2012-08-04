@@ -1,0 +1,26 @@
+Portspoof Unix install notes
+
+1. Compile the software:
+
+	./configure
+	make
+	make install
+
+2. Configure your firewall rules:
+
+	Linux :
+
+	# iptables -A PREROUTING -i eth0 -p tcp -m tcp --dport 8080:10000 -j REDIRECT --to-ports 4444
+	 Portspoof by default will listen on port ALL_INTERFACES:4444
+	 This FW rules will result in service obfuscation for port range from 8080 to 10000
+	$ ./portspoof.
+
+	BSD :
+
+	$ ulimit -n 512
+	$ pass in on em0 inet proto tcp from any to any port 5000:5500 flags S/SA rdr-to 127.0.0.1 port 4444
+	$ ./portspoof
+
+3. Add portspoof invocation to your system's startup scripts.
+
+	Modify other relevant startup scripts.
