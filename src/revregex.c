@@ -40,7 +40,7 @@
  int num_signatures=30;
  struct signature **arr_lines2;
 
-char * revregex_bracket(char * str,int start_offset,int end_offset, char endmetachar) //including initial chars [ ]
+char * revregex_bracket(char * str,int start_offset,int end_offset, int* retlen) //index: '[' ... ']' 
 {
 	//TODO hex support
 	int bslash='\\';
@@ -57,27 +57,26 @@ char * revregex_bracket(char * str,int start_offset,int end_offset, char endmeta
 	
 	//character pool
 	char characters[255]={0,};
-	
 	int chari=0;
 	char characterstmp[255]={0,};
 	long character_class=0;
 	
 	//skip first bracket char
 	int i=start_offset+1;
+	int lend_offset=end_offset;
 	
 	if( str[i]=='^') //not flag
 	{
-		i++;
-		not=1;
+		i++;not=1;
 	}
 	
 	// DEBUG
 	//printf("%d %d",i,end_offset);
 	
-	for(i;i<end_offset;i++)
+	for(i;i<lend_offset;i++)
 	{
 		 		
-			if( str[i]==bslash && i+1!=end_offset ) //special chars - check if character class
+			if( str[i]==bslash && i+1!=lend_offset ) //special chars - check if character class
 			{
 				if(str[i+1]=='c') 
 					character_class|=1<<1;
@@ -114,7 +113,7 @@ char * revregex_bracket(char * str,int start_offset,int end_offset, char endmeta
 				i++;
 				
 			}
-			else if( isalpha(str[i]) && (i+1)!=end_offset && str[i+1]==range && (i+2)!=end_offset && isalpha(str[i+2])) //check if rangeword
+			else if( isalpha(str[i]) && (i+1)!=lend_offset && str[i+1]==range && (i+2)!=lend_offset && isalpha(str[i+2])) //check if rangeword
 			{
 					//DEBUG
 					//printf("rangew");
@@ -128,7 +127,7 @@ char * revregex_bracket(char * str,int start_offset,int end_offset, char endmeta
 						characters[tmpj]=1;
 					}
 			}
-			else if( isdigit(str[i]) && (i+1)!=end_offset && str[i+1]==range && (i+2)!=end_offset && isdigit(str[i+2])) //check if rangedigit
+			else if( isdigit(str[i]) && (i+1)!=lend_offset && str[i+1]==range && (i+2)!=lend_offset && isdigit(str[i+2])) //check if rangedigit
 			{
 					//DEBUG
 					//printf("ranged");
@@ -154,7 +153,7 @@ char * revregex_bracket(char * str,int start_offset,int end_offset, char endmeta
 				
 	}
 
-
+	char endmetachar=str[end_offset+1];
 	int finsize=0;
 	//srand (time(NULL) );
 	
@@ -233,7 +232,6 @@ char * revregex_bracket(char * str,int start_offset,int end_offset, char endmeta
 	//printf("\n###\n");
 		
 	
-	
 	//TODO to be corrected
 	i=0;
 	for(i;i<255;i++)
@@ -266,6 +264,8 @@ char * revregex_bracket(char * str,int start_offset,int end_offset, char endmeta
 			finstr[i]=characterstmp[tmp];	
 		}
 	}
+	
+	*retlen=finsize;
 	return finstr;
 }
 
@@ -414,40 +414,41 @@ char* revregex(char * param_str,int* param_len,int start_offset,int end_offset) 
 	
 	//printf("#%s\n",str);
 	
+	
+	
 	repeat2:
 	i=start_offset;
-	for(i=start_offset;i<str_end_offset;i++)
+	for(i=start_offset;i<=str_end_offset;i++)
 	{
-		if(str[i]==lbrak && i!=start_offset && str[i-1]!=bslash)
+		if(str[i]==lbrak && i!=start_offset && str[i-1]!=bslash) // find left bracket
 		{
 			j=i;
-			for(j;j<str_end_offset;j++)
+			for(j;j<str_end_offset;j++) //find right bracket (without control char)
 			{
 				if(str[j]==rbrak && str[j-1]!=bslash ){
 					
 					
 					//printf("# [%d %c %d %c ]\n",i,str[i],j,str[j]);
-					retstr=revregex_bracket(str,i,j,str[j+1]);
-					retlen=strlen(retstr);
+					retstr=revregex_bracket(str,i,j,&retlen);					
 					
 					// merge it
 				
-						tmplen=str_len + retlen - (j-i);
-						if (!(tmp = malloc((tmplen+1)* sizeof(char)))) 
+					tmplen=str_len - (j-i) + retlen;
+						
+						
+						if (!(tmp = malloc(tmplen))) 
 					        exit(1);	
-						memset(tmp,0,(tmplen+1));
-
+						memset(tmp,0,tmplen);
 						memcpy(tmp,str,i); // copy up to index i
 						memcpy(tmp+i,retstr,retlen); // copy new string
-
-						//printf(" \n\n xxx %d %d %d xxx\n\n",retlen,j+2,str_len-j-2);
-						memcpy(tmp+i+retlen,str+j+2,str_len-j); // copy after index j
-					
-						//printf("# offset change: %d\n", retlen-(j-i));
+						memcpy(tmp+i+retlen,str+j+1,str_len-j-1); // copy after index j
 						free(str);
 						str=tmp;
 						str_len=tmplen;
 						str_end_offset=str_end_offset+retlen - (j-i);
+						
+						
+						
 						goto repeat2;	
 						
 					}

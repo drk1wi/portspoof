@@ -265,7 +265,6 @@ void process_connection(void *arg)
 			 	n = recv(threads[tid].clients[i], &buffer,1, 0);			
 			
 				// deal with different recv buffer size
-				
 				if(n == 0){
 				
 				if(opts & OPT_DEBUG)
