@@ -33,6 +33,8 @@
  *   forward this exception.
  */
 
+//TODO  headers - to be clean up
+
 #include "config.h"
 #include <sys/types.h>
 #include <pthread.h>
@@ -65,6 +67,7 @@
 #include <net/pfvar.h>
 #include <arpa/inet.h>
 #include <altq/altq.h>
+
 #endif
 
 #include <err.h>
@@ -76,19 +79,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
-
-#include <syslog.h>
 #include <signal.h>
 
-#include "porspoof.h"
+#include "portspoof.h"
 #include "revregex.h"
 #include "threads.h"
 #include "connection.h"
+#include "log.h"
 
 #define CONFSEPARATOR "/"
 
 char opts=0;
+char *log_file="portspoof.log";
 
 pthread_cond_t new_connection_cond = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t new_connection_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -103,6 +105,7 @@ usage(void)
 	  "-i             bind to a user defined ip address\n"
 	  "-p			  bind to a user defined port number\n"
 	  "-f			  use user defined signture file\n"
+	  "-l			  log port scanning alerts to a file\n"
 	  "-t			  number of threads\n"
 	  "-c			  length of client queue per thread\n"
 	  "-v			  be verbose\n"
@@ -154,7 +157,7 @@ int main(int argc, char **argv)
 	
 	
 	
-	while ((ch = getopt(argc, argv,"i:p:f:t:c:dh")) != -1) {
+	while ((ch = getopt(argc, argv,"l:i:p:f:t:c:dh")) != -1) {
 		switch (ch) {
 		case 'i':
 			bind_ip = optarg;
@@ -171,6 +174,11 @@ int main(int argc, char **argv)
 		case 'd':
 			opts |= OPT_DEBUG;
 			printf("-> Verbose mode on.\n");
+			break;
+		case 'l':
+			opts |= OPT_LOG_FILE;
+			log_file  = optarg;
+			printf("-> Using log file %s\n",log_file);
 			break;
 		case 't':
 			printf("-> Threading options to be implemented.\n");
@@ -194,10 +202,14 @@ int main(int argc, char **argv)
 		printf("-> No parameters - using default values.\n");
 	}
 
+	//check log file
+	if(opts & OPT_LOG_FILE)
+		log_create(log_file);
+
 	// open file
 	
 	if(opts & OPT_SIG_FILE)
-	printf("-> Using user defined signature file\n");
+	printf("-> Using user defined signature file %s\n",signature_file);
 	
 	FILE *fp = fopen(signature_file, "r");
 	if (fp == NULL) {
@@ -337,7 +349,8 @@ int main(int argc, char **argv)
 					sleep(1);
 					goto start;
 				}
-				
+						
+
 			if(opts & OPT_DEBUG)
             fprintf(stderr," new conn - thread choosen: %d -  nr. of connections already in queue: %d\n",choosen,threads[choosen].client_count);
 

@@ -48,7 +48,8 @@ binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am__objects_1 =
 am__objects_2 = portspoof-connection.$(OBJEXT) \
-	portspoof-portspoof.$(OBJEXT) portspoof-revregex.$(OBJEXT)
+	portspoof-portspoof.$(OBJEXT) portspoof-revregex.$(OBJEXT) \
+	portspoof-log.$(OBJEXT)
 am_portspoof_OBJECTS = $(am__objects_1) $(am__objects_2)
 portspoof_OBJECTS = $(am_portspoof_OBJECTS)
 portspoof_LDADD = $(LDADD)
@@ -160,8 +161,8 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 
 # File lists
-headers = connection.h portspoof.h revregex.h threads.h
-sources = connection.c portspoof.c revregex.c 
+headers = connection.h portspoof.h revregex.h threads.h log.h
+sources = connection.c portspoof.c revregex.c log.c
 portspoof_SOURCES = $(headers) $(sources)
 
 # Threads
@@ -254,6 +255,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/portspoof-connection.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/portspoof-log.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/portspoof-portspoof.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/portspoof-revregex.Po@am__quote@
 
@@ -312,6 +314,20 @@ portspoof-revregex.obj: revregex.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='revregex.c' object='portspoof-revregex.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(portspoof_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o portspoof-revregex.obj `if test -f 'revregex.c'; then $(CYGPATH_W) 'revregex.c'; else $(CYGPATH_W) '$(srcdir)/revregex.c'; fi`
+
+portspoof-log.o: log.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(portspoof_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT portspoof-log.o -MD -MP -MF $(DEPDIR)/portspoof-log.Tpo -c -o portspoof-log.o `test -f 'log.c' || echo '$(srcdir)/'`log.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/portspoof-log.Tpo $(DEPDIR)/portspoof-log.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='log.c' object='portspoof-log.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(portspoof_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o portspoof-log.o `test -f 'log.c' || echo '$(srcdir)/'`log.c
+
+portspoof-log.obj: log.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(portspoof_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT portspoof-log.obj -MD -MP -MF $(DEPDIR)/portspoof-log.Tpo -c -o portspoof-log.obj `if test -f 'log.c'; then $(CYGPATH_W) 'log.c'; else $(CYGPATH_W) '$(srcdir)/log.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/portspoof-log.Tpo $(DEPDIR)/portspoof-log.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='log.c' object='portspoof-log.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(portspoof_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o portspoof-log.obj `if test -f 'log.c'; then $(CYGPATH_W) 'log.c'; else $(CYGPATH_W) '$(srcdir)/log.c'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \

@@ -395,7 +395,7 @@ char* revregex(char * param_str,int* param_len,int start_offset,int end_offset) 
 					//get rid of ()
 					memcpy(tmp,str,i); // copy up to index i
 					memcpy(tmp+i,str+i+1,j-i); // copy i-j
-					memcpy(tmp+j-1,str+j+1,str_len-j);
+					memcpy(tmp+j-1,str+j+1,str_len-j-1);
 					
 					//printf("# offset change: %d\n", retlen-(j-i));
 					free(str);

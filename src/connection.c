@@ -58,7 +58,9 @@
 #include "config.h"
 #include "threads.h"
 #include "connection.h"
-#include "porspoof.h"
+#include "portspoof.h"
+#include "log.h"
+
 
 Thread threads[MAX_THREADS];
 
@@ -267,9 +269,10 @@ void process_connection(void *arg)
 				// deal with different recv buffer size
 				if(n == 0){
 				
+			
 				if(opts & OPT_DEBUG)
 				fprintf(stderr,"client %d closed connection 0\n", threads[tid].clients[i]);
-				
+								
         		close(threads[tid].clients[i]);
 				
 				pthread_mutex_lock(&new_connection_mutex);
@@ -313,7 +316,12 @@ void process_connection(void *arg)
 						perror("Getsockopt failed");
 				original_port = ntohs(peer_sockaddr.sin_port);
 				#endif
-				
+							  	
+				char* msg=malloc(MAX_LOG_MSG_LEN);
+				memset(msg,0,MAX_LOG_MSG_LEN);
+				snprintf(msg,MAX_LOG_MSG_LEN,"Connection_attempt: source_ip:%s dst_port:%d  \n",(char*)inet_ntoa(peer_sockaddr.sin_addr),original_port);//" port:%d src_ip%s\n", original_port,;
+				log_write(msg);
+				free(msg);
 			
 			  	if(opts & OPT_DEBUG)
 				{

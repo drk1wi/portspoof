@@ -22,8 +22,6 @@ PWD
 MZ\x90\0\x03\0\0\0\x04\0\0\0\xff\xff\0\0\xb8\0\0\0\0\0\0\0@\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0fn\0\0\xd0\0\0\0\x0e\x1f\xba\x0e\0\xb4\t\xcd!\xb8\x01L\xcd!This program cannot be run in DOS mode\.
 220 SSL Connection Established - Loading Protocol\.\.\.\.\r\n
 A-311 Death welcome\x001
-match backdoor m=^(?:ba|)sh-([\d.]+)\ = p/Bourne shell/ v/1/ i/**BACKDOOR**/
-match backdoor m=220-Welcome!\r\n220-\x1b\[30m/\x1b\[31m#\xa4#\xa4#\xa4#\xa4#\xa4#\xa4#\xa4#\xa4#\xa4#\xa4#\xa4#\xa4#\xa4#\xa4#\xa4#\xa4#\xa4#\xa4#\xa4#\xa4#\xa4#\xa4#\xa4#\xa4#\xa4#                                                         \r\n220-\x1b\[30m\|          Current Time:  \x1b\[35m[^\r\n]*\r\n220-\x1b\[30m\|          Current Date:  \x1b\[35m[^\r\n]*\r\n220-\x1b\[30m\\\r\n= p/Windows trojan/ i/**BACKDOOR**/ o/Windows/ cpe:/o:microsoft:windows/a
 \x01\0\0\0
 HTTP/1\.0 401 Authorization Required\r\n.*Server: bitcoin-json-rpc\r\n
 0x[0-9a-fA-F]{32}L
@@ -36,7 +34,6 @@ ACK\x01
 \x8d\0\0\0\x8d\0\0\0\x100\x81\x89\x02\x81\x81\0.*\x02\x03\x01\0\x01\0
 \x02\x07\x04\0\xe0\0\0\0\0\0\0\0\0\0\0\0\x02\0\0\0\0\0\0\0\x04\x03\x02\x010\0\0\0\0\0\0\0\x01\0\0\0\x01\0\0\0\xe0\0\0\0\0\0\0\0\0\x80\0\0\0\x80\0\0\0hfnapp04\0\0\0\0\0\0\0\0\x01\0\0\0\0\0\0\0\0\0\0\x02\0\0\0HFNAPP04\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0HFNAPP04\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0
 \*\x01..\0\x04\0\0\0\x01
-match chess m=^\n\r             _       __     __                             __      \n\r            \| \|     / /__  / /________  ____ ___  ___     / /_____ \n\r            \| \| /\| / / _ \\/ / ___/ __ \\/ __ `__ \\/ _ \\   / __/ __ \\\n\r= p/Lasker Internet Chess server/
 Cirrato Client ([\w._-]+)\0
 200.*Citadel(?:/UX)?
 \x7f\x7fICA\0\x7f\x7fICA\0
@@ -54,8 +51,6 @@ Crestron Terminal Protocol Console opened\r\n
 \d\d\d\d/\d\d/\d\d \d\d:\d\d:\d\d\r\n
 \xaf\x01
 220 ([-.\w]+) dictd ([-.\w/]+) on ([-.+ \w]+) <auth\.mime>
-match directconnect m=^\MyNick ([-.\w]+)|\Lock= p/Direct Connect P2P/ i/User: 1/ o/Windows/ cpe:/o:microsoft:windows/a
-match directconnect-admin m=^\r\nOpen DC Hub, version ([\d.]+), administrators port\.\r\nAll commands begin with '\' and end with '\|'\.\r\nPlease supply administrators passord\.\r\n= p/OpenDCHub directconenct hub admin port/ v/1/ o/Unix/
 0000019a[0-9a-f]{402}\r\n
 220 DSPAM DLMTP ([\w._-]+) Authentication Required\r\n
 \0\0\0\x0c\0\0\0\?\0\0\0\x02
@@ -65,7 +60,6 @@ match directconnect-admin m=^\r\nOpen DC Hub, version ([\d.]+), administrators p
 \(m\xe9l@k\xb3\xf7\x1e\xa5
 \(m\xe9l@k\xb1\xf1\x15\xa5
 \?\x008 \xc3p EFTSRV1                                 ([\d.]+) 
-match eggdrop m=\(Eggdrop v([\d.]+)\+(?:STEALER\.net|Gentoo) \(C\) 1997 Robey Pointer.*Eggheads=s p/Eggdrop IRC bot console with Gentoo patches/ v/1/ i/Gentoo/ o/Linux/ cpe:/o:gentoo:linux/
 \x00\x00\x03\x72<\?xml version=\"1\.0\" encoding=\"UTF-8\" standalone=\"no\" \?>\n<epp xmlns=\"http://www\.yoursrs\.com/xml/epp/epp-1\.0\" xmlns:xsi=\"http://www\.w3\.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www\.yoursrs\.com/xml/epp/epp-1\.0 epp-1\.0\.xsd\">\n\n  <greeting>\n    <svID>([^<]+)</svID>\n    <svDate>.*</svDate>\n    <svcMenu>\n      <version>([\w._-]+)</version>\n
 7\0\0\0~\0\0\0\0\x14\x06\x04\xe8\x99\x02\0\x05\xeb\0\x04\xdf\x92\0\0\n\xd7\xa3p=\n\xd7\x18@\x04\x95\xf1\x01\0\x13\x13EVE-EVE-RELEASE@ccp
 Windows NT Version ([\d.]+) build (\d+), \d+ processors? \(.*\)\r\nFingerDW V([\d.]+) - Hummingbird Ltd\.\n
@@ -155,7 +149,6 @@ FB/([\d.]+) PUSH: SERVER_READY ([\w._-]+) (\w+)\n
 220 copier2FTP server ready\.\r\n
 220 DrayTek FTP version ([\d.]+)\r\n
 220 ([-\w_.]+) FTP server ready \(mod_ftpd/([\d.]+)\)\r\n
-match ftp m%^220-loading\.\.\r\n220-\|           W e L c O m E @ SFXP\|=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\|\r\n% p/SwiftFXP/
 220 DELL1700n Dell Laser Printer 1700n FTP Server ([\w.]+) ready\.\r\n
 220 Dell Laser Printer 3100cn\r\n
 220 \w+ Dell Laser Printer M5200 FTP Server ([\d.]+) ready\.\r\n
@@ -269,7 +262,6 @@ HELLO_CONTROL_SERVER\r\n
 GIOP\x01...\0\0\0\0
 \x03\0\0.*@
 \xff\xfd.| p|GNU Gatekeeper
-match hddtemp m=^\|= p/hddtemp hard drive info server/
 Helpdesk Advanced ([\d.]+) License Logging Service
 \(\0\0\0\0\0\0\0..`\0\x01\xff\xff\xff\xcc\xfa\x85\0C\x1d\xe6whfnk\.\.\.E\0\0\0\0\0\0\0\0
 HTTP/1\.1 400 Bad Request\r\n.*\r\n\r\n<h1>Bad Request \(Invalid Verb\)</h1>
@@ -366,7 +358,6 @@ IUSB    \0\0\0\x007\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\xf1\
 <KU_goodbye>Protocol Error: XML data is not well-formed\.</KU_goodbye>
 \d+\0FORWARD\0\x0b\xc2c\x0c\xc1a\x9f@
 \x0e\0\0\0\0\0\0
-match irc m=^NOTICE AUTH :\*\*\* Looking up your hostname\.\.\.\r\nNOTICE AUTH :\*\*\* Checking Ident\r\nNOTICE AUTH :\*\*\* (?:Couldn't look up|Found) your hostname\r\n= p/Hybrid-based ircd/
 NOTICE AUTH :\*\*\* Looking up your hostname\r\nNOTICE AUTH :\*\*\* Found your hostname, cached\r\nNOTICE AUTH :\*\*\* Checking Ident\r\n
 NOTICE AUTH :\*\*\* Looking up your hostname\r\nNOTICE AUTH :\*\*\* Checking Ident\r\nNOTICE AUTH :\*\*\* No ident response\r\n
 NOTICE AUTH :\*\*\* Looking up your hostname\r\nNOTICE AUTH :\*\*\* Checking Ident\r\nNOTICE AUTH :\*\*\* Couldn't look up your hostname\r\n
@@ -407,7 +398,6 @@ merovingian:2:\w+:\n
 MudNames ([\d.]+) - \(C\) 1997-2001 Ragnar Hojland Espinosa <ragnar@ragnar-hojland\.com>\n\r
 # munin node at ([-\w_.]+)\n
 MULTIPLICITYP
-match mwti-rpc m=^Welcome MWTI RPC Communication Server Version ([\w._-]+) \[(?:Administrator|SYSTEM)\]\r\n= p/MWTI RPC Communication Server/ v/1/
 <announce> [\d.:a-f]+ is connected as <\w+>\.\n<announce> already connected: (.*?)\.\n
 \xd6\x81\x81\0\0\xf9\0\xf9\xee\xe3\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0
 \x80\0\0\\0\0\0\x01....\0\0\0\0\0\0\x05\x02\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x03\0\0\0\0|s p|Symantec/Veritas Backup Exec ndmp
@@ -461,7 +451,6 @@ smbd: error while loading shared libraries: libattr\.so\.1: cannot open shared o
 200 OK [\d.]+ ([\w._-]+) oco-([\w._-]+) \n
 \0X\x08\0\}\x08\r\n\0\.\x08.*\.\.\.\r\n
 pbmasterd(\d[-.\w]+)@[-.+\w]+: 
-match pharos m=^PSCOM(?:\xb6|\)\0\0.*AUTHENTICATE=s p/Pharos Notify/ i/printing client/
 PJLINK 1 [0-9a-f]{8}\r
 201 Welcome to Poweroff ([\d.]+) created by Jorgen Bosman\r\n
 \x01\x04\0\0\0\0\0\rD
@@ -524,7 +513,6 @@ welcome to the pioneers-meta-server version ([\d.]+)\n
 \+OK Kerio MailServer (\d[-.\w]+) POP3 server ready <([-.\w@:]+)>\r\n
 \+OK Kerio MailServer (\d[-.\w]+) POP3 server ready <
 \+OK Kerio MailServer (\d[-.\w]+) patch ([\d.]+) POP3 server ready <[\d.]+@\(null\)>\r\n
-match pop3 m=^\+OK POP3-Server Classic Hamster (?:Vr\.|Version) [\d.]+ \(Build ([\d.]+)\) greets you! <.*>\r\n= p/Classic Hamster pop3d/ v/1/ o/Windows/ cpe:/o:microsoft:windows/a
 \+OK Stalker POP3 Server ([\w.]+) at ([-\w_.]+) ready <.*>\r\n
 \+OK ([-\w_.]+) POP3 service \(iPlanet Messaging Server ([-\w_.\s]+) \(built .*\)\)\r\n
 \+OK Messaging Multiplexor \(iPlanet Messaging Server ([-\w_.\s]+) \(built .*\)\)\r\n
@@ -549,7 +537,6 @@ match pop3 m=^\+OK POP3-Server Classic Hamster (?:Vr\.|Version) [\d.]+ \(Build (
 \+OK Samsung Contact POP3 interface ready on: ([-\w_.]+)\r\n
 \+OK ([-\w_.]+) POP3 service \(Sun Java\(tm\) System Messaging Server ([-\d.]+) \(built .*\)
 \+OK Messaging Multiplexor \(Sun Java\(tm\) System Messaging Server (\d[-\w_.]+) \(built .*\)\)\r\n
-match pop3 m=^\+OK (?:modusMail|ModusMail) POP3 Server ([\w._-]+) Ready <[\d.]+@([-\w_.]+)>\r\n= p/ModusMail pop3d/ v/1/ o/Windows/ h/2/ cpe:/o:microsoft:windows/a
 \+OK ([-\w_.]+) POP3 server \(DeskNow POP3 Server ([\d.]+)\) ready \r\n
 \+OK POP3 SINA \(([-\d.]+)\) Server Ready\r\n
 \+OK POP3 on WebEasyMail \[([\d.]+)\] ready\.  http://www\.51webmail\.com\r\n
@@ -631,7 +618,6 @@ Proxy\+ POP3 server\. Insecure access - terminating\.\r\n
 \+OK [-\[\]\(\)!,/+:<>@.\w ]+\r\n
 lpd \[@([-\w_.]+)\]: connected from invalid port \(\d+\)\n| p|BSD/Linux lpd
 lpd: Host name for your address \(\d+\.\d+\.\d+\.\d+\) unknown\n
-([-\w_.]+): lpd: address for your hostname \([\d.]+\) not matched\n
 ([-\w_.]+): /usr/lib/lpd: Malformed from address\n
 \d+-201 ill-formed FROM address\.
 \0\.[\w._/-]+/Library/Preferences/PyCharm([\w._-]+)\0\)[\w._/-]+/Library/Caches/PyCharm[\w._-]+
@@ -664,7 +650,6 @@ t\x03\0\0
 :: w4ck1ng-shell \(Private Build v([\w._-]+)\) bind shell backdoor :: \n\n
 GENERAL: \d+ \d+<EoM>\n
 220 SLNP (\w+)@[vV]ersion:\s?V?([^@]+)@user:([^@]+)@pid:\d+\n
-# will match the replayed greeting of the proxied server!
 220 ([-\w_.]+) PGP Universal service ready \(proxied server greeted us with: (.*)\)\r\n
 220 ([-/.+\w]+) MailGate ready for ESMTP on 
 220 ([-/.+\w]+) SMTP ready to roll\r\n
@@ -903,7 +888,6 @@ SSH-([\d.]+)-OpenSSH_([\w._-]+)-chrootssh\n
 SSH-([\d.]+)-Nortel\r?\n
 SSH-([\d.]+)-OpenSSH_([\w_.-]+) DragonFly-\d+\r?\n
 SSH-([\d.]+)-OpenSSH_([\w_.-]+) FIPS\n
-# 2) Don't match unknown SSHs (and generate fingerprints)
 \0\0\0\\0\0\0\0\x01\0\0\0\x1bNo host key is configured!\n\r!\"v
 SSH-(\d[\d.]+)-SSF-(\d[-.\w]+)\r?\n
 SSH-(\d[\d.]+)-lshd_(\d[-.\w]+) lsh - a free ssh\r\n\0\0
@@ -1009,7 +993,6 @@ Check Point FireWall-1 Client Authentication Server running on [-.\w]+\r\n\r\xff
 \xff\xfb\x01\xff\xfb\x03\r\nUsername:
 \xff\xfd%\xff\xfb\x01\xff\xfd\x03\xff\xfd\x1f\xff\xfd\0\xff\xfb\0
 \xff\xfd\x03\xff\xfb\x03\xff\xfd'\xff\xfd\x18\xff\xfb\0\xff\xfd\0\xff\xfb\x01\xff\xfe\x01GUI START\n
-match telnet m=^\xff\xfb\x01\xff\xfd\x03\xff\xfd\x1f\xff\xfd\0\xff\xfb\0Microsoft \(R\) Windows (NT |)\(TM\) Version (\d[-.\w]+) \(Build (\d+)\)\r\nWelcome to Microsoft Telnet Service \r\nTelnet Server Build (\d[-.\w]+)\n\rlogin: = p/Microsoft Windows 1telnetd/ v/4/ i/OS version 2 build 3/ o/Windows/ cpe:/o:microsoft:windows/a
 \xff\xfd'\xff\xfd\x18| p|IBM OS/400 telnetd| o|OS/400
 \xff\xfb\x03\xff\xfb\x01\x07HP JetDirect\r\nPassword is not set\r\n
 \xff\xfb\x03\xff\xfb\x01\x07HP JetDirect\r\n\r\nEnter username: 
@@ -1035,11 +1018,9 @@ Tenor Multipath Switch CDR Server\r\nConnected from IpAddr/Port# [\d.]+/\d+ to P
 \xff\xfb\x01\xff\xfb\x03\xff\xfd\x01\x0d\x0a\x0d\x0aCisco\x20Systems.*Console/Telnet Access of the ([-. \w]+) for Configuration Purposes
 \xff\xfb\x01\n\r\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08                           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08
 \r\n\r\nUser Access Verification\r\nPassword:\xff\xfb\x01
-match telnet m=^\xff\xfb\x01\xff\xfb\x03\xff\xfd\x18\xff\xfd\x1f.*User Access Verification\r\n\r\n(?:Username|Password): =s p/Cisco IOS telnetd/ d/switch/ o/IOS/ cpe:/o:cisco:ios/a
 \xff\xfb\x03\xff\xfb\x01\xff\xfb\x03\xff\xfb\x01.*\r\nUser Access Verification\r\n\r\nPassword: 
 \xff\xfb\x01\r\r\nUser Access Verification\r\r\n\r\r\nUsername:
 \xff\xfb\x01\xff\xfb\x03\xff\xfd\x01\r\n\r\nCisco Systems Console\r\n
-# The match below matches Cisco microswitch devices and also Edge-core ES3526XA
 \xff\xfd\x18
 \xff\xfd\x18\xff\xfd\x1f\xff\xfd#\xff\xfd'\xff\xfd\
 \xff\xfb\x01\n\rUser Name : 
@@ -1065,18 +1046,14 @@ match telnet m=^\xff\xfb\x01\xff\xfb\x03\xff\xfd\x18\xff\xfd\x1f.*User Access Ve
 \r\nVxWorks login: \xff\xfb\x01
 \xff\xfb\x01\xff\xfd\x01\xff\xfb\x03\xff\xfd\x03\xff\xfb\x01\xff\xfd\x01\xff\xfb\x03\xff\xfd\x03\r\n\r\nSelect Access Level\r\n===================\r\n1 - Read-Only\r\n2 - Installer\r\n3 - Administrator\r\n13008 >>> 
 \xff\xfb\x01\xff\xfb\x03\xff\xfd\x18\xff\xfd\x1f\r\nExterior router [-\w_.]+\r\nType: Cisco 2651\r\nModule: E3/T3 interface\r\n\r\n
-match telnet m=^\xff\xfb\x01\r\n\r\n#\r\n\| ELSA, MicroLink Cable\r\n\| Ver\. ([\d.]+) / [\d.]+ \d\d:\d\d .*\r\n\| SN\.  \d+\r\n\| Copyright \(c\) ELSA AG, Aachen \(Germany\)\r\n\r\ncm2, Connection No\.: \d+ \(LAN\) \(read-only connection\)\r\n\r\nPassword:= p/ELSA Microlink Cable modem/ v/1/ i/read-only connection/ d/router/
 \xff\xfe\x01\xff\xfb\x01\xff\xfd\x03\xff\xfb\x03\xff\xfd\x18Georgia SoftWorks Telnet Server for Windows NT/2000/XP/2003/Vista Ver\. ([-\w_.]+)\n\r
-match telnet m=^\xff\xfb\x01\xff\xfb\x03\r\n\r\n#\r\n\| LANCOM L-54g Wireless\r\n\|= p/LANCOM L-54g Wireless router telnetd/ d/router/
 \xff\xfb\x01\xff\xfb\x03\xff\xfd\x01\r\n\r\nCisco Systems, Inc\. Console\r\n\r\n\r\n\r\r\n\r\nUsername: 
 \xff\xfb\x01\xff\xfb\x03\r\n\r\n\[ORiNOCO-AP-(\d+)[-\d]*\]> Please enter password: 
 \xff\xfb\xfd\xff\xfb\x01\n\r\n\rFabric OS \(tm\)  Release v([\w.]+)\n\r\n\r
 \xff\xfb\x01\xff\xfb\x03\xff\xfd\x18\r\n\nLantronix MSS100 Version V([\d.]+)/\d+\(\d+\)\n\r\nType HELP at the 'Local_2> ' prompt for assistance\.\n\r\n\r\n\nUsername> 
 \xff\xfb\x01\xff\xfb\x03\xff\xfd\x18\r\0\r\0\r\n\x07# \0
 \xff\xfb\x01OPTIBASE MGW5100 COMMAND LINE INTERFACE\r\n
-match telnet m=^\xff\xfb\x01\r\n\r\n#\r\n\| ELSA LANCOM DSL/I-10 Office\r\n\| Ver\. ([\d.]+) / [\d.]+\r\n\| SN\.  (\d+)\r\n= p/Elsa DSL I-10 router telnetd/ v/1/ i/SN 2/ d/router/
 PC Telnetd ([\d.]+)\r\n\r\nlogin: 
-match telnet m=^\xff\xfb\x01\xff\xfd\x03\xff\xfb\x03\x1b\[H\x1b\[2J\x1b\[0m\x1b\[0m\x1b\[0m\x1b\[H\x1b\[2J\x1b\[0m \+-+\+\r\n \| NuSight GEMS Console +Version v([\d.]+) \|\r\n \| Copyright \(c\) 1998-2001, NPI +\|\r\n= p/NPI Keystone switch telnetd/ v/1/ d/switch/
 rsconfig: port rose not active\n\xff\xfd\"\r\nLinuxNode v([\d.]+) \(([-\w_.]+)\)\r\n\r\nlogin: 
 \xff\xfd\"\r\nLinuxNode v([\d.]+) \(([-\w_.]+)\)\r\n\r\nlogin: 
 \xff\xfd\x01\xff\xfd!\xff\xfb\x01\xff\xfb\x03\r\r\n\r\n\r\nBusyBox v([-\w_.]+) \([^)]+\) Built-in shell \(ash\)\r\nEnter 'help' for a list of built-in commands\.\r\n\r\n# 
@@ -1090,7 +1067,6 @@ USR5450 Telnet server v([\d.]+)\n\r\nPassword :
 \xff\xfd\x03\xff\xfb\x03\xff\xfd\x01\xff\xfb\x01\d\d-\w+-\d+ \d\d:\d\d:\d\d %MSCM-I-NEWTERM: New TELNET connection from (?:[\d.]+)\r\r\nPassword:
 \xff\xfb\x01\xff\xfb\x03\xff\xfd\x18\r\0\n\nLantronix ETS16 Version V([\d.]+)/\d+\(\d+\)\n\r\0\nType HELP at the 'BRTR-ETS16>' prompt for assistance\.\n\r\0\nUsername> 
 \r\nWelcome to slush\.  \(Version ([\d.]+)\)\r\n\r\n\r\n\xff\xfb\x01\xff\xfb\x03([-\w_. ]+) login: 
-match telnet m=^\xff\xfb\x01\xff\xfd\x1f\xff\xfb\x03\x1b\[1;1f\x1b\[37m +\x1b\[2;1f +\x1b\[3;1f +\x1b\[4;1f -+ +\x1b\[5;1f\|  KpyM Telnet Server v([\d.]+) +\|= p/KpyM telnetd/ v/1/ o/Windows/ cpe:/o:microsoft:windows/a
 \xff\xfb\x01\xff\xfd\x03\xff\xfb\x03\x1b\[0m\x1b\[2J\x1b\[0m\x1b\[2J\x1b\[2;66H\x1b\[1m\x1b\[21;1H\x1b\[0m-+\x1b\[22;2H\x1b\[0mFunction:\x1b\[23;2H\x1b\[0mMessage:\x1b\[24;2H\x1b\[7mCTRL\+R = Refresh +\x1b\[8;12H\x1b\[0mIBM BladeCenter 4-Port Gb Ethernet Switch Module Console
 \xff\xfb\x01\xff\xfe\x01\xff\xfd\x03\xff\xfb\x03\x1b\[0;1H\x1b\[J\x1b\[1;1H\x1b\[0;1H\x1b\[J\x1b\[1;1H\x1b\[0m =+\r\n AT-8326GB Management System Version ([\d.]+) \r\n Remote - Telnet\r\n
 \r\nEfficient 5851 SDSL \[ATM\] Router \(5851-\d+\) v([-\d.]+) Ready\r\n\xff\xfb\x01\xff\xfb\x03\xff\xfd\x01\xff\xfe\x01Login: 
@@ -1158,7 +1134,6 @@ Telnet server disabled\r\n
 \xff\xfb\x01\xff\xfb\x03\r\n\r\n\x1b\[H\x1b\[JWelcome at ActiveFax Server\.\r\n\r\n
 \xff\xfb\x01\xff\xfb\x03RemoteX Telnet Server V([\d.]+)\n\r\n\rc:\\>
 \xff\xfb\x01\xff\xfd\x03\xff\xfb\x03\n\r +\*+\n\r +Welcome to ZXDSL 831\n\r +\*+\n\r\n\rZTE Corporation, Software Release VIK-([-\w_.]+)\n\r
-match telnet m%^\xff\xfe\x01\r\n\r\n\+=+\+\r\n\| +\[ MGE UPS SYSTEMS SNMP/Web agent Configuration menu \]% p/MGE UPS telnetd/ d/power-device/
 \*{60}\r\n\r\nThis session allows you to set the TCPIP parameters for your\r\nDell Laser Printer Printer Dell (\w+) MFP Ethernet internal network device, with a hardware\r\naddress of ([0-9A-F:]{17}) \(MSB, Canonical\)\.\r\nIt's an ethernet card\.\r\nNetwork Firmware Version is V([\w._-]+)\(\w+ MFP\) ([\d-]+)\.\r\nSystem Up Time is ([^\r\n.]+)\.\r\n\r\n
 \xff\xfb\"\xff\xfb\x03\xff\xfb\x01\xff\xfb\0\xff\xfd\0\n\r\nWelcome to the PDP-10 simulator\r\n\n
 \xff\xfb\x01\(Enable\) Password\? 
@@ -1194,7 +1169,6 @@ match telnet m%^\xff\xfe\x01\r\n\r\n\+=+\+\r\n\| +\[ MGE UPS SYSTEMS SNMP/Web ag
 \xff\xfa\x18\x01\xff\xf0\xff\xfb\x01\xff\xfb\x03AMBIT Cable Modem\r\n\r\nlogin: 
 refused in\.telnetd from [-\w_.]+ logged\n
 \xff\xfd\x01\xff\xfd\x1f\xff\xfd!\xff\xfb\x01\xff\xfb\x03Access DENIED\.\r\n
-match telnet m=\xff\xfb\x01\r\n\r\n#\r\n\| Siemens I-Gate LAN 2\r\n\| Ver\. ([\d.]+) / [\d.]+\r\n\| SN\.  (\w+)\r\n\|= p/Siemens I-Gate LAN 2 telnetd/ v/1/ i/Serial 2/ d/router/
 \xff\xfb\x01\x1b\[1;1H\x1b\[2K\x1b\[2;1H\x1b\[2K\x1b\[3;1H\x1b\[2K\x1b\[4;1H\x1b\[2K\x1b\[5;1H\x1b\[2K\x1b\[6;.*Business Policy Switch 2000
 BeanShell ([-\w_.]+) - by Pat Niemeyer \(pat@pat\.net\)\nbsh % 
 \xff\xfb\x01\xff\xfd\x03\xff\xfb\x03\xff\xfd\x1f\r\n\(Aruba800\) \r\nUser: 
@@ -1229,7 +1203,6 @@ AD6680 Gateway Software\r\n[-\w_]+  \(MAC  ([\w:]+)\)\r\n
 Connected\r\nUse log command to LOGON\r\n
 \xff\xfb\x01\xff\xfb\x03Grandstream ([\w-]+) Command Shell\r\nPassword: 
 \xff\xfd\x01\xff\xfd\x1f\xff\xfd!\xff\xfb\x01\xff\xfb\x03Grandstream ([\w-]+)  V([\w.]+) Command Shell
-match telnet m=^\xff\xfd\x01\xff\xfd!\xff\xfb\x01\xff\xfb\x03ADSL Router\r\nLogin (?:user|name): = p/ADSL router telnet config/ d/broadband router/
 \xff\xfd\x01\xff\xfd!\xff\xfb\x01\xff\xfb\x03AH4021\r\nLogin: 
 \xff\xfb\x01\xff\xfb\x03\n\r\0SNTP Version ([\d.]+) Server ([\w._-]+)\n\r\0\r\0\nMAC address (\w+)\n\r\0Software version V[\d.]+ \(\d+\) ([\w._-]+)\r\0\nPassword :
 uShare \(([\w._-]+)\) \(Built .*\)\nFor a list of registered commands type \"help\"\n\n> 
@@ -1268,8 +1241,6 @@ odec=\d+ u=\d+, p=\d+, i=\d+, max entries = \d+ \r\n\d+: IMGREQUEST: request_sta
 \xff\xfd\x01\xff\xfd!\xff\xfb\x01\xff\xfb\x03\r\r\nWireless AP Manager Console [^\r\n]+\r\n please enter your password: 
 \xff\xfc\x01\xff\xfb\x01\xff\xfb\x03\xff\xfd\x18\xff\xfb\x18\xff\xfd\x1f\xff\xfb\x1f\xff\xfb\"\xff\xfb\x05Login:
 \xff\xfb\x01\xff\xfb\x03\r\n\r\nYou are connected to configuration tool\r\nEnter the password: 
-match telnet m%\xff\xfe\x01\r\n\r\n\+============================================================================\+\r\n\|             \[ interSeptor Configuration Utility Main Menu \]                \|\r\n\+============================================================================\+\r\n\r\nEnter Password: % p/Jacarta interSeptor environmental monitor telnetd/ d/specialized/
-match telnet m=^\xff\xfb\x01\xff\xfb\x03\r\n                ,vvvdP9P\?\?\?\^   ,,,\r\n              vvd###P\^`\^         vvvvv v\r\n         vv#####\?\^                  \?\?\?\?####vv,\r\n      vv####\?\?     ,vvvdP\?\?\?\^  ,,,        \?\?##\^\r\n     v#####\?    ,vvd##P\?\^        #\?#v#vvv\r\n   v#####\?    v###P\^    ,vvv,        '\?#\?,\r\n  ######\?   ####\?\^ ,vd#P\?\^     `\?\?\?##\r\n  #####\?   v####  ,d##P\^           ''\r\n ######   v####  \]###L                   _   _          _                  ___\r\n #####\?   v####  \]##L                   /   / \\  \|\\ \|  \|_  \\/   /\\   \|\\ \|   \|\r\n ######    ####  \]###L                  \\_  \\_/  \| \\\|  \|_  /\\  /--\\  \| \\\|   \|\r\n= p/Zoom X6 ADSL router telnetd/ d/broadband router/
 \xff\xfb\x01\xff\xfd\x01\xff\xfb\x03\xff\xfd\x03\xff\xfb\x05\xff\xfd\x05\r\n\*\*\* Welcome to VTM   \*\*\*\r\n\r\n\r\n\rLogin   : 
 \r\nCEN-IDOC Control Console\r\n\r\nCEN-IDOC>
 \xff\xfb\x01\r\nWelcome to Ring v([\d.]+) Copyright \(C\) AMX Corp\. 2002-2003\r\n
@@ -1285,7 +1256,6 @@ MythFrontend Network Control\r\nType 'help' for usage information\r\n-----------
 \xff\xfd\x01\xff\xfd\x1f\xff\xfd!\xff\xfb\x01\xff\xfb\x03\r\r\n\r\n\r\r\n\rWelcome to DreamBox\.\r\n\rRunning under Kernel ([\w._-]+) \.\r\n\rBased on (Gemini [\w._-]+ GUI)\.\r\n\rKernel and utilities compiled by SatDream\.\r\n\r\r\n\r\r\n\rhttp://www\.satderam\.ru , info@satdream\.ru , dreambox@satdream\.ru\r\n
 \xff\xfb\x01\xff\xfd\x03\xff\xfb\x03\r\nBNT Layer 2/3 Copper Gigabit Ethernet Switch Module for IBM BladeCenter\.\r\n\r\n\r\nEnter password: | p|Nortel Layer 2/3 Gigabit Ethernet switch for IBM BladeCenter
 \xff\xfb\x01\xff\xfd\"\r\n#####   ####  ##   ##  ####   #####\r\n##  ## ##  ## ## # ## ##  ## ##\r\n##  ## ###### ####### ##      #####\r\n##  ## ##     ####### ##  ##      ##\r\n##  ##  #####  ## ##   ####  ######\r\n     A Butter Team Creation\r\n\r\nPassword :
-match telnet m=^\xff\xfb\x01\xff\xfb\x03\x1b\[2J\x1b\[00H\+----------------------------------------------------------------------\+\r\0\r\n.*\| Motorola (PTP \d+) Lite Console Application +\|\r\0\r\n.*\| Software Version: ([\w._-]+) +\|\r\0\r\n\| Hardware Version: ([\w._-]+) +\|\r\0\r\n=s p/Motorola 1 WAP telnetd/ v/2/ i/hardware version 3/
 \xff\xfc\x01\xff\xfb\x01\xff\xfb\x03\xff\xfe\x18\xff\xfd\x1f\xff\xfb\x1f\xff\xfb\"\xff\xfb\x05TiMOS-([\w._-]+) cpm/hops ALCATEL SR (\w+)
 \xff\xfb\x01\xff\xfb\x03\r\n\x1b\[1;1H\x1b\[2J\r\n\r\nObeh\xf6riga \xe4ga ej tilltr\xe4de\r\n\r\n\xf6vertr\xe4delse beivras\.\r\n\r\n\rUsername: 
 \n\rTA-005-FXO1-122M : CLI\n\rLogin : 
@@ -1316,7 +1286,6 @@ nodnsquery/[\d.]+ is not authorized to use the telnet proxy\r\n
 \x12\0\r\0\x03\0\0\0\0\x02\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x9a\x20\xd0Z\x1e\x1b\xa3\*\xf2\xdd\xe2\(\xc3sp&\xda\xe4Yp\xdbET\xf9\x8cc\xc24\*Y\xbe\xb3\xba\xd6%\xf5\xb668\xad\xab>@D<\x01<i\x80O>\xdd>\)\xdb\x18\xf55\xd1\xba\x96\x1c\x17\x17\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x01\0\x01
 \x0f\0\n\0\x01\0\0\0\0\x02\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0
 \x0b\0\0\0GBXRemote 2
-match vmware-auth m=^220 VMware Authentication Daemon Version (\d[-.\w]+), ServerDaemonProtocol:(SOAP|IPC), MKSDisplayProtocol:VNC= p/VMware Authentication Daemon/ v/1/ i/Uses VNC, 2/
 VTUN server ver \. (\d[-.\w /]+)\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0
 VTUN server ver \(.*\) (\d[-.\w /]+)\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0
 250 OK moleSoftware VHCS2 Server Welcomes You !\r\n
@@ -1471,7 +1440,6 @@ login: uucpd: \d+-\d+ The user is not known\.\n
 \x02\x01
 SDPACK
 \xff\xfe\x01\xff\xfd\x03\xff\xfd\x18\xff\xfd\x1f\xff\xfb\x03\xff\xfb\x01\r\nAccount Name: \r\nPassword: \r\nThis copy of the Ataman Telnetd Server is registered as licensed to:\r\n\t(.+)\r\n\r\nLogin failed: unknown user name, password or privilege incorrect\.\r\n
-match telnet m=^\xff\xfb\x01\xff\xfb\x03\r\n\r\n\r\n +-+\r\n +\| Cyclades-PR4000: CyROS  V_([\d.]+)  \(.*\)     \|\r\n= p/Cyclades PR4000 router telnetd/ v/1/ d/router/
 \xff\xfb\x01\xff\xfb\x03\r\n\r\nLogin: \r\n\r\nYou must supply a username\r\n\r\nLogin: \r\n\r\nYou must supply a username\r\n\r\nLogin: 
 \r\n\r\nThis is a FirstClass system, from Open Text Corporation\.\r\n\r\n\r\nFirstClass is an e-mail and conferencing system with a graphical user interface\.\r\n\r\n\r\nThe Command Line Interface is not available on this sy
 \xff\xfb\x01\r\nPassword:\r\nLogged in as guest\r\n
@@ -1542,7 +1510,6 @@ Login name: HTTP/1\.0       In real life: \?\?\?\r\n
 \0\0\0\0/\x20HT
 HTTP/1\.1 302 Moved\r\nContent-type: text/html\r\nConnection: close\r\nLocation: /1[012]\d{8}/l\r\n\r\n<H1>Document
 HTTP/1\.[01] \d\d\d .*\r\nServer: Xitami\r\n
-match http m%^HTTP/1\.1 401 Unauthorized\r\nConnection: close\r\nWWW-Authenticate: Basic realm=\"(?:MLdonkey|P2P)\"\r\n% p/MLDonkey multi-network P2P web interface/
 HTTP/1\.[01] \d\d\d .*\r\nServer: JRun Web Server\r\n
 HTTP/1\.1 403 Forbidden\r\nServer: Web Server\r\n\r\n
 HTTP/1\.1 301 Moved Permanently\r\nServer: Web Server\r\nLocation: .*\r\nContent-Type: text/html\r\nContent-Length: \d+\r\n\r\n<HEAD><TITLE>Moved</TITLE></HEAD><BODY><A HREF=\".*\">Moved</A></BODY>\r\n
@@ -1590,7 +1557,6 @@ HTTP/1\.1 200 OK\r\nPragma: no-cache\r\nConnection: close\r\nContent-Type: text/
 JAMES Remote Administration Tool ([\d.]+)\nPlease enter your login and password\nLogin id:\n
 \0\0\0.~\x81.0\x81..\x03\x02\x01\x05.\x03\x02\x01\x1e.\x11\x18\x0f
 ERR unknown_command Unknown\+server\+command\r\n
-# Wrongly matches SSL in some cases
 ..\x0a\0x\x01
 ERROR\n
 1INVALID REQUEST
@@ -1632,19 +1598,14 @@ HTTP/1\.1 400 Bad Request\r\nDate: .*\r\nServer: Unknown/0\.0 UPnP/([\d.]+) Vira
 (?:p9sk1@[\w._-]+ )*p9sk1@([\w._-]+)\0/bin/exportfs: auth_proxy: auth_proxy rpc write: : invalid argument\n
 <\?xml version=\"1\.0\" encoding=\"UTF-8\"\?>\n<!DOCTYPE rql PUBLIC \"-//Kapow Technologies//DTD RoboSuite Robot Query Language ([\w._-]+)//EN\" \"http://www\.kapowtech\.com/robosuite/rql/dtd/robot-query-language_[\w._-]+\.dtd\">\n<rql>\n  <server-error>\n    <message>com\.kapowtech\.robosuite\.api\.java\.rql\.RQLProtocolException: Invalid byte 1 of 1-byte UTF-8 sequence\.</message>
 \0\0\0\0\0\x84\0\x10\x7c\x9f\xfb\0\0\0\0\0
-match syncsort-cmagent m=^\x80\0\0J\x0f\x02\x02\x06\t\x1d\x02\x11m\x04\x15\x17\x01\x06c\|sww{t\x1b{uwOn\x04\x0f\x1d\x19wE\x0f\x13\x15\x08\x13g\x06\x03\x15\x04\x08\x0f\x13e\x18fm~ug\x10\0\x1dl\x01\x0f\ne\x0f\x04\nm\x17qkzdn}qG= p/Syncsort Backup Express cmagent/
 \x04\x01\0C..\0\0\xaa\0\0\0/\x0f\xa2\x01\x0e.. Login failed\r\n\x14Microsoft SQL Server\0\0\0\xfd\0\xfd\0\0\0\0\0\x02
-match ossec-agent m=^\xdf\x06\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x01\x97\|\0\0\0\0\x02\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x10\0\0\0= p/OSSEC Agent/
-match telnet m=^\xff\xfb\x01\xff\xfb\x03\xff\xfb\0\xff\xfd\0Log level 3\r\r\nUsername: data_error\r\r\n\(rdata_error\r\r\ndata_error\r\r\ndata_error\r\r\ndata_error\r\r\ndata_error\r\r\ndata_error\r\r\ndata_error\r\r\ndata_error\r\r\ndata_error\r\r\n\|= p/Jungo OpenRG telnetd/ i/Pirelli A125G wireless DSL router/ d/WAP/ o/Linux/ cpe:/o:linux:kernel/a
 \x01Permission denied\.\n
 \xde\xad\xbe\xef\x04\0\xff\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1fem\.requestparserparser\.InvError
 \x16\x15\x16\x16\x16\x12XW\]
-# Has to come before BIND matches.
 \x07version\x04bind\0\0\x10\0.\xc0\x0c\0\x10\0\x01\0\0\0\x05\0..Served by PowerDNS - http://www\.powerdns\.com
 \0\x06\x81\x80\0\x01\0\x01\0\0\0\0\x07version\x04bind\0\0\x10\0\x03\xc0\x0c\0\x10\0\x03.......PowerDNS Recursor ([\w._-]+) (\Id: pdns_recursor\.cc .*?\)
 \0\x06\x81\x80\0\x01\0\x01\0\0\0\0\x07version\x04bind\0\0\x10\0\x03\xc0\x0c\0\x01\0\x01\0\0\0\x03\0\x04....
 \0\x06\x81\x04\0\x01\0\0\0\0\0\0\x07version\x04bind\0\0\x10\0\x03
-# Has to come before BIND matches.
 ..\0\x06\x85\0\0\x01\0\x01\0\x01\0\0\x07version\x04bind\0\0\x10\0\x03\xc0\x0c\0\x10\0\x03\0\0\0\0...[\w._-]+-RedHat-([\w._-]+\.el5_[\w._-]+)\xc0\x0c\0\x02\0\x03\0\0\0\0\0\x02\xc0\x0c
 \0\x1e\0\x06\x81\x84\0\x01\0\0\0\0\0\0\x07version\x04bind\0\0\x10\0\x03
 ..*\x07version\x04bind.*Incognito DNS \w+ ([\d.]+) \(
@@ -1684,7 +1645,6 @@ cvs \[server aborted\]: bad auth protocol start: HELP\r\n
 cvs \[server aborted\]: bad auth protocol start: HELP\r\nerror  \n
 cvs-pserver \[pserver aborted\]: bad auth protocol start: HELP\r\n\n
 HELP\r\n
-match ftp m%^220 .*\r\n214-The following commands are recognized \(\* =>'s unimplemented\)\.\r\n(?:214-| )USER    PASS    ACCT\*   CWD     XCWD    CDUP    XCUP    SMNT\*   \r\n(?:214-| )QUIT    REIN\*   PORT    PASV    EPRT    EPSV    TYPE    STRU    \r\n(?:214-| )MODE    RETR    STOR    STOU    APPE    ALLO\*   REST    RNFR    \r\n(?:214-| )RNTO    ABOR    DELE    MDTM    RMD     XRMD    MKD     XMKD    \r\n(?:214-| )PWD     XPWD    SIZE    LIST    NLST    SITE    SYST    STAT    \r\n% p/ProFTPD/ v/1.2.8 - 1.2.9/ o/Unix/ cpe:/a:proftpd:proftpd/
 220 .*\r\n214-The following commands are recognized \(\* =>'s unimplemented\):\r\n CWD     XCWD    CDUP    XCUP    SMNT\*   QUIT    PORT    PASV    \r\n EPRT    EPSV    ALLO\*   RNFR    RNTO    DELE    MDTM    RMD     \r\n XRMD    MKD     XMKD    PWD     XPWD    SIZE    SYST    HELP    \r\n NOOP    FEAT    OPTS    AUTH\*?   CCC\*    CONF\*   ENC\*    MIC\*    \r\n PBSZ\*?   PROT\*?   TYPE    STRU    MODE    RETR    STOR    STOU    \r\n
 220 FTP server ready\.\r\n214- The following commands are recognized \(\* =>'s unimplemented\)\.\r\n   USER    PORT    TYPE    MLFL\*   MRCP\*   DELE    SYST    RMD     STOU \r\n   PASS    LPRT    STRU    MAIL\*   ALLO    CWD     STAT    XRMD    SIZE \r\n   ACCT\*   EPRT    MODE    MSND\*   REST    XCWD    HELP    PWD     MDTM \r\n   SMNT\*   PASV    RETR    MSOM\*   RNFR    LIST    NOOP    XPWD \r\n   REIN\*   LPSV    STOR    MSAM\*   RNTO    NLST    MKD     CDUP \r\n   QUIT    EPSV    APPE    MRSQ\*   ABOR    SITE    XMKD    XCUP \r\n214 End\.\r\n
 220 ([-\w_.]+) FTP server \(UNIX_SV ([\d.]+)\) ready\.\r\n214-The following commands are recognized \(\* =>'s unimplemented\)\.\r\n   USER    PORT    STOR    MSAM\*   RNTO    NLST    MKD     CDUP \r\n   PASS    PASV    APPE    MRSQ\*   ABOR    SITE    XMKD    XCUP \r\n   ACCT\*   TYPE    MLFL\*   MRCP\*   DELE    SYST    RMD     STOU \r\n   SMNT\*   STRU    MAIL\*   ALLO    CWD     STAT    XRMD    SIZE \r\n   REIN\*   MODE    MSND\*   REST    XCWD    HELP    PWD     MDTM \r\n   QUIT    RETR    MSOM\*   RNFR    LIST    NOOP    XPWD \r\n
@@ -1768,7 +1728,6 @@ AB\0N\x04\x01\x94\0\x06/cccb/\0\0\x02\0\x0cContent-Type\0\0\x17text/html;charset
 \x16\x03\0.*Router\([a-zA-Z0-9_-]+).*Sophos EM Certification Manager
 \x16\x03\0.*Sophos EM Certification Manager
 \0\0MF\xff\xf3MBr\0\0\0\0\x08\x01@\0\0\0\0\0\0\0\0\0\0\0\0\0\0@\x06\0\0\x01\0\0\x81\0\x02PC NETWORK PROGRAM 1\.0\0\x02MICROSOFT NETWORKS 1\.03\0\x02MICROSOFT NETWORKS 3\.0\0\x02LANMAN1\.0\0\x02LM1\.2X002\0\x02Samba\0\x02NT LANMAN 1\.0\0\x02NT LM 0
-match bmc-tmart m=^\x15uBMC TM ART Version ([\w._-]+, Build \d+ from [\d-]+), Copyright \? [\d-]+ BMC Software, Inc\. \| All Rights Reserved\.= p/BMC Transaction Management Application Response Time/ v/1/
 \0\0\0\0\0\0\0=r\0\0\0\0\0\0\0\xd8\x97%\x01\x13\0\0\0CONDUCTUS_PG([\w._-]+)\x1a\0\0\0unbekannter Code: 19240920
 \0\0\0\0\0\0\0;r\0\0\0\0\0\0\0h\xd52\t\x10\0\0\0FUNDUS_PG([\w._-]+)\x1b\0\0\0unbekannter Code: 154326376
 \0\0\0\0\0\0\0;r\0\0\0\0\0\0\0XL\)\x01\x11\0\0\0PARATUS_PG([\w._-]+)\x1a\0\0\0unbekannter Code: 19483736
@@ -1811,7 +1770,6 @@ E\0\0\0\x84SFATAL\0C0A000\0Munsupported frontend protocol 65363\.19778: server s
 \0\0\0\x0b3999 No go\n
 2[23]0 FTP Server Ready\r\n504 Comand length not supported\.\r\n
 \0\0\x02\0\0\0\0\0\0\0\0\0\r\0\0\0\0.......International Business Machines Corp\.
-\0\x19\x02\0\x02\0\x07\0Protocol version mismatch\0
 \0\x01\0\x03\0\0\0/Incompatible version number: message discarded\.
 \x01\0\x0b\0\0.....\0\0\0\0.*Sun Microsystems, Inc\.
 \x01\0\x0b\0\0.*Conectiva Linux \(XFree86 ([\d.]+), patch level (\w+)\)

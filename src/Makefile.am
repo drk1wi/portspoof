@@ -1,8 +1,8 @@
 ## Process this file with automake to produce Makefile.in
 
 # File lists
-headers = connection.h portspoof.h revregex.h threads.h
-sources = connection.c portspoof.c revregex.c 
+headers = connection.h portspoof.h revregex.h threads.h log.h
+sources = connection.c portspoof.c revregex.c log.c
 
 # Unix executables
 bin_PROGRAMS = portspoof
