@@ -37,7 +37,7 @@
 #define OPT_DEBUG 1<<3
 #define OPT_SIG_FILE 1<<4
 #define OPT_LOG_FILE 1<<5
-
+#define OPT_SYSLOG_DIS 1<<6
 
 #define DEFAULT_PORT 4444
 extern char opts;

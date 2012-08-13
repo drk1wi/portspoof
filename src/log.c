@@ -36,9 +36,12 @@ void log_write(char* msg) {
 		
 	}	
 	
+	if(!(opts & OPT_SYSLOG_DIS))
+	{
 	openlog("portspoof", LOG_PID|LOG_CONS, LOG_USER);
- 	syslog(LOG_INFO,"portspoof: %s",msg);
+ 	syslog(LOG_INFO," %s",msg);
  	closelog();
+	}
 	pthread_mutex_unlock(&log_mutex);
 	
 	return;

@@ -106,6 +106,7 @@ usage(void)
 	  "-p			  bind to a user defined port number\n"
 	  "-f			  use user defined signture file\n"
 	  "-l			  log port scanning alerts to a file\n"
+		  "-d			  disable syslog\n"
 	  "-t			  number of threads\n"
 	  "-c			  length of client queue per thread\n"
 	  "-v			  be verbose\n"
@@ -157,7 +158,7 @@ int main(int argc, char **argv)
 	
 	
 	
-	while ((ch = getopt(argc, argv,"l:i:p:f:t:c:dh")) != -1) {
+	while ((ch = getopt(argc, argv,"l:i:p:f:t:c:dvh")) != -1) {
 		switch (ch) {
 		case 'i':
 			bind_ip = optarg;
@@ -171,9 +172,13 @@ int main(int argc, char **argv)
 			signature_file  = optarg;
 			opts |= OPT_SIG_FILE;
 			break;
-		case 'd':
+		case 'v':
 			opts |= OPT_DEBUG;
 			printf("-> Verbose mode on.\n");
+			break;
+		case 'd':
+			opts |= OPT_SYSLOG_DIS;
+			printf("-> Syslog logging disabled.\n");
 			break;
 		case 'l':
 			opts |= OPT_LOG_FILE;
@@ -197,7 +202,7 @@ int main(int argc, char **argv)
 	}
 	
 
-	if( !(opts&OPT_IP || opts&OPT_PORT || opts&OPT_SIG_FILE))
+	if( !(opts&OPT_IP || opts&OPT_PORT || opts&OPT_DEBUG || opts&OPT_SIG_FILE || opts&OPT_LOG_FILE || opts&OPT_SYSLOG_DIS))
 	{
 		printf("-> No parameters - using default values.\n");
 	}

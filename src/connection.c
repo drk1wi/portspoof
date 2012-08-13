@@ -40,6 +40,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
+#include <time.h> 
 
 #ifdef OPENBSD
 
@@ -254,6 +255,9 @@ void process_connection(void *arg)
 	char buffer;
 	int original_port=DEFAULT_PORT;
 	int n = 0;
+	time_t timestamp;
+	struct sockaddr_in peer_sockaddr;
+	int peer_sockaddr_len=sizeof(struct sockaddr_in);
 	
 	while(1) {
 
@@ -264,37 +268,97 @@ void process_connection(void *arg)
 			if(threads[tid].clients[i] != 0)
 			{
 		     
+				timestamp = time(NULL); 
+				
 			 	n = recv(threads[tid].clients[i], &buffer,1, 0);			
 			
 				// deal with different recv buffer size
 				if(n == 0){
 				
-			
-				if(opts & OPT_DEBUG)
-				fprintf(stderr,"client %d closed connection 0\n", threads[tid].clients[i]);
-								
-        		close(threads[tid].clients[i]);
+					#ifdef OPENBSD
+					
+					if ( getpeername(threads[tid].clients[i], (struct sockaddr *) &peer_sockaddr, &peer_sockaddr_len)){
+								perror("Getsockopt failed");
+								goto close_socket;
+					}
+					else
+					original_port=get_original_port(peer_sockaddr.sin_addr,peer_sockaddr.sin_port);
+					
+					#else
+					
+					if ( getsockopt (threads[tid].clients[i], SOL_IP, SO_ORIGINAL_DST, (struct sockaddr*)&peer_sockaddr, &peer_sockaddr_len )){
+								perror("Getsockopt failed");
+								goto close_socket;
+							}
+					else
+					original_port = ntohs(peer_sockaddr.sin_port);
+					
+					#endif
 				
-				pthread_mutex_lock(&new_connection_mutex);
-				threads[tid].clients[i] = 0;
-				threads[tid].client_count--;
-				pthread_mutex_unlock(&new_connection_mutex);
+					//LOG
+					char* msg=malloc(MAX_LOG_MSG_LEN);
+					memset(msg,0,MAX_LOG_MSG_LEN);
+					snprintf(msg,MAX_LOG_MSG_LEN,"%d # Port_probe # REMOVING_SOCKET # source_ip:%s # dst_port:%d  \n",(int)timestamp,(char*)inet_ntoa(peer_sockaddr.sin_addr),original_port);//" port:%d src_ip%s\n", original_port,;
+					log_write(msg);
+					free(msg);
+					//
+				
+					close_socket:
+					if(opts & OPT_DEBUG)
+					fprintf(stderr,"Thread nr. %d : client %d closed connection\n",tid, threads[tid].clients[i]);
+				
+	        		close(threads[tid].clients[i]);
+				
+					pthread_mutex_lock(&new_connection_mutex);
+					threads[tid].clients[i] = 0;
+					threads[tid].client_count--;
+					pthread_mutex_unlock(&new_connection_mutex);
 				
 
 				}
 				else if(n < 0){
 
+						
 					if(errno == EAGAIN)
 					{
 						continue; // Nmap NULL probe (no data) -> skip && go to another socket (client)
 					}
 					else if(errno == 104) // Client terminted connection -> get rid of the socket now!
-					{
-						close(threads[tid].clients[i]); 			
-					}
+					{}
 					else
 					fprintf(stderr,"errno: %d\n", errno);    
-					    				
+					
+					#ifdef OPENBSD
+					
+					if ( getpeername(threads[tid].clients[i], (struct sockaddr *) &peer_sockaddr, &peer_sockaddr_len)){
+								perror("Getsockopt failed");
+								goto close_socket2;
+					}
+					else
+					original_port=get_original_port(peer_sockaddr.sin_addr,peer_sockaddr.sin_port);
+					
+					#else
+					
+					if ( getsockopt (threads[tid].clients[i], SOL_IP, SO_ORIGINAL_DST, (struct sockaddr*)&peer_sockaddr, &peer_sockaddr_len )){
+								perror("Getsockopt failed");
+								goto close_socket2;
+							}
+					else
+					original_port = ntohs(peer_sockaddr.sin_port);
+					
+					#endif
+				
+					//LOG
+					char* msg=malloc(MAX_LOG_MSG_LEN);
+					memset(msg,0,MAX_LOG_MSG_LEN);
+					snprintf(msg,MAX_LOG_MSG_LEN,"%d # Port_probe # REMOVING_SOCKET # source_ip:%s # dst_port:%d  \n",(int)timestamp,(char*)inet_ntoa(peer_sockaddr.sin_addr),original_port);//" port:%d src_ip%s\n", original_port,;
+					log_write(msg);
+					free(msg);
+					//	
+					
+					close_socket2:
+					close(threads[tid].clients[i]); 			
+					
 					pthread_mutex_lock(&new_connection_mutex);
 					threads[tid].clients[i] = 0;
 					threads[tid].client_count--;
@@ -304,28 +368,31 @@ void process_connection(void *arg)
 				else
 				{
 					
-				struct sockaddr_in peer_sockaddr;
-				int peer_sockaddr_len=sizeof(struct sockaddr_in);
 
 				#ifdef OPENBSD
 				//  BSD
 				getpeername(threads[tid].clients[i], (struct sockaddr *) &peer_sockaddr, &peer_sockaddr_len);
 				original_port=get_original_port(peer_sockaddr.sin_addr,peer_sockaddr.sin_port);
+				//
 				#else
+				// Linux
 				if ( getsockopt (threads[tid].clients[i], SOL_IP, SO_ORIGINAL_DST, (struct sockaddr*)&peer_sockaddr, &peer_sockaddr_len ))
 						perror("Getsockopt failed");
 				original_port = ntohs(peer_sockaddr.sin_port);
+				//
 				#endif
 							  	
+				//LOG
 				char* msg=malloc(MAX_LOG_MSG_LEN);
 				memset(msg,0,MAX_LOG_MSG_LEN);
-				snprintf(msg,MAX_LOG_MSG_LEN,"Connection_attempt: source_ip:%s dst_port:%d  \n",(char*)inet_ntoa(peer_sockaddr.sin_addr),original_port);//" port:%d src_ip%s\n", original_port,;
+				snprintf(msg,MAX_LOG_MSG_LEN,"%d # Service_probe # SIGNATURE_SEND # source_ip:%s # dst_port:%d  \n",(int)timestamp,(char*)inet_ntoa(peer_sockaddr.sin_addr),original_port);//" port:%d src_ip%s\n", original_port,;
 				log_write(msg);
 				free(msg);
+				//
 			
 			  	if(opts & OPT_DEBUG)
 				{
-					fprintf(stderr,"\n---\nThread nr.%d for port %d \n", tid,original_port);//: rcv from %s:%d\n", (int)tid,inet_ntoa(peer_sockaddr.sin_addr), ntohs(peer_sockaddr.sin_port));
+					fprintf(stderr,"\n---\nThread nr.%d for port %d \n", tid,original_port);
 				}
 			
 				str=((signature*)(arr_lines2[signatures[original_port]]))->cptr;
@@ -349,6 +416,8 @@ void process_connection(void *arg)
 				printf("\n---\n");
 				
 				}
+				
+				
 				
 				if(send(threads[tid].clients[i], str, len,0)==-1)
 					perror("Send to socket failed");

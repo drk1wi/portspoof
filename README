@@ -1,6 +1,6 @@
-Portspoof overview
+Portspoof software overview
 
-Short description
+Short description:
 
 	The portspoof program is designed to enhance OS security through emulation of legitimate service signatures on otherwise closed ports. 
 	It is meant to be a lightweight, fast, portable and secure addition to the any firewall system or security infrastructure.
@@ -10,28 +10,26 @@ Short description
 	 General benefits of using this software are:
 	 - Protection against well known port scanners (all scanning results are chaotic and difficult to interpret)
 	 - Possibility to use your current firewall rules to decide for which hosts "port spoofing" applies
-	 - 
+	 - Port scanning detection functionality
 	
 	http://portspoof.duszynski.eu
 	
-	Author:
-	Piotr Duszynski (piotr@duszynski.eu)
-	Twitter: @drk1wi
+	Author: Piotr Duszynski (piotr@duszynski.eu) # Follow me at @drk1wi
 
 License
 
-	 Consult the COPYING file.
+	Consult the COPYING file.
 
 Compile instructions
-
-     Consult the INSTALL file.
+	
+	Consult the INSTALL file.
 
 Other important files 
 
-	 AUTHORS		File with Author contact info
-     Changelog      What I have implemented
-     TODO           What I am planning to implement in the upcoming versions
-	 FAQ			Bug reporting and frequently asked questions
+	AUTHORS		File with Author contact info
+	Changelog   What I have implemented
+	TODO        What I am planning to implement in the upcoming versions
+	FAQ			Bug reporting and frequently asked questions
 
 
 
