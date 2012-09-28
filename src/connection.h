@@ -34,7 +34,6 @@
  */
 
 
-//TODO  headers - to be clean up
 
 #ifdef OPENBSD
 
@@ -61,6 +60,7 @@
 
 #include <pthread.h>
 #include "threads.h"
+
 #include <assert.h>  
 #include <net/if.h>
 #include <sys/types.h>
@@ -81,7 +81,6 @@
 
 
 #define SO_ORIGINAL_DST 80
-
 #define TCPSTATES
 
 extern Thread threads[MAX_THREADS];

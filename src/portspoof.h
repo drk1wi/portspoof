@@ -38,7 +38,12 @@
 #define OPT_SIG_FILE 1<<4
 #define OPT_LOG_FILE 1<<5
 #define OPT_SYSLOG_DIS 1<<6
+#define OPT_CONFIG_FILE 1<<7
 
+#define CONFSEPARATOR "/"
 #define DEFAULT_PORT 4444
+#define LOG_FILE "portspoof.log"
+#define CONF_FILE "portspoof.conf"
+#define SIGNATURE_FILE "signatures"
 extern char opts;
 extern char* log_file;

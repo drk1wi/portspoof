@@ -33,13 +33,21 @@
  *   forward this exception.
  */
 
-//TODO  headers - to be clean up
 
-#include "config.h"
 #include <sys/types.h>
 #include <pthread.h>
 #include <sys/timeb.h>
 #include <sys/wait.h>
+#include <err.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <netdb.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <signal.h>
 
 #ifdef OPENBSD
 
@@ -70,45 +78,34 @@
 
 #endif
 
-#include <err.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <limits.h>
-#include <netdb.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <signal.h>
 
+#include "config.h"
 #include "portspoof.h"
 #include "revregex.h"
 #include "threads.h"
 #include "connection.h"
 #include "log.h"
+#include "config_file.h"
 
-#define CONFSEPARATOR "/"
+extern char *__progname;
 
 char opts=0;
-char *log_file="portspoof.log";
+char *log_file=LOG_FILE;
 
 pthread_cond_t new_connection_cond = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t new_connection_mutex = PTHREAD_MUTEX_INITIALIZER;
-
-extern char *__progname;
 
 void 
 usage(void)
 {
 	printf("Usage: portspoof [OPTION]...\n"
 	"Portspoof - service signature obfuscator.\n\n"
-	  "-i             bind to a user defined ip address\n"
-	  "-p			  bind to a user defined port number\n"
-	  "-f			  use user defined signture file\n"
+	  "-i             bind to a user defined IP address\n"
+	  "-p			  bind to a user defined PORT number\n"
+	  "-f			  custom signture file\n"
+	  "-c			  configuration file\n"
 	  "-l			  log port scanning alerts to a file\n"
-		  "-d			  disable syslog\n"
-	  "-t			  number of threads\n"
-	  "-c			  length of client queue per thread\n"
+	  "-d			  disable syslog\n"
 	  "-v			  be verbose\n"
 	  "-h			  display this help and exit\n\n"
 	"Without any OPTION - use default values and continue");
@@ -139,8 +136,8 @@ int main(int argc, char **argv)
 {
 	int	ch;
 	char* bind_ip;
-	char* signature_file="signatures";
-	char* configuration_file="portspoof.conf";
+	char* signature_file=LOG_FILE;
+	char* configuration_file=CONF_FILE;
 	int sockd,newsockfd;
 	int addrlen;
 	int pid;
@@ -152,13 +149,11 @@ int main(int argc, char **argv)
 	unsigned short int port=DEFAULT_PORT;
 	
 	#ifdef CONFDIR
-		configuration_file = CONFDIR CONFSEPARATOR "portspoof.conf";
-		signature_file = CONFDIR CONFSEPARATOR "signatures";
+		configuration_file = CONFDIR CONFSEPARATOR CONF_FILE;
+		signature_file = CONFDIR CONFSEPARATOR SIGNATURE_FILE;
 	#endif
 	
-	
-	
-	while ((ch = getopt(argc, argv,"l:i:p:f:t:c:dvh")) != -1) {
+	while ((ch = getopt(argc, argv,"l:i:p:f:c:dvh")) != -1) {
 		switch (ch) {
 		case 'i':
 			bind_ip = optarg;
@@ -171,6 +166,10 @@ int main(int argc, char **argv)
 		case 'f':
 			signature_file  = optarg;
 			opts |= OPT_SIG_FILE;
+			break;
+		case 'c':
+			configuration_file  = optarg;
+			opts |= OPT_CONFIG_FILE;
 			break;
 		case 'v':
 			opts |= OPT_DEBUG;
@@ -185,12 +184,6 @@ int main(int argc, char **argv)
 			log_file  = optarg;
 			printf("-> Using log file %s\n",log_file);
 			break;
-		case 't':
-			printf("-> Threading options to be implemented.\n");
-			break;
-		case 'c':
-			printf("-> Threading options to be implemented.\n");
-			break;
 		case 'h':
 			usage();
 			break;
@@ -202,24 +195,24 @@ int main(int argc, char **argv)
 	}
 	
 
-	if( !(opts&OPT_IP || opts&OPT_PORT || opts&OPT_DEBUG || opts&OPT_SIG_FILE || opts&OPT_LOG_FILE || opts&OPT_SYSLOG_DIS))
+	if( !(opts&OPT_IP || opts&OPT_PORT || opts&OPT_DEBUG || opts&OPT_SIG_FILE || opts&OPT_LOG_FILE || opts&OPT_SYSLOG_DIS || opts&OPT_CONFIG_FILE))
 	{
 		printf("-> No parameters - using default values.\n");
 	}
+
 
 	//check log file
 	if(opts & OPT_LOG_FILE)
 		log_create(log_file);
 
-	// open file
-	
+	// open file	
 	if(opts & OPT_SIG_FILE)
 	printf("-> Using user defined signature file %s\n",signature_file);
 	
 	FILE *fp = fopen(signature_file, "r");
 	if (fp == NULL) {
 	    printf("Error opening file: %s \n",signature_file);
-	    return -1;
+	    exit(1);
 	}
 	
 	// get number of lines
@@ -228,12 +221,16 @@ int main(int argc, char **argv)
 			{
 				num_lines++;
 			}
-						
+	
+	int config_nr_of_payloads=0;
+	if(opts & OPT_CONFIG_FILE)
+		config_nr_of_payloads=get_nr_of_payloads(configuration_file);
+	
 	// allocate memory
- 	arr_lines2 = malloc(num_lines * sizeof(struct signature*));
+ 	arr_lines2 = malloc((num_lines+config_nr_of_payloads) * sizeof(struct signature*));
 
 	int i=0;	
-	for(;i<num_lines;i++)
+	for(;i<num_lines+config_nr_of_payloads;i++)
 		{
 			struct signature* tmp;
 			tmp=malloc(sizeof(signature));
@@ -262,8 +259,7 @@ int main(int argc, char **argv)
 				
 				((signature*)(arr_lines2[num_lines]))->cptr=process_signature(tmp,&len);
 				((signature*)(arr_lines2[num_lines]))->len=len;
-				num_lines++;
-				
+				num_lines++;	
 			}
 	
 	fclose(fp);
@@ -271,13 +267,20 @@ int main(int argc, char **argv)
 	i=0;	
 	int tmpi=0;
 	srand(time(0));
-	// set port spoof mapping
+	// set portspoof mapping
 	for(;i<SIGNATURES_SIZE;i++)
 		{
-			signatures[i]=i%num_lines; //rand()%num_lines; //TODO different port mapping schemes
+			signatures[i]=i%num_lines; 
 		}
-
-
+		
+	// open file	
+	if(opts & OPT_CONFIG_FILE){
+	printf("-> Using configuration file %s\n",configuration_file);
+		
+		if(process_config_file(arr_lines2,signatures,num_lines,configuration_file))
+		exit(1);
+	}
+	
  	/* create thread pool */
 	for(i = 0; i < MAX_THREADS; i++)
 	{
@@ -305,7 +308,7 @@ int main(int argc, char **argv)
 		 
 		}
 	  else
-		my_name.sin_addr.s_addr = INADDR_ANY; // inet_addr("127.0.0.1");
+		my_name.sin_addr.s_addr = INADDR_ANY; 
 	  
 	  if(opts & OPT_PORT)
 		{

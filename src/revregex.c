@@ -435,20 +435,16 @@ char* revregex(char * param_str,int* param_len,int start_offset,int end_offset) 
 				
 					tmplen=str_len - (j-i) + retlen;
 						
-						
 						if (!(tmp = malloc(tmplen))) 
 					        exit(1);	
 						memset(tmp,0,tmplen);
 						memcpy(tmp,str,i); // copy up to index i
 						memcpy(tmp+i,retstr,retlen); // copy new string
-						memcpy(tmp+i+retlen,str+j+1,str_len-j-1); // copy after index j
+						memcpy(tmp+i+retlen,str+j+2,str_len-j-1); // copy after index j without control
 						free(str);
 						str=tmp;
 						str_len=tmplen;
 						str_end_offset=str_end_offset+retlen - (j-i);
-						
-						
-						
 						goto repeat2;	
 						
 					}
@@ -509,12 +505,10 @@ char * escape_hex(char* str,int* final_len)
 	char *str2 = malloc(length+1);
 	memset(str2,0,length+1);
 	
-	//printf("ok");
 	while(*(str+i)!='\0'){
 		if(*(str+i)==bslash){
 			
 		 	if(*(str+i+1)!='\0' && *(str+i+1)=='0'){
-			//printf("null");
 				*(str2+i2)=0;
 				i2++;
 				i++;
@@ -522,9 +516,7 @@ char * escape_hex(char* str,int* final_len)
 			else if(*(str+i+1)!='\0' && *(str+i+1)=='x' && *(str+i+2)!='\0' && ishex(str+i+2) && *(str+i+3)!='\0' && ishex(str+i+3))
 				{
 					//printf("\\%hhx",char2hex(str+i+2));
-
 					*(str2+i2)=(char)char2hex(str+i+2);
-					
 					i2++;
 					i+=3;
 
