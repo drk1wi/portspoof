@@ -64,6 +64,7 @@ char * revregex_bracket(char * str,int start_offset,int end_offset, int* retlen)
 	//skip first bracket char
 	int i=start_offset+1;
 	int lend_offset=end_offset;
+	int tmpj;
 	
 	if( str[i]=='^') //not flag
 	{
@@ -117,28 +118,29 @@ char * revregex_bracket(char * str,int start_offset,int end_offset, int* retlen)
 			{
 					//DEBUG
 					//printf("rangew");
-					rangeword=1;
-					i+=3;
 					
 					//add chars from range to the pool
-					int tmpj=str[i];
+					tmpj=str[i];
 					for(tmpj;tmpj<=str[i+2];tmpj++)
 					{
 						characters[tmpj]=1;
 					}
+					i+=3;
+					rangeword=1;
+					
 			}
 			else if( isdigit(str[i]) && (i+1)!=lend_offset && str[i+1]==range && (i+2)!=lend_offset && isdigit(str[i+2])) //check if rangedigit
 			{
 					//DEBUG
 					//printf("ranged");
-					rangedigit=1;
-					i+=3;
 					
-					int j=str[i];
-					for(j;j<=str[i+2];j++)
+					tmpj=str[i];
+					for(tmpj;tmpj<=str[i+2];tmpj++)
 					{
-						characters[j]=1;
+						characters[tmpj]=1;
 					}
+					i+=3;
+					rangedigit=1;
 					
 			} 
 			else if(str[i]=='.')
@@ -153,7 +155,7 @@ char * revregex_bracket(char * str,int start_offset,int end_offset, int* retlen)
 				
 	}
 
-	char endmetachar=str[end_offset+1];
+	char endmetachar=str[end_offset+1]; //TODO: should be ok unless one creates "[a-z]", which is invalid regex!
 	int finsize=0;
 	//srand (time(NULL) );
 	
@@ -298,12 +300,20 @@ char * fill_specialchars(char * str,int* param_len, int start_offset,int end_off
 					tmp[tmpi]=97+rand()%25;	
 					tmpi++;
 					i++;
+					
+					if(i+1!=end_offset && (str[i+1]=='+' ||str[i+1]=='*') )
+						i++;
+					
 			}
 			else if(str[i]==bslash && i+1!=end_offset && str[i+1]==digit )
 			{
 					tmp[tmpi]=48+rand()%10;
 					tmpi++;		
-					i++;	
+					i++;
+					
+					if(i+1!=end_offset && (str[i+1]=='+' ||str[i+1]=='*') )
+						i++;	
+				
 			}
 			else if(str[i]==bslash && i+1!=end_offset && str[i+1]==newline )
 			{
@@ -317,14 +327,11 @@ char * fill_specialchars(char * str,int* param_len, int start_offset,int end_off
 					tmpi++;
 					i++;	
 			}
-			else if(str[i]==dot)
+			else if(str[i]==dot && i!=start_offset && str[i-1]!=bslash)
 			{
-					if(i!=start_offset && str[i-1]!=bslash)
-						continue;
-						
-					tmp[tmpi]='a'; //any character
+
+					tmp[tmpi]=97+rand()%25;	
 					tmpi++;	
-					
 			}		
 			else
 			{
@@ -374,7 +381,7 @@ char* revregex(char * param_str,int* param_len,int start_offset,int end_offset) 
 	int retlen;
 	char* retstr;
 	repeat1:
-	for(i=start_offset;i<=str_end_offset;i++)
+	for(i=start_offset;i<=str_end_offset;i++) // remove () from string
 	{
 		if(str[i]==lnaw && i!=start_offset && str[i-1]!=bslash)
 		{
@@ -427,7 +434,7 @@ char* revregex(char * param_str,int* param_len,int start_offset,int end_offset) 
 			{
 				if(str[j]==rbrak && str[j-1]!=bslash ){
 					
-					
+
 					//printf("# [%d %c %d %c ]\n",i,str[i],j,str[j]);
 					retstr=revregex_bracket(str,i,j,&retlen);					
 					

@@ -1,3 +1,7 @@
+0.3 28/09/2012
+* Configuration file
+* Droppped BSD support due to time constraints 
+
 0.2 11/08/2012
 * Port scanning alerts can be logged to a user defined file
 * Syslog logging
