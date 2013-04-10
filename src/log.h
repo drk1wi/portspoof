@@ -1,5 +1,8 @@
 #define MAX_LOG_MSG_LEN 200
-#include "portspoof.h"
+#include "Configuration.h"
 
-void log_create(char* file);
-void log_write(char* msg);
+class Configuration;
+extern Configuration* configuration;
+
+void log_create(const char* file);
+void log_write(const char* msg);

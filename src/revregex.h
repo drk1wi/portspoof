@@ -41,24 +41,16 @@
 #include <stdlib.h>
 #include <time.h>
 #include <ctype.h>
+#include <vector>
+#include <string>
+#include <iostream>
+
+using namespace std;
 
 #define BUFSIZE 1024
 #define SIGNATURES_SIZE 65535 // max port range
 
-#ifndef REVREGEX_VARS
-#define REVREGEX_VARS
-
-typedef struct {
-	int len;
-	char* cptr;
-} signature;
-
-
-extern  int signatures[SIGNATURES_SIZE];
-extern  int num_signatures;
-extern  struct signature **arr_lines2;
-#endif
-
+std::vector<char> process_signature(std::string str);
 
 char * revregex_bracket(char * str,int start_offset,int end_offset, int* retlen);
 char * fill_specialchars(char * str, int* param_len, int start_offset,int end_offset);
@@ -66,6 +58,5 @@ char* revregex(char * param_str,int* param_len,int start_offset,int end_offset);
 int char2hex(char* ptr);
 int ishex(char* ch);
 char * escape_hex(char* str,int* final_len);
-char * process_signature(const char* str, int* len);
 
 

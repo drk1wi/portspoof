@@ -33,36 +33,12 @@
  *   forward this exception.
  */
 
-
-
-#ifdef OPENBSD
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netinet/in_systm.h>
-#include <netinet/in.h>
-#include <netinet/ip.h>
-#include <netinet/udp.h>
-#include <net/if.h>
-#include <netinet/if_ether.h>
-#include <arpa/inet.h>
-#include <netinet/tcp.h>
-#include <sys/socket.h>
-#include <sys/ioctl.h>
-#include <netinet/tcp_fsm.h>
-
-
-#endif
-
 #include <pthread.h>
 #include "threads.h"
 
+#include <sys/types.h>
+#include <sys/socket.h>
 #include <assert.h>  
-#include <net/if.h>
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
@@ -76,16 +52,23 @@
 #include <err.h>
 #include <errno.h>
 #include <stdio.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
 
 #include "revregex.h"
-
+#include "Configuration.h"
 
 #define SO_ORIGINAL_DST 80
 #define TCPSTATES
 
+
+
 extern Thread threads[MAX_THREADS];
-extern int port;
-extern char opts;
+
+class Configuration;
+extern Configuration* configuration;
 
 void nonblock(int sockfd);
-void process_connection(void *arg);
+void* process_connection(void *arg);

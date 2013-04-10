@@ -8,26 +8,26 @@ pthread_cond_t log_cond = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t log_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 
-void log_create(char* file){
+void log_create(const char* file){
 	
-	FILE *fp = fopen(log_file, "a");
+	FILE *fp = fopen(configuration->getLogFile().c_str(), "a");
 		if (fp == NULL) {
-			FILE *fp = fopen(log_file, "w");
+			FILE *fp = fopen(configuration->getLogFile().c_str(), "w");
 		}
 	
 	fclose(fp);
 	return;
 	
 }
-void log_write(char* msg) {
+void log_write(const char* msg) {
 
 	pthread_mutex_lock(&log_mutex);
 
-	if(opts & OPT_LOG_FILE)
+	if(configuration->getConfigValue(OPT_LOG_FILE))
 	{
-		FILE *fp = fopen(log_file, "a");
+		FILE *fp = fopen(configuration->getLogFile().c_str(), "a");
 		if (fp == NULL) {
-		    printf("Error opening file: %s \n",log_file);
+		    fprintf(stdout,"Error opening file: %s \n",configuration->getLogFile().c_str());
 			exit(1);
 		}
 		
@@ -36,7 +36,7 @@ void log_write(char* msg) {
 		
 	}	
 	
-	if(!(opts & OPT_SYSLOG_DIS))
+	if(!(configuration->getConfigValue(OPT_SYSLOG_DIS)))
 	{
 	openlog("portspoof", LOG_PID|LOG_CONS, LOG_USER);
  	syslog(LOG_INFO," %s",msg);

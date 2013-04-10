@@ -33,7 +33,6 @@
  *   forward this exception.
  */
 
-#include "config.h"
 #include "revregex.h"
 
  int signatures[SIGNATURES_SIZE];
@@ -49,7 +48,7 @@ char * revregex_bracket(char * str,int start_offset,int end_offset, int* retlen)
 	int range='-';
 
 	//flags
-	char not=0;
+	char nnot=0;
 	char wordf=0;
 	char digitf=0;
 	char rangeword=0;
@@ -68,11 +67,11 @@ char * revregex_bracket(char * str,int start_offset,int end_offset, int* retlen)
 	
 	if( str[i]=='^') //not flag
 	{
-		i++;not=1;
+		i++;nnot=1;
 	}
 	
 	// DEBUG
-	//printf("%d %d",i,end_offset);
+	//fprintf(stdout,"%d %d",i,end_offset);
 	
 	for(i;i<lend_offset;i++)
 	{
@@ -108,7 +107,7 @@ char * revregex_bracket(char * str,int start_offset,int end_offset, int* retlen)
 				else
 					{
 						//DEBUG
-						//printf("unknown char: %c !\n", str[i+1]); //DEBUG - ignore this char it probably was escaped
+						//fprintf(stdout,"unknown char: %c !\n", str[i+1]); //DEBUG - ignore this char it probably was escaped
 						characters[str[i+1]]=1;
 					}
 				i++;
@@ -117,7 +116,7 @@ char * revregex_bracket(char * str,int start_offset,int end_offset, int* retlen)
 			else if( isalpha(str[i]) && (i+1)!=lend_offset && str[i+1]==range && (i+2)!=lend_offset && isalpha(str[i+2])) //check if rangeword
 			{
 					//DEBUG
-					//printf("rangew");
+					//fprintf(stdout,"rangew");
 					
 					//add chars from range to the pool
 					tmpj=str[i];
@@ -132,7 +131,7 @@ char * revregex_bracket(char * str,int start_offset,int end_offset, int* retlen)
 			else if( isdigit(str[i]) && (i+1)!=lend_offset && str[i+1]==range && (i+2)!=lend_offset && isdigit(str[i+2])) //check if rangedigit
 			{
 					//DEBUG
-					//printf("ranged");
+					//fprintf(stdout,"ranged");
 					
 					tmpj=str[i];
 					for(tmpj;tmpj<=str[i+2];tmpj++)
@@ -231,20 +230,20 @@ char * revregex_bracket(char * str,int start_offset,int end_offset, int* retlen)
 		finsize=1+rand()%9;
 		
 	// DEBUG f
-	//printf("\n###\n");
+	//fprintf(stdout,"\n###\n");
 		
 	
 	//TODO to be corrected
 	i=0;
 	for(i;i<255;i++)
 	{
-		if(not==0 && characters[i])
+		if(nnot==0 && characters[i])
 		{
 			characterstmp[chari]=i;
 			chari++;
-			//printf("%c",i);
+			//fprintf(stdout,"%c",i);
 		}
-		else if(not && characters[i]==0)
+		else if(nnot && characters[i]==0)
 		{
 			characterstmp[chari]=i;
 			chari++;
@@ -253,7 +252,7 @@ char * revregex_bracket(char * str,int start_offset,int end_offset, int* retlen)
 	}
 			
 			
-	char *finstr=malloc((finsize+1)*sizeof(char));
+	char *finstr=(char*)malloc((finsize+1)*sizeof(char));
 	memset(finstr,0,(finsize+1)*sizeof(char));
 	
 	if(chari)
@@ -286,7 +285,7 @@ char * fill_specialchars(char * str,int* param_len, int start_offset,int end_off
 	int tmpi=0;
 		
 	
-    if (!(tmp = malloc(tmplen * sizeof(char))))
+    if (!(tmp = (char*)malloc(tmplen * sizeof(char))))
         exit(1);	
 	memset(tmp,0,tmplen);
 	
@@ -344,7 +343,7 @@ char * fill_specialchars(char * str,int* param_len, int start_offset,int end_off
 	char* fin;
 	int finlen=tmpi+1;
 	
-    if (!(fin = malloc(finlen * sizeof(char))))
+    if (!(fin = (char*)malloc(finlen * sizeof(char))))
         exit(1);	
 
 	memset(fin,0,finlen);
@@ -370,7 +369,7 @@ char* revregex(char * param_str,int* param_len,int start_offset,int end_offset) 
 	char* tmp;	// tmp string for merging
 	int tmplen;
 	
-    if (!(str = malloc((str_len+1) * sizeof(char))))
+    if (!(str = (char*)malloc((str_len+1) * sizeof(char))))
         exit(1);	
 	memset(str,0,str_len+1);
 	memcpy(str,param_str+start_offset,str_len);
@@ -390,12 +389,12 @@ char* revregex(char * param_str,int* param_len,int start_offset,int end_offset) 
 			{
 				if(str[j]==rnaw && str[j-1]!=bslash ){
 					
-					//printf("#(%d %d)\n",i,j);
+					//fprintf(stdout,"#(%d %d)\n",i,j);
 					//revregex(str,j-i,i+1,j);
 					
 					tmplen=str_len - 2 ;
 					
-					if (!(tmp = malloc( ( tmplen +	1) * sizeof(char)))) // alloc without the brackets
+					if (!(tmp = (char*)malloc( ( tmplen +	1) * sizeof(char)))) // alloc without the brackets
 				        exit(1);	
 					memset(tmp,0,( tmplen +	1));
 					
@@ -404,7 +403,7 @@ char* revregex(char * param_str,int* param_len,int start_offset,int end_offset) 
 					memcpy(tmp+i,str+i+1,j-i); // copy i-j
 					memcpy(tmp+j-1,str+j+1,str_len-j-1);
 					
-					//printf("# offset change: %d\n", retlen-(j-i));
+					//fprintf(stdout,"# offset change: %d\n", retlen-(j-i));
 					free(str);
 					str=tmp;
 					str_len=str_len-2;
@@ -419,7 +418,7 @@ char* revregex(char * param_str,int* param_len,int start_offset,int end_offset) 
 		
 	}
 	
-	//printf("#%s\n",str);
+	//fprintf(stdout,"#%s\n",str);
 	
 	
 	
@@ -435,14 +434,14 @@ char* revregex(char * param_str,int* param_len,int start_offset,int end_offset) 
 				if(str[j]==rbrak && str[j-1]!=bslash ){
 					
 
-					//printf("# [%d %c %d %c ]\n",i,str[i],j,str[j]);
+					//fprintf(stdout,"# [%d %c %d %c ]\n",i,str[i],j,str[j]);
 					retstr=revregex_bracket(str,i,j,&retlen);					
 					
 					// merge it
 				
 					tmplen=str_len - (j-i) + retlen;
 						
-						if (!(tmp = malloc(tmplen))) 
+						if (!(tmp = (char*)malloc(tmplen))) 
 					        exit(1);	
 						memset(tmp,0,tmplen);
 						memcpy(tmp,str,i); // copy up to index i
@@ -509,7 +508,7 @@ char * escape_hex(char* str,int* final_len)
 	int i=0,i2=0;
 	
 	int length=strlen(str);
-	char *str2 = malloc(length+1);
+	char *str2 = (char*)malloc(length+1);
 	memset(str2,0,length+1);
 	
 	while(*(str+i)!='\0'){
@@ -522,7 +521,7 @@ char * escape_hex(char* str,int* final_len)
 			}
 			else if(*(str+i+1)!='\0' && *(str+i+1)=='x' && *(str+i+2)!='\0' && ishex(str+i+2) && *(str+i+3)!='\0' && ishex(str+i+3))
 				{
-					//printf("\\%hhx",char2hex(str+i+2));
+					//fprintf(stdout,"\\%hhx",char2hex(str+i+2));
 					*(str2+i2)=(char)char2hex(str+i+2);
 					i2++;
 					i+=3;
@@ -530,7 +529,7 @@ char * escape_hex(char* str,int* final_len)
 				}
 			else
 			{
-				//printf("%c",*(str+i));
+				//fprintf(stdout,"%c",*(str+i));
 			}
 		}
 		else{
@@ -545,7 +544,7 @@ char * escape_hex(char* str,int* final_len)
 	
 	*final_len=i2;	
 	char* strfin;
-    if (!(strfin = malloc((i2 + 1) * sizeof(char))))
+    if (!(strfin = (char*)malloc((i2 + 1) * sizeof(char))))
         exit(1);
 
 	memset(strfin,0,i2+1);
@@ -594,7 +593,7 @@ char * clear_spaces(char* str)
 	
 	}
 	
-	printf("size %d\n",j);
+	fprintf(stdout,"size %d\n",j);
 	
 	char* strfin;
     if (!(strfin = malloc((j + 1) * sizeof(char))))
@@ -609,47 +608,47 @@ char * clear_spaces(char* str)
 	
 }
 */
-char * process_signature(const char* str, int* len)
-{
-	
-	size_t length = strlen(str);
 
-	char *str2 = malloc(length+1);
-	memset(str2,0,length+1);
-	memcpy(str2,str,length+1);	
+std::vector<char> process_signature(std::string str)
+{
+	//cout<<str;
+	//cout.flush();
 	
+	size_t length = str.length();
+	char *str2 =(char*) malloc(length+1);
+	memset(str2,0,length+1);
+	memcpy(str2,str.c_str(),length+1);		
 	int final_len=length;
 	char *str3=revregex(str2,&final_len,0,length-1);	
 	char* str4=fill_specialchars(str3,&final_len,0,final_len);
 	char* str5=escape_hex(str4,&final_len);
-	*len=final_len;
-
-	
-	
-	// DEBUG
-	/*
-	printf("\n##hex##\n");
-	int t=0;
-	for(;t<final_len;t++)
-	{
-			if(*(str3+t)==0)
-				printf("\\00");
-			else if(*(str3+t)=='\n')
-				printf("\\n");
-			else if(*(str3+t)=='\r')
-				printf("\\r");
-			else
-				printf("\\%x",*(str3+t));
-	}
-	printf("\n");
-	*/
-	// ----
-	
-	
 	free(str2);
 	free(str3);
 	free(str4);
-	return str5;
+	
+	/*
+	fprintf(stdout,"\n##hex##\n");
+	int t=0;
+	for(;t<final_len;t++)
+	{
+			if(*(str5+t)==0)
+				fprintf(stdout,"\\00");
+			else if(*(str5+t)=='\n')
+				fprintf(stdout,"\\n");
+			else if(*(str5+t)=='\r')
+				fprintf(stdout,"\\r");
+			else
+				fprintf(stdout,"\\%x",*(str5+t));
+	}
+	fprintf(stdout,"\n");
+	*/
+
+	std::vector<char> result_vector;
+	
+	for(int i=0; i<final_len;i++)
+		result_vector.push_back(str5[i]);
+
+	return result_vector;
 	
 }
 
