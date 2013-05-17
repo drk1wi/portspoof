@@ -1,1 +1,0 @@
-HTTP/1.0 200 OK\r\nServer: Apache/__FUZZ__(Amazon)\r\nX-Powered-By: ASP\.NET\r\nCache-Control: no-cache, must-revalidate\r\nContent-type: text/html\r\nX-Powered-By: PHP/xxx\r\nExpires: Mon, 26 Jul 1997 05:00:00 GMT\r\n<title>Log In - Juniper Web Device Manager</title><address>Apache mod_perl/2.0.4 Perl/v5.10.1 Server at devtest.myhost.co.za Port 80</address>
