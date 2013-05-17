@@ -12,6 +12,7 @@ Portspoof Unix install notes
 
 	# iptables -A PREROUTING -i eth0 -p tcp -m tcp --dport 8080:10000 -j REDIRECT --to-ports 4444
 	 Portspoof by default will listen on port ALL_INTERFACES:4444
+	 
 	 This FW rules will result in service obfuscation for port range from 8080 to 10000
 	$ ./portspoof.
 

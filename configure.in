@@ -4,12 +4,12 @@
 CFLASGS="${CFLAGS=}"
 
 AC_PREREQ(2.61)
-AC_INIT([portspoof], [0.3], [piotr@duszynski.eu])
+AC_INIT([portspoof], [0.4], [piotr@duszynski.eu])
 AC_CONFIG_AUX_DIR(auto)
 AC_CONFIG_MACRO_DIR([m4])
 
-AM_INIT_AUTOMAKE(portspoof,0.2)
-AC_CONFIG_SRCDIR([src/portspoof.c])
+AM_INIT_AUTOMAKE(portspoof,0.4)
+AC_CONFIG_SRCDIR([src/portspoof.cpp])
 AC_CONFIG_HEADER([src/config.h])
 AC_DEFINE([_GNU_SOURCE], [1], [Use GNU source])
 
@@ -30,7 +30,7 @@ openbsd*)
 esac
 
 # Checks for programs.
-AC_PROG_CC
+AC_PROG_CXX
 AM_PROG_CC_C_O
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET

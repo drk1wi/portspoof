@@ -44,7 +44,7 @@ extern pthread_mutex_t new_connection_mutex;
 #ifndef THREAD_VARS
 #define THREAD_VARS
 
-#define MAX_THREADS    1
+#define MAX_THREADS    10
 #define MAX_CLIENT_PER_THREAD 30
 
 typedef struct {
