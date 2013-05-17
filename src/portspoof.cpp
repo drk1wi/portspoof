@@ -84,7 +84,7 @@ int main(int argc, char **argv)
 
 	int sockd,newsockfd;
 	int addrlen;
-	int pid;
+	//int pid;
 	struct sockaddr_in my_name, peer_name;
 	int status;
 
@@ -99,7 +99,8 @@ int main(int argc, char **argv)
 		
 	if(configuration->readConfigFile())
 		exit(1);
-		
+	
+	/*	
 	if(configuration->getConfigValue(OPT_FUZZ_NMAP))
 	{
 		if(configuration->PrepareFuzzer())
@@ -112,7 +113,7 @@ int main(int argc, char **argv)
 		fprintf(stdout,"-> Preparing fuzzer!\n");
 		
 	}
-
+	*/
 	
 
 	//check log file

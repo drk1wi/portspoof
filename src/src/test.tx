@@ -1,0 +1,8 @@
+-> Verbose mode on.
+ new conn - thread choosen: 9 -  nr. of connections already in queue: 0
+ new conn - thread choosen: 8 -  nr. of connections already in queue: 0
+
+---
+Thread nr.8 for port 8106 
+signature sent -> \32\32\30\20\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\41\20\45\53\4d\54\50\20\4f\70\65\6e\53\4d\54\50\44\r\n
+---

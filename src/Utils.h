@@ -11,6 +11,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <vector>
 
 
 #ifndef HEXDUMP_COLS
@@ -27,8 +28,10 @@ class Utils {
 		static void hexdump(void *mem, unsigned int len);
 		static int isNumeric (const char * s);
 		static char* get_substring_value(char* str);
-		static string wrapNMAP(string wrapper,string payload);
-		static std::string unescape( string& s);
+		static std::vector<char> wrapNMAP(string wrapper,std::vector<char> payload);
+		static std::vector<char> unescape( std::vector<char>& s);
+		static std::vector<char> str2vector( std::string& s);
+		
 		
 };
 

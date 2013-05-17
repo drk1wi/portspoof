@@ -279,6 +279,8 @@ char * fill_specialchars(char * str,int* param_len, int start_offset,int end_off
 	int dot='.';
 	int newline='n';
 	int creturn='r';
+	int tab='t';
+	
 	
 	char* tmp;	// tmp string for merging
 	int tmplen=end_offset-start_offset;
@@ -323,6 +325,12 @@ char * fill_specialchars(char * str,int* param_len, int start_offset,int end_off
 			else if(str[i]==bslash && i+1!=end_offset && str[i+1]==creturn )
 			{
 					tmp[tmpi]='\r';
+					tmpi++;
+					i++;	
+			}
+			else if(str[i]==bslash && i+1!=end_offset && str[i+1]==tab )
+			{
+					tmp[tmpi]='\t';
 					tmpi++;
 					i++;	
 			}

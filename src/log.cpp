@@ -12,7 +12,7 @@ void log_create(const char* file){
 	
 	FILE *fp = fopen(configuration->getLogFile().c_str(), "a");
 		if (fp == NULL) {
-			FILE *fp = fopen(configuration->getLogFile().c_str(), "w");
+			fp = fopen(configuration->getLogFile().c_str(), "w");
 		}
 	
 	fclose(fp);

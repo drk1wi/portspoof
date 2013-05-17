@@ -44,15 +44,42 @@ void Utils::hexdump(void *mem, unsigned int len)
     }
 }
 
-string Utils::wrapNMAP(string wrapper,string payload)
+std::vector<char> Utils::wrapNMAP(string wrapper,std::vector<char> payload)
 {
-	std::stringstream ss;	
+	stringstream ss;	
+	string str;
+	std::vector<char> result_vector;
+	
 	ss<<wrapper.substr(0,wrapper.find("__FUZZ__"));
-	ss<<payload;
+	str=ss.str();
+	
+	for(int i=0; i<str.length();i++)
+		result_vector.push_back(str[i]);	
+	
+	result_vector.insert(result_vector.end(),payload.begin(),payload.end());
+	
+	ss.str("");
 	ss<<wrapper.substr(wrapper.find("__FUZZ__")+strlen("__FUZZ__"),wrapper.size());
-	return ss.str();
+	
+	str=ss.str();
+	
+	for(int i=0; i<str.length();i++)
+		result_vector.push_back(str[i]);		
+	
+	return result_vector;
 }
 
+std::vector<char> Utils::str2vector( std::string& s)
+{
+	std::vector<char> result_vector;
+	
+	for(int i=0; i<s.length();i++)
+		result_vector.push_back(s[i]);
+		
+	return result_vector;
+	
+	
+}
 int Utils::isNumeric (const char * s)
 {
     if (s == NULL || *s == '\0' || isspace(*s))
@@ -63,10 +90,10 @@ int Utils::isNumeric (const char * s)
 }
 
 
-std::string Utils::unescape(string& s)
+std::vector<char> Utils::unescape(std::vector<char> & s)
 {
-  string res;
-  string::const_iterator it = s.begin();
+  std::vector<char> res;
+  vector<char>::const_iterator it = s.begin();
   while (it != s.end())
   {
     char c = *it++;
@@ -75,13 +102,15 @@ std::string Utils::unescape(string& s)
       switch (*it++) {
       case 'n': c = '\n'; break;
       case 'r': c = '\r'; break;
+      case 't': c = '\t'; break;
+
       // all other escapes
       default: 
         // invalid escape sequence - skip it. alternatively you can copy it as is, throw an exception...
         continue;
       }
     }
-    res += c;
+    res.push_back(c);
   }
 
   return res;

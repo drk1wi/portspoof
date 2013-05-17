@@ -69,8 +69,8 @@ void nonblock(int sockfd)
 void* process_connection(void *arg)
 {
 	int tid =  *((int*)(&arg));
-	int len,i;  
-	std:string str;
+	//int len;  
+	string str;
 	char buffer;
 	int original_port=DEFAULT_PORT;
 	int n = 0;
@@ -82,7 +82,7 @@ void* process_connection(void *arg)
 	while(1) {
 
 		sleep(1);
-		for(i = 0; i < MAX_CLIENT_PER_THREAD; i++)
+		for(int i = 0; i < MAX_CLIENT_PER_THREAD; i++)
 		{
 				
 			if(threads[tid].clients[i] != 0)
@@ -90,7 +90,11 @@ void* process_connection(void *arg)
 		     
 				timestamp = time(NULL); 
 				
-			 	n = recv(threads[tid].clients[i], &buffer,1, 0);			
+				if(configuration->getConfigValue(OPT_NOT_NMAP_SCANNER))
+					n = 1; // just reply...
+				else
+					n = recv(threads[tid].clients[i], &buffer,1, 0);	
+			 		
 			
 				// deal with different recv buffer size
 				if(n == 0){
@@ -127,7 +131,6 @@ void* process_connection(void *arg)
 					threads[tid].client_count--;
 					pthread_mutex_unlock(&new_connection_mutex);
 				
-
 				}
 				else if(n < 0){
 
@@ -177,7 +180,6 @@ void* process_connection(void *arg)
 				else
 				{
 					
-
 				#ifdef OSX
 				//  BSD
 							original_port = ntohs(peer_sockaddr.sin_port);
@@ -208,16 +210,15 @@ void* process_connection(void *arg)
 				int buffertosendsize=vectsignature.size();
 				char* buffertosend= (char*)malloc(buffertosendsize);
 				
-				for(int i=0; i<buffertosendsize;i++)
-					buffertosend[i]=vectsignature[i];
+				for(int j=0; j<buffertosendsize;j++)
+					buffertosend[j]=vectsignature[j];
 					
 			  	if(configuration->getConfigValue(OPT_DEBUG))
 				{
 					
 				
 				fprintf(stdout,"signature sent -> ");	
-				unsigned int t=0;
-				for(;t<buffertosendsize;t++)
+				for(int t=0;t<buffertosendsize;t++)
 				{
 						if(*(buffertosend+t)==0)
 							fprintf(stdout,"\\00");

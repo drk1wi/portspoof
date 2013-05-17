@@ -8,7 +8,7 @@
 #define LOG_FILE "portspoof.log"
 #define CONF_FILE "portspoof.conf"
 #define SIGNATURE_FILE "signatures"
-#define OPT_FUZZ 1
+#define OPT_FUZZ_WORDLIST 1
 #define OPT_IP 2
 #define OPT_PORT 3
 #define OPT_DEBUG 4
@@ -17,7 +17,9 @@
 #define OPT_SYSLOG_DIS 7
 #define OPT_CONFIG_FILE 8
 #define OPT_FUZZ_NMAP 9
-
+#define OPT_FUZZ_INTERNAL 10
+#define OPT_NOT_NMAP_SCANNER 11
+#define OPT_FUZZ_RANDOM 12
 
 #define MAX_PORTS 65535
 
@@ -48,6 +50,9 @@ using namespace std;
 typedef map < unsigned short, std::vector<char> > Port_Signature_Map;
 typedef vector < string > Raw_Signatures_Vector;
 typedef vector < string > Nmap_Fuzz_Vector;
+class Fuzzer;
+
+#include "Fuzzer.h"
 
 
 class Configuration {
@@ -57,39 +62,31 @@ class Configuration {
 		std::string logfile;
 		std::string bind_ip;
 		unsigned short int port;
-		bitset<10> opts;
-		
-		unsigned short ifuzz;		
+		bitset<20> opts;
+		Fuzzer* fuzzer;
+		std::string nmapfuzzsignatures_file;
+		std::string fuzzpayload_file;
 		Port_Signature_Map portsignatureemap;
 		Raw_Signatures_Vector rawsignatures;
 		
-		//fuzzing part
-		std::string nmapfuzzsignatures_file;
-		std::string fuzzpayload_file;
-		Nmap_Fuzz_Vector nmapfuzzsignatures;
-		FILE *fp_payloads;
-		int counter;
-		std::string input_line;
 		
 	public:
 		Configuration();
-		
+		void usage(void);
  		bool processArgs(int argc, char** argv);
 		bool readConfigFile();
 		std::vector<char> mapPort2Signature(unsigned short port);
-		void usage(void);
-		bool getConfigValue(int value);
+		bool processSignatureFile();
+		
+		//getters
 		std::string getConfigFile();
 		std::string getSignatureFile();
 		std::string getLogFile();
 		std::string getBindIP();
+		std::string getNmapfuzzSignaturesFile();
+		std::string getFuzzPayloadFile();
+		bool getConfigValue(int value);
 		unsigned short int getPort();
-		bool processSignatureFile();
-		
-		//fuzzing part
-		bool PrepareFuzzer();
-		std::vector<char> GetFUZZ();
-		
 			
 };
 

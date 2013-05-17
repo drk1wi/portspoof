@@ -121,25 +121,25 @@ int main(int argc, char** argv){
 
 		/* Find the properties for the device */
 		if (pcap_lookupnet(configuration->getDevice().c_str(), &net, &mask, errbuf) == -1) {
-			printf("Couldn't get netmask for device %s: %s\n", configuration->getDevice().c_str(), errbuf);
+			fprintf(stdout,"Couldn't get netmask for device %s: %s\n", configuration->getDevice().c_str(), errbuf);
 			net = 0;
 			mask = 0;
 		}
 		
 		//promisc mode.
 		if ( (descr = pcap_open_live(configuration->getDevice().c_str(), BUFSIZ, 1,  512, errbuf)) == NULL){
-	    	printf("ERROR: %s\n", errbuf);
+	    	fprintf(stdout,"ERROR: %s\n", errbuf);
 	    	exit(1);
 	 	}
 	
 		cout<<"Promisc mode set"<<endl;
 	
 		if (pcap_compile(descr, &fp, configuration->getFilter().c_str(), 0, net) == -1) { 
-			 printf("Couldn't parse filter %s: %s\n", configuration->getFilter().c_str(), pcap_geterr(descr));
+			 fprintf(stdout,"Couldn't parse filter %s: %s\n", configuration->getFilter().c_str(), pcap_geterr(descr));
 	    	 exit(1);
 		 }
 		 if (pcap_setfilter(descr, &fp) == -1) {
-			 printf("Couldn't install filter %s: %s\n", configuration->getFilter().c_str(), pcap_geterr(descr));
+			 fprintf(stdout,"Couldn't install filter %s: %s\n", configuration->getFilter().c_str(), pcap_geterr(descr));
 	    	 exit(1);
 		 }
 	 	

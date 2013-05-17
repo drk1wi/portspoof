@@ -8,12 +8,9 @@ Configuration::Configuration()
 	bind_ip=std::string();
 	port=DEFAULT_PORT;	
 	opts=0;
-	
-	
 	nmapfuzzsignatures_file = std::string(NMAP_FUZZ_FILE_SIG);	
 	fuzzpayload_file = std::string(FUZZ_FILE_PAYLOAD);	
-	counter=0;
-	
+		
 	return;
 }
 
@@ -28,13 +25,14 @@ void  Configuration::usage(void)
 	"Portspoof - service signature obfuscator.\n\n"
 	  "-i             bind to a user defined IP address\n"
 	  "-p			  bind to a user defined PORT number\n"
-	  "-f			  custom signture file\n"
+	  "-s			  custom signture file\n"
 	  "-c			  configuration file\n"
 	  "-l			  log port scanning alerts to a file\n"
 	  "-d			  disable syslog\n"
 	  "-v			  be verbose\n"
-	  "-x			  fuzz\n"
-	  "-y			  nmap wrap fuzz\n"
+	  "-f			  read fuzz payload list\n"
+	  "-1			  generate fuzzing payloads\n"
+	  "-n			  nmap wrap fuzz signatures\n"
 	  "-h			  display this help and exit\n\n"
 	"Without any OPTION - use default values and continue\n");
 	
@@ -46,7 +44,7 @@ bool Configuration::processArgs(int argc, char** argv)
 	int	ch;
 	extern char *__progname;
 	
-	while ((ch = getopt(argc, argv,"l:i:p:f:c:y:x:dvh")) != -1) {
+	while ((ch = getopt(argc, argv,"l:i:p:s:c:f:n:dvh123")) != -1) {
 		switch (ch) {
 		case 'i':
 			this->bind_ip = std::string(optarg);
@@ -56,7 +54,7 @@ bool Configuration::processArgs(int argc, char** argv)
 			this->port  = atoi(optarg);
 			this->opts[OPT_PORT]=1;
 			break;
-		case 'f':
+		case 's':
 			this->signaturefile  = std::string(optarg);
 			this->opts[OPT_SIG_FILE]=1;
 			
@@ -79,16 +77,28 @@ bool Configuration::processArgs(int argc, char** argv)
 			this->logfile  = std::string(optarg);
 			fprintf(stdout,"-> Using log file %s\n",this->logfile.c_str());
 			break;	
-		case 'x':
-		this->opts[OPT_FUZZ]=1;
+		case 'f':
+		this->opts[OPT_FUZZ_WORDLIST]=1;
 			this->fuzzpayload_file=std::string(optarg);
-			fprintf(stdout,"-> Fuzzing mode!\n");
+			fprintf(stdout,"-> Reading fuzzing payloads from a file!\n");
 			break;
-		case 'y':
+		case 'n':
 			this->opts[OPT_FUZZ_NMAP]=1;
 			this->nmapfuzzsignatures_file=std::string(optarg);
-			fprintf(stdout,"-> NMAP Fuzzing mode!\n");
+			fprintf(stdout,"-> NMAP wrapper mode!\n");
 			break;
+		case '1':
+			this->opts[OPT_FUZZ_INTERNAL]=1;
+			fprintf(stdout,"-> Generate fuzzing payloads!\n");
+			break;
+		case '2':
+			this->opts[OPT_NOT_NMAP_SCANNER]=1;
+			fprintf(stdout,"-> Switching to simple reply mode (anything apart from Nmap)!\n");
+			break;
+		case '3':
+			this->opts[OPT_FUZZ_RANDOM]=1;
+			fprintf(stdout,"-> Random int fuzzing!\n");
+			break;			
 		case 'h':
 			this->usage();
 			break;
@@ -105,6 +115,10 @@ bool Configuration::processArgs(int argc, char** argv)
 		fprintf(stdout,"-> No parameters - using default values.\n");
 	}
 			
+	if(this->getConfigValue(OPT_FUZZ_NMAP) ||this->getConfigValue(OPT_FUZZ_WORDLIST) || this->getConfigValue(OPT_FUZZ_INTERNAL))
+		this->fuzzer=new Fuzzer(this);
+	
+	
 	return 0;
 }
 
@@ -115,6 +129,15 @@ std::string Configuration::getConfigFile()
 std::string Configuration::getSignatureFile()
 {
 	return this->signaturefile;
+	
+}
+std::string Configuration::getNmapfuzzSignaturesFile()
+{
+	return this->nmapfuzzsignatures_file;
+}
+std::string Configuration::getFuzzPayloadFile()
+{
+	return this->fuzzpayload_file;
 	
 }
 std::string Configuration::getLogFile()
@@ -135,7 +158,7 @@ unsigned short int Configuration::getPort()
 std::vector<char> Configuration::mapPort2Signature(unsigned short port)
 {	
 	/*
-	if(this->opts&OPT_FUZZ)
+	if(this->opts&OPT_FUZZ_WORDLIST
 	{
 		
 		std::string input_line;
@@ -148,10 +171,10 @@ std::vector<char> Configuration::mapPort2Signature(unsigned short port)
 		
 	}
 	*/
-	if(this->opts[OPT_FUZZ_NMAP])
+	if(this->opts[OPT_FUZZ_NMAP] || this->opts[OPT_FUZZ_INTERNAL] || this->opts[OPT_FUZZ_WORDLIST])
 	{
 		std::vector<char> result_vector;		
-		result_vector=this->GetFUZZ();
+		result_vector=this->fuzzer->GetFUZZ();
 		return result_vector;
 	}
 	else
@@ -257,81 +280,3 @@ bool Configuration::readConfigFile()
 	
 }
 
-
-bool Configuration::PrepareFuzzer()
-{
-	
-		this->fp_payloads=fopen(this->fuzzpayload_file.c_str(), "r");
-		if ( this->fp_payloads == NULL) {
-		    fprintf(stdout,"Error opening payload file: %s \n",this->fuzzpayload_file.c_str());
-			return 1;
-		}
-		
-		/////
-		
-		FILE *fp = fopen(this->nmapfuzzsignatures_file.c_str(), "r");
-		if (fp == NULL) {
-			  fprintf(stdout,"Error opening nmap signature file: %s \n",this->nmapfuzzsignatures_file.c_str());
-			return 1;
-		}
-
-		char buf_file[BUFSIZE];
-		while (fgets(buf_file, BUFSIZE, fp))
-		nmapfuzzsignatures.push_back(std::string(buf_file));
-		fclose(fp);
-		
-	    fprintf(stdout,"-> Nmap signatures read: %d \n",this->nmapfuzzsignatures.size());
-		
-		return 0;
-}
-
-
-
-
-std::vector<char>  Configuration::GetFUZZ()
-{
-	
-	
-	char buf_file[BUFSIZE];
-	std::string input_wrapped,input_wrapped2;
-	std::vector<char> result_vector;
-
-	
-	if(this->counter%this->nmapfuzzsignatures.size()==0)
-	{
-		
-	
-	if(fgets(buf_file, BUFSIZE, this->fp_payloads)==NULL)
-	{
-		fprintf(stdout,"EOF of payload file\n");
-		fflush(stdout);
-	}
-	this->input_line=std::string(buf_file);
-	this->input_line.erase(input_line.size() - 1);//remove \n
-	
-	}
-	
-	
-	input_wrapped=Utils::wrapNMAP(this->nmapfuzzsignatures[this->counter%this->nmapfuzzsignatures.size()],this->input_line);
-	input_wrapped2=Utils::unescape(input_wrapped);
-	
-	
-	this->counter++;
-
-	for(int i=0; i<input_wrapped2.length();i++)
-		result_vector.push_back(input_wrapped2[i]);
-	
-	return result_vector;
-	
-	
-}
-
-/*
-std::string input_line;
-std::getline(std::cin, input_line);
-
-
-for(int i=0; i<input_line.length();i++)
-	result_vector.push_back(input_line[i]);
-return result_vector;
-*/
