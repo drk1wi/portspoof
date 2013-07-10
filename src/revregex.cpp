@@ -1,5 +1,5 @@
 /*
- *   portspoof       Service signature obfucastor 
+ *   Portspoof  - Service Signature Emulator  / Offesnsive Defense Exploitation Framework    
  *   Copyright (C) 12012 Piotr Duszyński <piotr[at]duszynski.eu>
  *
  *   This program is free software; you can redistribute it and/or modify it
@@ -16,16 +16,16 @@
  *   with this program; if not, see <http://www.gnu.org/licenses>.
  * 
  *   Linking portspoof statically or dynamically with other modules is making
- *   a combined work based on portspoof. Thus, the terms and conditions of
+ *   a combined work based on Portspoof. Thus, the terms and conditions of
  *   the GNU General Public License cover the whole combination.
  * 
- *   In addition, as a special exception, the copyright holder of portspoof
- *   gives you permission to combine portspoof with free software programs or
+ *   In addition, as a special exception, the copyright holder of Portspoof
+ *   gives you permission to combine Portspoof with free software programs or
  *   libraries that are released under the GNU LGPL. You may copy
  *   and distribute such a system following the terms of the GNU GPL for
- *   portspoof and the licenses of the other code concerned.
+ *   Portspoof and the licenses of the other code concerned.
  * 
- *   Note that people who make modified versions of portspoof are not obligated
+ *   Note that people who make modified versions of Portspoof are not obligated
  *   to grant this special exception for their modified versions; it is their
  *   choice whether to do so. The GNU General Public License gives permission
  *   to release a modified version without this exception; this exception
@@ -357,7 +357,7 @@ char * fill_specialchars(char * str,int* param_len, int start_offset,int end_off
 	memset(fin,0,finlen);
 	memcpy(fin,tmp,finlen-1);
 	*param_len=finlen-1;
-	
+	free(tmp);
 		return fin;
 }
 
@@ -655,6 +655,8 @@ std::vector<char> process_signature(std::string str)
 	
 	for(int i=0; i<final_len;i++)
 		result_vector.push_back(str5[i]);
+
+	free(str5);
 
 	return result_vector;
 	

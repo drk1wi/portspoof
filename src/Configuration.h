@@ -1,5 +1,5 @@
 /*
- *   PPortspoof  - Service Signature Emulator  / Offesnsive Defense Exploitation Framework       
+ *   Portspoof  - Service Signature Emulator  / Offesnsive Defense Exploitation Framework       
  *   Copyright (C) 12012 Piotr Duszyński <piotr[at]duszynski.eu>
  *
  *   This program is free software; you can redistribute it and/or modify it
