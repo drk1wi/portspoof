@@ -61,7 +61,7 @@ Server::Server(Configuration* configuration)
 
 	 int n = 1;
 	 setsockopt(sockd, SOL_SOCKET, SO_REUSEADDR , &n, sizeof(n));
-	 
+
 	/* server address  - by default localhost */
 	  my_name.sin_family = PF_INET;
 	  if(configuration->getConfigValue(OPT_IP))

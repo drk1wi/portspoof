@@ -34,7 +34,7 @@
  */
 
 #include <pthread.h>
-#include "threads.h"
+#include "Threads.h"
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -59,12 +59,16 @@
 
 #include "revregex.h"
 #include "Configuration.h"
+#include "Server.h"
+
+#ifndef CONNECTION_H
+#define CONNECTION_H
 
 #define SO_ORIGINAL_DST 80
 #define TCPSTATES
 
-
-
+extern pthread_cond_t new_connection_cond;
+extern pthread_mutex_t new_connection_mutex;
 extern Thread threads[MAX_THREADS];
 
 class Configuration;
@@ -72,3 +76,6 @@ extern Configuration* configuration;
 
 void nonblock(int sockfd);
 void* process_connection(void *arg);
+
+
+#endif

@@ -35,12 +35,6 @@
 
 #include <pthread.h>
 
-
-extern pthread_cond_t new_connection_cond;
-extern pthread_mutex_t new_connection_mutex;
-
-
-
 #ifndef THREAD_VARS
 #define THREAD_VARS
 

@@ -41,12 +41,10 @@
 #include <sys/socket.h>
 #include <sys/ioctl.h>
 #include <time.h> 
-#include "threads.h"
+#include "Threads.h"
 #include "connection.h"
 #include "log.h"
 #include "Configuration.h"
-
-Thread threads[MAX_THREADS];
 
 
 void nonblock(int sockfd)
@@ -116,7 +114,7 @@ void* process_connection(void *arg)
 					msg=(char*)malloc(MAX_LOG_MSG_LEN);
 					memset(msg,0,MAX_LOG_MSG_LEN);
 					snprintf(msg,MAX_LOG_MSG_LEN,"%d # Port_probe # REMOVING_SOCKET # source_ip:%s # dst_port:%d  \n",(int)timestamp,(char*)inet_ntoa(peer_sockaddr.sin_addr),original_port);//" port:%d src_ip%s\n", original_port,;
-					log_write(msg);
+					Utils::log_write(configuration,msg);
 					free(msg);
 					//
 				
@@ -164,7 +162,7 @@ void* process_connection(void *arg)
 					msg =(char*)malloc(MAX_LOG_MSG_LEN);
 					memset(msg,0,MAX_LOG_MSG_LEN);
 					snprintf(msg,MAX_LOG_MSG_LEN,"%d # Port_probe # REMOVING_SOCKET # source_ip:%s # dst_port:%d  \n",(int)timestamp,(char*)inet_ntoa(peer_sockaddr.sin_addr),original_port);//" port:%d src_ip%s\n", original_port,;
-					log_write(msg);
+					Utils::log_write(configuration,msg);
 					free(msg);
 					//	
 					
@@ -196,7 +194,7 @@ void* process_connection(void *arg)
 				char* msg=(char*)malloc(MAX_LOG_MSG_LEN);
 				memset(msg,0,MAX_LOG_MSG_LEN);
 				snprintf(msg,MAX_LOG_MSG_LEN,"%d # Service_probe # SIGNATURE_SEND # source_ip:%s # dst_port:%d  \n",(int)timestamp,(char*)inet_ntoa(peer_sockaddr.sin_addr),original_port);//" port:%d src_ip%s\n", original_port,;
-				log_write(msg);
+				Utils::log_write(configuration,msg);
 				free(msg);
 				//
 			
@@ -254,4 +252,6 @@ void* process_connection(void *arg)
 		    
 		}
 	}
+
+	return 0;
 }
