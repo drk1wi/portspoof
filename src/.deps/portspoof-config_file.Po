@@ -18,7 +18,7 @@ portspoof-config_file.o: config_file.c config_file.h /usr/include/stdio.h \
  /usr/include/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/bits/stdlib.h /usr/include/ctype.h connection.h \
  /usr/include/pthread.h /usr/include/sched.h /usr/include/bits/sched.h \
- /usr/include/signal.h /usr/include/bits/setjmp.h threads.h \
+ /usr/include/signal.h /usr/include/bits/setjmp.h Threads.h \
  /usr/include/assert.h /usr/include/net/if.h /usr/include/sys/socket.h \
  /usr/include/sys/uio.h /usr/include/bits/uio.h \
  /usr/include/bits/socket.h /usr/include/bits/sockaddr.h \
@@ -133,7 +133,7 @@ connection.h:
 
 /usr/include/bits/setjmp.h:
 
-threads.h:
+Threads.h:
 
 /usr/include/assert.h:
 

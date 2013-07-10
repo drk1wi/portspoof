@@ -1,8 +1,8 @@
 ## Process this file with automake to produce Makefile.in
 
 # File lists
-headers = config_file.h  config.h  Configuration.h  connection.h  Fuzzer.h  log.h  portspoof.h  revregex.h  threads.h  Utils.h
-sources = Configuration.cpp  connection.cpp  Fuzzer.cpp  log.cpp  portspoof.cpp  revregex.cpp  Utils.cpp
+headers = connection.h portspoof.h revregex.h threads.h log.h config_file.h
+sources = connection.c portspoof.c revregex.c log.c config_file.c
 
 # Unix executables
 bin_PROGRAMS = portspoof

@@ -10,7 +10,6 @@ Configuration::Configuration()
 	opts=0;
 	nmapfuzzsignatures_file = std::string(NMAP_FUZZ_FILE_SIG);	
 	fuzzpayload_file = std::string(FUZZ_FILE_PAYLOAD);	
-	thread_number=MAX_THREADS;
 		
 	return;
 }
@@ -24,18 +23,16 @@ void  Configuration::usage(void)
 {
 	fprintf(stdout,"Usage: portspoof [OPTION]...\n"
 	"Portspoof - service signature obfuscator.\n\n"
-	  "-i			  bind to a user defined IP address\n"
+	  "-i             bind to a user defined IP address\n"
 	  "-p			  bind to a user defined PORT number\n"
-	  "-s			  custom service signture file\n"
+	  "-s			  custom signture file\n"
 	  "-c			  configuration file\n"
 	  "-l			  log port scanning alerts to a file\n"
 	  "-d			  disable syslog\n"
 	  "-v			  be verbose\n"
-	  "-f			  fuzz payload list\n"
-	  "-n			  nmap wrap fuzz signatures\n"
+	  "-f			  read fuzz payload list\n"
 	  "-1			  generate fuzzing payloads\n"
-	  "-2			  switch to simple reply mode (anything apart from Nmap)!\n"
-	  "-3			  Random int fuzzing!\n"
+	  "-n			  nmap wrap fuzz signatures\n"
 	  "-h			  display this help and exit\n\n"
 	"Without any OPTION - use default values and continue\n");
 	
@@ -119,10 +116,8 @@ bool Configuration::processArgs(int argc, char** argv)
 	}
 			
 	if(this->getConfigValue(OPT_FUZZ_NMAP) ||this->getConfigValue(OPT_FUZZ_WORDLIST) || this->getConfigValue(OPT_FUZZ_INTERNAL))
-		{
 		this->fuzzer=new Fuzzer(this);
-		this->thread_number=1;
-		}
+	
 	
 	return 0;
 }

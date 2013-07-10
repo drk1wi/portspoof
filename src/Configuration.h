@@ -43,7 +43,6 @@
 #include "connection.h"
 
 #include "Utils.h"
-#include "threads.h"
 
 using namespace std;
 
@@ -63,7 +62,6 @@ class Configuration {
 		std::string logfile;
 		std::string bind_ip;
 		unsigned short int port;
-		int thread_number;
 		bitset<20> opts;
 		Fuzzer* fuzzer;
 		std::string nmapfuzzsignatures_file;

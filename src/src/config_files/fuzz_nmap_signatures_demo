@@ -1,0 +1,4 @@
+220 __FUZZ__ ESMTP OpenSMTPD\r\n
+220 __FUZZ__ SMTP ready to roll\r\n
+550 4m2v4 __FUZZ__
++OK Lotus Notes POP3 server version  ready j* on __FUZZ__/xxx.\r\n
