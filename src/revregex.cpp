@@ -1,6 +1,6 @@
 /*
- *   Portspoof  - Service Signature Emulator  / Offesnsive Defense Exploitation Framework    
- *   Copyright (C) 12012 Piotr Duszyński <piotr[at]duszynski.eu>
+ *   Portspoof  - Service Signature Emulator  / Exploitation Framework Frontend   
+ *   Copyright (C) 2012 Piotr Duszyński <piotr[at]duszynski.eu>
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the
@@ -33,6 +33,7 @@
  *   forward this exception.
  */
 
+
 #include "revregex.h"
 
  int signatures[SIGNATURES_SIZE];
@@ -42,10 +43,10 @@
 char * revregex_bracket(char * str,int start_offset,int end_offset, int* retlen) //index: '[' ... ']' 
 {
 	//TODO hex support
-	int bslash='\\';
-	int word='w';
-	int digit='d';
-	int range='-';
+	char bslash='\\';
+	char word='w';
+	char digit='d';
+	char range='-';
 
 	//flags
 	char nnot=0;
@@ -273,13 +274,13 @@ char * revregex_bracket(char * str,int start_offset,int end_offset, int* retlen)
 char * fill_specialchars(char * str,int* param_len, int start_offset,int end_offset)
 {
 	
-	int bslash='\\';
-	int word='w';
-	int digit='d';
-	int dot='.';
-	int newline='n';
-	int creturn='r';
-	int tab='t';
+	char bslash='\\';
+	char word='w';
+	char digit='d';
+	char dot='.';
+	char newline='n';
+	char creturn='r';
+	char tab='t';
 	
 	
 	char* tmp;	// tmp string for merging
@@ -363,11 +364,11 @@ char * fill_specialchars(char * str,int* param_len, int start_offset,int end_off
 
 char* revregex(char * param_str,int* param_len,int start_offset,int end_offset) // with brackets
 {
-	int lnaw='(';
-	int rnaw=')';
-	int lbrak='[';
-	int rbrak=']';
-	int bslash='\\';
+	char lnaw='(';
+	char rnaw=')';
+	char lbrak='[';
+	char rbrak=']';
+	char bslash='\\';
 	
 	
 	char* str; //main string
@@ -512,7 +513,7 @@ int ishex(char* ch)
 
 char * escape_hex(char* str,int* final_len)
 {
-	int bslash='\\';
+	char bslash='\\';
 	int i=0,i2=0;
 	
 	int length=strlen(str);
@@ -562,60 +563,6 @@ char * escape_hex(char* str,int* final_len)
 	
 }
 
-/*
-
-char * clear_spaces(char* str)
-{
-	
-	int len=0;
-	int flag=1;
-	int i=0;
-	int j=0;
-	char* str2;
-	
-	len=strlen(str);
-    if (!(str2 = malloc((len+1) * sizeof(char))))
-        exit(1);	
-
-	memset(str2,0,len+1);
-	
-	for(i;i<len;i++)
-	{
-			
-		if(str[i]==' ' && flag==1)
-			{
-			str2[j]=str[i];
-			j++;
-			flag=0;
-			}
-		else if(str[i]==' ')
-			flag=0;
-		else
-			flag=1;
-			
-		if(flag)	
-		{
-			str2[j]=str[i];
-			j++;
-		}
-	
-	}
-	
-	fprintf(stdout,"size %d\n",j);
-	
-	char* strfin;
-    if (!(strfin = malloc((j + 1) * sizeof(char))))
-        exit(1);
-
-	memset(strfin,0,j+1);
-	memcpy(strfin,str2,j);
-
-	free(str2);
-	
-	return strfin;
-	
-}
-*/
 
 std::vector<char> process_signature(std::string str)
 {

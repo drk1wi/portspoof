@@ -1,6 +1,6 @@
 /*
- *   Portspoof  - Service Signature Emulator  / Offesnsive Defense Exploitation Framework    
- *   Copyright (C) 12012 Piotr Duszyński <piotr[at]duszynski.eu>
+ *   Portspoof  - Service Signature Emulator  / Exploitation Framework Frontend   
+ *   Copyright (C) 2012 Piotr Duszyński <piotr[at]duszynski.eu>
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the
@@ -33,6 +33,7 @@
  *   forward this exception.
  */
 
+
 #include "Server.h"
 #include "Configuration.h"
 #include "Threads.h"
@@ -51,12 +52,6 @@ int main(int argc, char **argv)
 	configuration = new Configuration();
 		
 	if(configuration->processArgs(argc,argv))
-		exit(1);
-		
-	if(configuration->processSignatureFile())
-		exit(1);
-		
-	if(configuration->readConfigFile())
 		exit(1);
 		
 	server = new Server(configuration);

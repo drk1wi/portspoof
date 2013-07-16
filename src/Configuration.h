@@ -1,6 +1,6 @@
 /*
- *   Portspoof  - Service Signature Emulator  / Offesnsive Defense Exploitation Framework       
- *   Copyright (C) 12012 Piotr Duszyński <piotr[at]duszynski.eu>
+ *   Portspoof  - Service Signature Emulator  / Exploitation Framework Frontend   
+ *   Copyright (C) 2012 Piotr Duszyński <piotr[at]duszynski.eu>
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the
@@ -43,7 +43,7 @@
 
 #define LOG_FILE "portspoof.log"
 #define CONF_FILE "portspoof.conf"
-#define SIGNATURE_FILE "signatures"
+#define SIGNATURE_FILE "portspoof_signatures"
 #define OPT_FUZZ_WORDLIST 1
 #define OPT_IP 2
 #define OPT_PORT 3
@@ -100,6 +100,7 @@ class Configuration {
 		std::string bind_ip;
 		unsigned short int port;
 		int thread_number;
+		bool fuzzing_mode;
 		bitset<20> opts;
 		Fuzzer* fuzzer;
 		std::string nmapfuzzsignatures_file;

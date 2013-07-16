@@ -1,6 +1,6 @@
 /*
- *   Portspoof  - Service Signature Emulator  / Offesnsive Defense Exploitation Framework     
- *   Copyright (C) 12012 Piotr Duszyński <piotr[at]duszynski.eu>
+ *   Portspoof  - Service Signature Emulator  / Exploitation Framework Frontend   
+ *   Copyright (C) 2012 Piotr Duszyński <piotr[at]duszynski.eu>
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the
@@ -48,7 +48,7 @@ Configuration::Configuration()
 	nmapfuzzsignatures_file = std::string(NMAP_FUZZ_FILE_SIG);	
 	fuzzpayload_file = std::string(FUZZ_FILE_PAYLOAD);	
 	thread_number=MAX_THREADS;
-		
+	fuzzing_mode=0;
 	return;
 }
 
@@ -61,18 +61,18 @@ void  Configuration::usage(void)
 {
 	fprintf(stdout,"Usage: portspoof [OPTION]...\n"
 	"Portspoof - service signature emulator / exploitation framework.\n\n"
-	  "-i			  Bind to a particular  IP address\n"
-	  "-p			  Bind to a particular PORT number\n"
-	  "-s			  Service signture regex. file\n"
-	  "-c			  Portspoof configuration file\n"
-	  "-l			  Log port scanning alerts to a file\n"
+	  "-i			  ip : Bind to a particular  IP address\n"
+	  "-p			  port : Bind to a particular PORT number\n"
+	  "-s			  file_path : Portspoof service signature regex. file\n"
+	  "-c			  file_path : Portspoof configuration file\n"
+	  "-l			  file_path : Log port scanning alerts to a file\n"
 	  "-d			  Disable syslog\n"
 	  "-v			  Be verbose\n"
-	  "-f			  FUZZER_MODE: fuzzing payload file list \n"
-	  "-n			  FUZZER_MODE: wrapping signatures file list\n"
-	  "-1			  FUZZER_MODE: generate fuzzing payloads internally\n"
-	  "-3			  FUZZER_MODE: Generate random byte values !\n"
-	  "-2			  switch to simple reply mode (works for anything apart from Nmap)!\n"
+	  "-f			  file_path : FUZZER_MODE - fuzzing payload file list \n"
+	  "-n			  file_path : FUZZER_MODE - wrapping signatures file list\n"
+	  "-1			  FUZZER_MODE - generate fuzzing payloads internally\n"
+	  "-3			  FUZZER_MODE -Generate random byte values !\n"
+	  "-2			  switch to simple reply mode (doesn't work from Nmap)!\n"
 	  "-h			  display this help and exit\n\n"
 	"Without any OPTION - use default values and continue\n");
 	
@@ -116,10 +116,8 @@ bool Configuration::processArgs(int argc, char** argv)
 		this->opts[OPT_LOG_FILE]=1;
 			this->logfile  = std::string(optarg);
 			fprintf(stdout,"-> Using log file %s\n",this->logfile.c_str());
-
 			//check log file
 			Utils::log_create(configuration->getLogFile().c_str());
-
 			break;	
 		case 'f':
 		this->opts[OPT_FUZZ_WORDLIST]=1;
@@ -162,9 +160,21 @@ bool Configuration::processArgs(int argc, char** argv)
 	if(this->getConfigValue(OPT_FUZZ_NMAP) ||this->getConfigValue(OPT_FUZZ_WORDLIST) || this->getConfigValue(OPT_FUZZ_INTERNAL))
 		{
 		this->fuzzer=new Fuzzer(this);
-		this->thread_number=1;
+		this->thread_number=1; //set thread count to 1 due to race conditions 
+		this->fuzzing_mode=1;
 		}
-	
+
+	if(this->fuzzing_mode == 0)
+	{
+
+	if(this->processSignatureFile())
+		exit(1);
+		
+	if(this->readConfigFile())
+		exit(1);
+
+	}
+
 	return 0;
 }
 
