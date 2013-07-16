@@ -47,7 +47,7 @@
 
 using namespace std;
 
-#define BUFSIZE 1024
+#define BUFSIZE 2048
 #define SIGNATURES_SIZE 65535 // max port range
 
 std::vector<char> process_signature(std::string str);

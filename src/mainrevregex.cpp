@@ -12,10 +12,56 @@
 #include <pthread.h>
 #include <unistd.h>
 
+
 using namespace std;
 
 
-string revregexn(string str)
+std::vector<char> str2vector( std::string s)
+{
+	std::vector<char> result_vector;
+	
+	for(int i=0; i<s.length();i++)
+		result_vector.push_back(s[i]);
+		
+	return result_vector;
+	
+	
+}
+
+std::vector<char> cutvector(std::vector<char> str,int start_offset, int end_offset)
+{
+
+	std::vector<char> result_vector;
+
+
+	for(int i=start_offset;i<=end_offset;i++)
+			result_vector.push_back(str[i]);
+
+	
+		return result_vector;
+
+}
+
+
+std::vector<char> mergevector(std::vector<char> str,std::vector<char> str2)
+{
+
+	std::vector<char> result_vector;
+
+	for(int i=0;i<str.size();i++)
+		result_vector.push_back(str[i]);
+	
+	for(int i=0;i<str2.size();i++)
+		result_vector.push_back(str2[i]);
+
+	return result_vector;
+
+}
+
+
+
+
+std::vector<char> revregexn(std::vector<char> str)
 {
 
 	//defines
@@ -24,59 +70,112 @@ string revregexn(string str)
 	char lbrak='[';
 	char rbrak=']';
 	char bslash='\\';
-	//
 
+	std::vector<char> result_vector=str;
+	std::vector<char> tmp;
 
-	stringstream ss;	
-	std::vector<char> result_vector;
-	std::string::iterator lastcut=str.begin();
-	std::string::iterator iter1;
-	std::string::iterator iter2;
-	string result_string=str;
-
-	for(iter1=str.begin();iter1<str.end();iter1++) // remove () [regex special char.] from  the string
+	repeat_remove:
+	tmp.clear();
+	
+	for(int i=0;i<result_vector.size();i++) // remove parenthises
 	{
-		if(*iter1==lnaw && ( (iter1 == str.begin() ) || *(iter1-1)!=bslash))
+		if(result_vector[i]==lnaw && ( (i == 0 ) || result_vector[i-1]!=bslash))
 		{
-			ss<<str.substr(lastcut - str.begin(),iter1 - str.begin());
 
-			for(iter2=iter1;iter2<str.end();iter2++)
+			for(int j=i;j<result_vector.size();)
 			{
-				if(*iter2==rnaw && *(iter2-1)!=bslash ){
+				if(result_vector[j]==rnaw && result_vector[j-1]!=bslash ){
 					
-					ss<<str.substr(iter1+1 - str.begin(),iter2-2-str.begin());
-					lastcut=iter2;
-					iter1=iter2;
-					break;
+					tmp=mergevector(tmp,cutvector(result_vector,0,i-1));
+					tmp=mergevector(tmp,cutvector(result_vector,i+1,j-1));
+					tmp=mergevector(tmp,cutvector(result_vector,j+1,result_vector.size()-1));
+					result_vector=tmp;
+					goto repeat_remove;
+					}
+
+				j++;
+
+				if(j==result_vector.size())
+				{
+
+				fprintf(stdout,"Regex error : !!");
+				
+				for(int k=0;k<result_vector.size();k++)
+					cout<<result_vector[k];
+				cout<<endl;
 				}
-				//fprintf(stdout,"Regex error %s !! \n",str.c_str());
 			}
 
 		}
 
 	}
 
-	//process results
+	repeat_remove2:
+	tmp.clear();
 
-	if(iter1==str.end())
+	for(int i=0;i<result_vector.size();i++) // 
 	{
-		ss<<str.substr(lastcut +1 - str.begin(),iter1-str.begin());
-		result_string=ss.str();
+		if(result_vector[i]==lbrak && ( (i == 0 ) || result_vector[i-1]!=bslash))
+		{
+
+			for(int j=i;j<result_vector.size();)
+			{
+				if(result_vector[j]==rbrak && result_vector[j-1]!=bslash ){
+					
+					tmp=mergevector(tmp,cutvector(result_vector,0,i-1));
+					tmp=mergevector(tmp,cutvector(result_vector,i+1,j-1));
+					tmp=mergevector(tmp,cutvector(result_vector,j+1,result_vector.size()-1));
+					result_vector=tmp;
+					goto repeat_remove2;
+					}
+
+				j++;
+
+				if(j==result_vector.size())
+				{
+
+				fprintf(stdout,"Regex error : !!");
+				
+				for(int k=0;k<result_vector.size();k++)
+					cout<<result_vector[k];
+				cout<<endl;
+				}
+			}
+
+		}
 
 	}
-
-
-	return result_string;
+	return result_vector;
 }
 
 
 int main(int argc, char **argv)
 {
 
-string s ="1(234)567\n";
-cout<<revregexn(s);
+std::vector<char> result_vector1;
+std::vector<char> result_vector;
+
+
+string s ="123[xxx]sfssf\n";
+
+result_vector=revregexn(str2vector(s));
+
+for(int i=0;i<result_vector.size();i++)
+	cout<<result_vector[i];
+
+
+
+s ="(1xx)\n";
+
+result_vector=revregexn(str2vector(s));
+
+for(int i=0;i<result_vector.size();i++)
+	cout<<result_vector[i];
+
+/*
 s ="(1234)5\n";
 cout<<revregexn(s);
+*/
 
 return 0;
 

@@ -40,7 +40,6 @@
 
 #define CONFSEPARATOR "/"
 #define DEFAULT_PORT 4444
-#define BUFSIZE 1024
 
 #define LOG_FILE "portspoof.log"
 #define CONF_FILE "portspoof.conf"
