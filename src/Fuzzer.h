@@ -1,6 +1,6 @@
 /*
- *   Portspoof  - Service Signature Emulator  / Offesnsive Defense Exploitation Framework    
- *   Copyright (C) 12012 Piotr Duszyński <piotr[at]duszynski.eu>
+ *   Portspoof  - Service Signature Emulator  / Exploitation Framework Frontend   
+ *   Copyright (C) 2012 Piotr Duszyński <piotr[at]duszynski.eu>
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the
@@ -33,6 +33,7 @@
  *   forward this exception.
  */
 
+
  
 
 #ifndef FUZZER_H
@@ -41,7 +42,6 @@
 #include <string>
 #include <stdio.h>
 #include <ctype.h>
-#include <pcap.h>
 #include <map>
 #include <vector>
 #include <sstream>

@@ -1,6 +1,6 @@
 /*
- *   Portspoof  - Service Signature Emulator  / Offesnsive Defense Exploitation Framework     
- *   Copyright (C) 12012 Piotr Duszyński <piotr[at]duszynski.eu>
+ *   Portspoof  - Service Signature Emulator  / Exploitation Framework Frontend   
+ *   Copyright (C) 2012 Piotr Duszyński <piotr[at]duszynski.eu>
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the
@@ -43,12 +43,15 @@ Configuration::Configuration()
 	signaturefile = std::string(SIGNATURE_FILE);
 	logfile = std::string(LOG_FILE);
 	bind_ip=std::string();
+	username=std::string(DAEMON_USER);
+	group=std::string(DAEMON_USER);
+
 	port=DEFAULT_PORT;	
 	opts=0;
 	nmapfuzzsignatures_file = std::string(NMAP_FUZZ_FILE_SIG);	
 	fuzzpayload_file = std::string(FUZZ_FILE_PAYLOAD);	
 	thread_number=MAX_THREADS;
-		
+	fuzzing_mode=0;
 	return;
 }
 
@@ -61,18 +64,19 @@ void  Configuration::usage(void)
 {
 	fprintf(stdout,"Usage: portspoof [OPTION]...\n"
 	"Portspoof - service signature emulator / exploitation framework.\n\n"
-	  "-i			  Bind to a particular  IP address\n"
-	  "-p			  Bind to a particular PORT number\n"
-	  "-s			  Service signture regex. file\n"
-	  "-c			  Portspoof configuration file\n"
-	  "-l			  Log port scanning alerts to a file\n"
+	  "-i			  ip : Bind to a particular  IP address\n"
+	  "-p			  port : Bind to a particular PORT number\n"
+	  "-D			  run as daemon process\n"
+	  "-s			  file_path : Portspoof service signature regex. file\n"
+	  "-c			  file_path : Portspoof configuration file\n"
+	  "-l			  file_path : Log port scanning alerts to a file\n"
 	  "-d			  Disable syslog\n"
 	  "-v			  Be verbose\n"
-	  "-f			  FUZZER_MODE: fuzzing payload file list \n"
-	  "-n			  FUZZER_MODE: wrapping signatures file list\n"
-	  "-1			  FUZZER_MODE: generate fuzzing payloads internally\n"
-	  "-3			  FUZZER_MODE: Generate random byte values !\n"
-	  "-2			  switch to simple reply mode (works for anything apart from Nmap)!\n"
+	  "-f			  file_path : FUZZER_MODE - fuzzing payload file list \n"
+	  "-n			  file_path : FUZZER_MODE - wrapping signatures file list\n"
+	  "-1			  FUZZER_MODE - generate fuzzing payloads internally\n"
+	  "-3			  FUZZER_MODE -Generate random byte values !\n"
+	  "-2			  switch to simple reply mode (doesn't work from Nmap)!\n"
 	  "-h			  display this help and exit\n\n"
 	"Without any OPTION - use default values and continue\n");
 	
@@ -84,7 +88,7 @@ bool Configuration::processArgs(int argc, char** argv)
 	int	ch;
 	extern char *__progname;
 	
-	while ((ch = getopt(argc, argv,"l:i:p:s:c:f:n:dvh123")) != -1) {
+	while ((ch = getopt(argc, argv,"l:i:p:s:c:f:n:dvh123D")) != -1) {
 		switch (ch) {
 		case 'i':
 			this->bind_ip = std::string(optarg);
@@ -112,14 +116,15 @@ bool Configuration::processArgs(int argc, char** argv)
 		this->opts[OPT_SYSLOG_DIS]=1;
 			fprintf(stdout,"-> Syslog logging disabled.\n");
 			break;
+		case 'D':
+		this->opts[OPT_RUN_AS_D]=1;
+			break;
 		case 'l':
 		this->opts[OPT_LOG_FILE]=1;
 			this->logfile  = std::string(optarg);
 			fprintf(stdout,"-> Using log file %s\n",this->logfile.c_str());
-
 			//check log file
 			Utils::log_create(configuration->getLogFile().c_str());
-
 			break;	
 		case 'f':
 		this->opts[OPT_FUZZ_WORDLIST]=1;
@@ -162,9 +167,21 @@ bool Configuration::processArgs(int argc, char** argv)
 	if(this->getConfigValue(OPT_FUZZ_NMAP) ||this->getConfigValue(OPT_FUZZ_WORDLIST) || this->getConfigValue(OPT_FUZZ_INTERNAL))
 		{
 		this->fuzzer=new Fuzzer(this);
-		this->thread_number=1;
+		this->thread_number=1; //set thread count to 1 due to race conditions 
+		this->fuzzing_mode=1;
 		}
-	
+
+	if(this->fuzzing_mode == 0)
+	{
+
+	if(this->processSignatureFile())
+		exit(1);
+		
+	if(this->readConfigFile())
+		exit(1);
+
+	}
+
 	return 0;
 }
 
@@ -204,9 +221,30 @@ unsigned short int Configuration::getPort()
 
 int Configuration::getThreadNr()
 {
-
 	return this->thread_number;
 }
+
+
+int Configuration::getUserid()
+{
+        struct passwd *pwd = getpwnam(this->username.c_str()); 
+        if(pwd) return pwd->pw_uid;
+        
+        return -1;
+}
+
+
+int Configuration::getGroupid()
+{
+        struct group *grp = getgrnam(this->group.c_str()); 
+        if(grp) return grp->gr_gid;
+
+        return -1;
+
+}
+
+
+
 
 std::vector<char> Configuration::mapPort2Signature(unsigned short port)
 {	

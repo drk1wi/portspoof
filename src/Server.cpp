@@ -1,6 +1,6 @@
 /*
- *   Portspoof  - Service Signature Emulator  / Offesnsive Defense Exploitation Framework        
- *   Copyright (C) 12012 Piotr Duszyński <piotr[at]duszynski.eu>
+ *   Portspoof  - Service Signature Emulator  / Exploitation Framework Frontend   
+ *   Copyright (C) 2012 Piotr Duszyński <piotr[at]duszynski.eu>
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the
@@ -32,6 +32,7 @@
  *   also makes it possible to release a modified version which carries
  *   forward this exception.
  */
+
 
 #include "Server.h"
 
@@ -172,4 +173,88 @@ int Server::choose_thread()
 		return -1;
 	
 	return min;
+}
+
+
+
+void Server::daemonize()
+{
+
+	const string &dir = "/";
+    const std::string &stdinfile = "/dev/null";
+    const std::string &stdoutfile = "/dev/null";
+    const std::string &stderrfile = "/dev/null";
+
+
+  umask(0);
+/* 
+  rlimit rl;
+  if (getrlimit(RLIMIT_NOFILE, &rl) < 0) 
+  {
+    throw std::runtime_error(strerror(errno));
+  }
+ 
+
+ 
+*/
+  
+  pid_t pid;
+  if ((pid = fork()) < 0) 
+  {
+    throw std::runtime_error(strerror(errno));
+  } else if (pid != 0) { //parent
+    exit(0);
+  }
+
+  setsid();
+ 
+  if (!dir.empty() && chdir(dir.c_str()) < 0) 
+  {
+    throw std::runtime_error(strerror(errno));
+  }
+ 
+
+   if (setgid(this->configuration->getGroupid()) != 0)
+   {
+ 	fprintf(stdout,"setgid: Unable to drop group privileges: %s", strerror(errno));
+	fflush(stdout);
+	exit(-1);
+   }
+   
+
+   if (setuid(this->configuration->getUserid()) != 0)
+   	{
+ 	fprintf(stdout,"setuid: Unable to drop user privileges: %s", strerror(errno));
+	fflush(stdout);
+	exit(-1);
+   }
+
+
+/*
+  if (rl.rlim_max == RLIM_INFINITY) 
+  {
+    rl.rlim_max = 1024;
+  }
+ 
+  for (unsigned int i = 0; i < rl.rlim_max; i++) 
+  {
+    close(i);
+  }
+ 
+ */
+
+  int fd0 = open(stdinfile.c_str(), O_RDONLY);
+  int fd1 = open(stdoutfile.c_str(),
+      O_WRONLY|O_CREAT|O_APPEND, S_IRUSR|S_IWUSR);
+  int fd2 = open(stderrfile.c_str(),
+      O_WRONLY|O_CREAT|O_APPEND, S_IRUSR|S_IWUSR);
+ 
+ /*
+  if (fd0 != STDIN_FILENO || fd1 != STDOUT_FILENO || fd2 != STDERR_FILENO) 
+  {
+    throw runtime_error("new standard file descriptors were not opened as expected");
+  }
+  */
+
+
 }
