@@ -42,7 +42,6 @@
 #include <string>
 #include <stdio.h>
 #include <ctype.h>
-#include <pcap.h>
 #include <map>
 #include <vector>
 #include <sstream>

@@ -1,13 +1,12 @@
 #!/bin/sh
-# Starts and stops Portspoof
+# Starts and stops Portspoof daemon
 #
-
 
 case "$1" in
 start)
 	
              if !  pidof portspoof >/dev/null; then
-                   /usr/local/bin/portspoof -c /usr/local/etc/portspoof.conf -s /usr/local/etc/portspoof_signatures 
+                   /usr/local/bin/portspoof -D -c /usr/local/etc/portspoof.conf -s /usr/local/etc/portspoof_signatures 
                    echo "Starting Portspoof..."
              else
                     echo "Portspoof already running.."

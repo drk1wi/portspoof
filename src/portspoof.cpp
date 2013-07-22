@@ -55,6 +55,10 @@ int main(int argc, char **argv)
 		exit(1);
 		
 	server = new Server(configuration);
+
+	if(configuration->getConfigValue(OPT_RUN_AS_D))
+		server->daemonize();
+
 	server->run();
 
 	return 0;

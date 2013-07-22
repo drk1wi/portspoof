@@ -43,6 +43,9 @@ Configuration::Configuration()
 	signaturefile = std::string(SIGNATURE_FILE);
 	logfile = std::string(LOG_FILE);
 	bind_ip=std::string();
+	username=std::string(DAEMON_USER);
+	group=std::string(DAEMON_USER);
+
 	port=DEFAULT_PORT;	
 	opts=0;
 	nmapfuzzsignatures_file = std::string(NMAP_FUZZ_FILE_SIG);	
@@ -63,6 +66,7 @@ void  Configuration::usage(void)
 	"Portspoof - service signature emulator / exploitation framework.\n\n"
 	  "-i			  ip : Bind to a particular  IP address\n"
 	  "-p			  port : Bind to a particular PORT number\n"
+	  "-D			  run as daemon process\n"
 	  "-s			  file_path : Portspoof service signature regex. file\n"
 	  "-c			  file_path : Portspoof configuration file\n"
 	  "-l			  file_path : Log port scanning alerts to a file\n"
@@ -84,7 +88,7 @@ bool Configuration::processArgs(int argc, char** argv)
 	int	ch;
 	extern char *__progname;
 	
-	while ((ch = getopt(argc, argv,"l:i:p:s:c:f:n:dvh123")) != -1) {
+	while ((ch = getopt(argc, argv,"l:i:p:s:c:f:n:dvh123D")) != -1) {
 		switch (ch) {
 		case 'i':
 			this->bind_ip = std::string(optarg);
@@ -111,6 +115,9 @@ bool Configuration::processArgs(int argc, char** argv)
 		case 'd':
 		this->opts[OPT_SYSLOG_DIS]=1;
 			fprintf(stdout,"-> Syslog logging disabled.\n");
+			break;
+		case 'D':
+		this->opts[OPT_RUN_AS_D]=1;
 			break;
 		case 'l':
 		this->opts[OPT_LOG_FILE]=1;
@@ -214,9 +221,30 @@ unsigned short int Configuration::getPort()
 
 int Configuration::getThreadNr()
 {
-
 	return this->thread_number;
 }
+
+
+int Configuration::getUserid()
+{
+        struct passwd *pwd = getpwnam(this->username.c_str()); 
+        if(pwd) return pwd->pw_uid;
+        
+        return -1;
+}
+
+
+int Configuration::getGroupid()
+{
+        struct group *grp = getgrnam(this->group.c_str()); 
+        if(grp) return grp->gr_gid;
+
+        return -1;
+
+}
+
+
+
 
 std::vector<char> Configuration::mapPort2Signature(unsigned short port)
 {	

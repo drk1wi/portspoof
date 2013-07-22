@@ -44,6 +44,10 @@
 #define LOG_FILE "portspoof.log"
 #define CONF_FILE "portspoof.conf"
 #define SIGNATURE_FILE "portspoof_signatures"
+
+#define DAEMON_USER "daemon"
+#define DAEMON_GROUP "daemon"
+
 #define OPT_FUZZ_WORDLIST 1
 #define OPT_IP 2
 #define OPT_PORT 3
@@ -56,14 +60,14 @@
 #define OPT_FUZZ_INTERNAL 10
 #define OPT_NOT_NMAP_SCANNER 11
 #define OPT_FUZZ_RANDOM 12
+#define OPT_RUN_AS_D 13
+
 
 #define MAX_PORTS 65535
-
 
 #include <string>
 #include <stdio.h>
 #include <ctype.h>
-#include <pcap.h>
 #include <map>
 #include <vector>
 #include <sstream>
@@ -72,6 +76,11 @@
 #include <iostream>
 #include <ctime> 
 #include <bitset>
+#include <sys/types.h>
+#include <stdio.h>
+#include <pwd.h> 
+#include <grp.h>
+#include <unistd.h>
 
 
 #include "Utils.h"
@@ -98,6 +107,9 @@ class Configuration {
 		std::string signaturefile;
 		std::string logfile;
 		std::string bind_ip;
+		std::string username;
+		std::string group;
+
 		unsigned short int port;
 		int thread_number;
 		bool fuzzing_mode;
@@ -127,7 +139,8 @@ class Configuration {
 		bool getConfigValue(int value);
 		unsigned short int getPort();
 		int getThreadNr();
-			
+		int getGroupid();
+		int getUserid();
 };
 
 

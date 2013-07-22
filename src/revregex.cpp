@@ -33,6 +33,7 @@
  *   forward this exception.
  */
 
+// TODO: TO BE ENTIRELY REWRITTEN!
 
 #include "revregex.h"
 

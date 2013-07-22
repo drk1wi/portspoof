@@ -42,6 +42,12 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <pwd.h>
+#include <unistd.h>
+#include <stdexcept>
+#include <sys/resource.h>
 
 #include <time.h> 
 #include "Threads.h" 
@@ -66,6 +72,7 @@ class Server{
 		Server(Configuration* configuration);
 		int choose_thread();
 		bool run();
+		void daemonize();
 };
 
 #endif
