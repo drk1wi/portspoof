@@ -1,6 +1,6 @@
 /*
- *   portspoof       Service signature obfucastor 
- *   Copyright (C) 12012 Piotr Duszyński <piotr[at]duszynski.eu>
+ *   Portspoof  - Service Signature Emulator  / Exploitation Framework Frontend   
+ *   Copyright (C) 2012 Piotr Duszyński <piotr[at]duszynski.eu>
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the
@@ -16,16 +16,16 @@
  *   with this program; if not, see <http://www.gnu.org/licenses>.
  * 
  *   Linking portspoof statically or dynamically with other modules is making
- *   a combined work based on portspoof. Thus, the terms and conditions of
+ *   a combined work based on Portspoof. Thus, the terms and conditions of
  *   the GNU General Public License cover the whole combination.
  * 
- *   In addition, as a special exception, the copyright holder of portspoof
- *   gives you permission to combine portspoof with free software programs or
+ *   In addition, as a special exception, the copyright holder of Portspoof
+ *   gives you permission to combine Portspoof with free software programs or
  *   libraries that are released under the GNU LGPL. You may copy
  *   and distribute such a system following the terms of the GNU GPL for
- *   portspoof and the licenses of the other code concerned.
+ *   Portspoof and the licenses of the other code concerned.
  * 
- *   Note that people who make modified versions of portspoof are not obligated
+ *   Note that people who make modified versions of Portspoof are not obligated
  *   to grant this special exception for their modified versions; it is their
  *   choice whether to do so. The GNU General Public License gives permission
  *   to release a modified version without this exception; this exception
@@ -33,8 +33,9 @@
  *   forward this exception.
  */
 
+
 #include <pthread.h>
-#include "threads.h"
+#include "Threads.h"
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -59,12 +60,16 @@
 
 #include "revregex.h"
 #include "Configuration.h"
+#include "Server.h"
+
+#ifndef CONNECTION_H
+#define CONNECTION_H
 
 #define SO_ORIGINAL_DST 80
 #define TCPSTATES
 
-
-
+extern pthread_cond_t new_connection_cond;
+extern pthread_mutex_t new_connection_mutex;
 extern Thread threads[MAX_THREADS];
 
 class Configuration;
@@ -72,3 +77,6 @@ extern Configuration* configuration;
 
 void nonblock(int sockfd);
 void* process_connection(void *arg);
+
+
+#endif

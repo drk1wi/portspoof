@@ -1,3 +1,40 @@
+/*
+ *   Portspoof  - Service Signature Emulator  / Exploitation Framework Frontend   
+ *   Copyright (C) 2012 Piotr Duszyński <piotr[at]duszynski.eu>
+ *
+ *   This program is free software; you can redistribute it and/or modify it
+ *   under the terms of the GNU General Public License as published by the
+ *   Free Software Foundation; either version 2 of the License, or (at your
+ *   option) any later version.
+ * 
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *   See the GNU General Public License for more details.
+ * 
+ *   You should have received a copy of the GNU General Public License along
+ *   with this program; if not, see <http://www.gnu.org/licenses>.
+ * 
+ *   Linking portspoof statically or dynamically with other modules is making
+ *   a combined work based on Portspoof. Thus, the terms and conditions of
+ *   the GNU General Public License cover the whole combination.
+ * 
+ *   In addition, as a special exception, the copyright holder of Portspoof
+ *   gives you permission to combine Portspoof with free software programs or
+ *   libraries that are released under the GNU LGPL. You may copy
+ *   and distribute such a system following the terms of the GNU GPL for
+ *   Portspoof and the licenses of the other code concerned.
+ * 
+ *   Note that people who make modified versions of Portspoof are not obligated
+ *   to grant this special exception for their modified versions; it is their
+ *   choice whether to do so. The GNU General Public License gives permission
+ *   to release a modified version without this exception; this exception
+ *   also makes it possible to release a modified version which carries
+ *   forward this exception.
+ */
+
+ 
+
 #include "Configuration.h"
 
 Configuration::Configuration()
@@ -6,11 +43,15 @@ Configuration::Configuration()
 	signaturefile = std::string(SIGNATURE_FILE);
 	logfile = std::string(LOG_FILE);
 	bind_ip=std::string();
+	username=std::string(DAEMON_USER);
+	group=std::string(DAEMON_USER);
+
 	port=DEFAULT_PORT;	
 	opts=0;
 	nmapfuzzsignatures_file = std::string(NMAP_FUZZ_FILE_SIG);	
 	fuzzpayload_file = std::string(FUZZ_FILE_PAYLOAD);	
-		
+	thread_number=MAX_THREADS;
+	fuzzing_mode=0;
 	return;
 }
 
@@ -22,17 +63,20 @@ bool Configuration::getConfigValue(int value)
 void  Configuration::usage(void)
 {
 	fprintf(stdout,"Usage: portspoof [OPTION]...\n"
-	"Portspoof - service signature obfuscator.\n\n"
-	  "-i             bind to a user defined IP address\n"
-	  "-p			  bind to a user defined PORT number\n"
-	  "-s			  custom signture file\n"
-	  "-c			  configuration file\n"
-	  "-l			  log port scanning alerts to a file\n"
-	  "-d			  disable syslog\n"
-	  "-v			  be verbose\n"
-	  "-f			  read fuzz payload list\n"
-	  "-1			  generate fuzzing payloads\n"
-	  "-n			  nmap wrap fuzz signatures\n"
+	"Portspoof - service signature emulator / exploitation framework.\n\n"
+	  "-i			  ip : Bind to a particular  IP address\n"
+	  "-p			  port : Bind to a particular PORT number\n"
+	  "-D			  run as daemon process\n"
+	  "-s			  file_path : Portspoof service signature regex. file\n"
+	  "-c			  file_path : Portspoof configuration file\n"
+	  "-l			  file_path : Log port scanning alerts to a file\n"
+	  "-d			  Disable syslog\n"
+	  "-v			  Be verbose\n"
+	  "-f			  file_path : FUZZER_MODE - fuzzing payload file list \n"
+	  "-n			  file_path : FUZZER_MODE - wrapping signatures file list\n"
+	  "-1			  FUZZER_MODE - generate fuzzing payloads internally\n"
+	  "-3			  FUZZER_MODE -Generate random byte values !\n"
+	  "-2			  switch to simple reply mode (doesn't work from Nmap)!\n"
 	  "-h			  display this help and exit\n\n"
 	"Without any OPTION - use default values and continue\n");
 	
@@ -44,7 +88,7 @@ bool Configuration::processArgs(int argc, char** argv)
 	int	ch;
 	extern char *__progname;
 	
-	while ((ch = getopt(argc, argv,"l:i:p:s:c:f:n:dvh123")) != -1) {
+	while ((ch = getopt(argc, argv,"l:i:p:s:c:f:n:dvh123D")) != -1) {
 		switch (ch) {
 		case 'i':
 			this->bind_ip = std::string(optarg);
@@ -62,7 +106,7 @@ bool Configuration::processArgs(int argc, char** argv)
 		case 'c':
 			this->configfile  = std::string(optarg);
 			this->opts[OPT_CONFIG_FILE]=1;
-			
+			fprintf(stdout,"-> Using user defined regex. signature file %s\n",this->configfile.c_str());
 			break;
 		case 'v':
 		this->opts[OPT_DEBUG]=1;
@@ -72,24 +116,29 @@ bool Configuration::processArgs(int argc, char** argv)
 		this->opts[OPT_SYSLOG_DIS]=1;
 			fprintf(stdout,"-> Syslog logging disabled.\n");
 			break;
+		case 'D':
+		this->opts[OPT_RUN_AS_D]=1;
+			break;
 		case 'l':
 		this->opts[OPT_LOG_FILE]=1;
 			this->logfile  = std::string(optarg);
 			fprintf(stdout,"-> Using log file %s\n",this->logfile.c_str());
+			//check log file
+			Utils::log_create(configuration->getLogFile().c_str());
 			break;	
 		case 'f':
 		this->opts[OPT_FUZZ_WORDLIST]=1;
 			this->fuzzpayload_file=std::string(optarg);
-			fprintf(stdout,"-> Reading fuzzing payloads from a file!\n");
+			fprintf(stdout,"-> Reading fuzzing payloads from a file %s!\n",this->fuzzpayload_file.c_str());
 			break;
 		case 'n':
 			this->opts[OPT_FUZZ_NMAP]=1;
 			this->nmapfuzzsignatures_file=std::string(optarg);
-			fprintf(stdout,"-> NMAP wrapper mode!\n");
+			fprintf(stdout,"-> Payload wrapping mode!\n");
 			break;
 		case '1':
 			this->opts[OPT_FUZZ_INTERNAL]=1;
-			fprintf(stdout,"-> Generate fuzzing payloads!\n");
+			fprintf(stdout,"-> Generate fuzzing payloads internally!\n");
 			break;
 		case '2':
 			this->opts[OPT_NOT_NMAP_SCANNER]=1;
@@ -116,9 +165,23 @@ bool Configuration::processArgs(int argc, char** argv)
 	}
 			
 	if(this->getConfigValue(OPT_FUZZ_NMAP) ||this->getConfigValue(OPT_FUZZ_WORDLIST) || this->getConfigValue(OPT_FUZZ_INTERNAL))
+		{
 		this->fuzzer=new Fuzzer(this);
-	
-	
+		this->thread_number=1; //set thread count to 1 due to race conditions 
+		this->fuzzing_mode=1;
+		}
+
+	if(this->fuzzing_mode == 0)
+	{
+
+	if(this->processSignatureFile())
+		exit(1);
+		
+	if(this->readConfigFile())
+		exit(1);
+
+	}
+
 	return 0;
 }
 
@@ -155,22 +218,37 @@ unsigned short int Configuration::getPort()
 	return this->port;
 }
 
+
+int Configuration::getThreadNr()
+{
+	return this->thread_number;
+}
+
+
+int Configuration::getUserid()
+{
+        struct passwd *pwd = getpwnam(this->username.c_str()); 
+        if(pwd) return pwd->pw_uid;
+        
+        return -1;
+}
+
+
+int Configuration::getGroupid()
+{
+        struct group *grp = getgrnam(this->group.c_str()); 
+        if(grp) return grp->gr_gid;
+
+        return -1;
+
+}
+
+
+
+
 std::vector<char> Configuration::mapPort2Signature(unsigned short port)
 {	
-	/*
-	if(this->opts&OPT_FUZZ_WORDLIST
-	{
-		
-		std::string input_line;
-		std::getline(std::cin, input_line);
-		std::vector<char> result_vector;
-
-		for(int i=0; i<input_line.length();i++)
-			result_vector.push_back(input_line[i]);
-		return result_vector;
-		
-	}
-	*/
+	
 	if(this->opts[OPT_FUZZ_NMAP] || this->opts[OPT_FUZZ_INTERNAL] || this->opts[OPT_FUZZ_WORDLIST])
 	{
 		std::vector<char> result_vector;		
@@ -198,11 +276,11 @@ bool Configuration::processSignatureFile()
 	fclose(fp);
 	
 				  // set  random mapping
-				  //srand((unsigned)time(0)); 	
+				  srand((unsigned)time(0)); 	
 				  for(int i=0;i<MAX_PORTS;i++)
 					{
-					//portsignatureemap.insert(make_pair(i,process_signature(rawsignatures[rand()%rawsignatures.size()])));
-					portsignatureemap.insert(make_pair(i,process_signature(rawsignatures[i%rawsignatures.size()])));
+					portsignatureemap.insert(make_pair(i,process_signature(rawsignatures[rand()%rawsignatures.size()])));
+					//portsignatureemap.insert(make_pair(i,process_signature(rawsignatures[i%rawsignatures.size()])));
 			
 					}
 					

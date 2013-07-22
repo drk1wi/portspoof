@@ -1,3 +1,10 @@
+1.0 - 01/08/2013 - Linux
+* Major release. 
+* Ported to C++. 
+* Example NMAP domino-enum-password NSE, McAffe UTF7 XSS, etc. exploits added . 
+* Fuzzer functionality added.
+* Many minor improvements and enhancements have been made.
+
 0.3 28/09/2012
 * Configuration file
 * Droppped BSD support due to time constraints 

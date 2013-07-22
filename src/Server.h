@@ -1,6 +1,6 @@
 /*
- *   Portspoof  - Service Signature Emulator  / Offesnsive Defense Exploitation Framework       
- *   Copyright (C) 12012 Piotr Duszyński <piotr[at]duszynski.eu>
+ *   Portspoof  - Service Signature Emulator  / Exploitation Framework Frontend   
+ *   Copyright (C) 2012 Piotr Duszyński <piotr[at]duszynski.eu>
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the
@@ -32,6 +32,7 @@
  *   also makes it possible to release a modified version which carries
  *   forward this exception.
  */
+
  
 #ifndef SERVER_H
 #define SERVER_H
@@ -41,6 +42,12 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <pwd.h>
+#include <unistd.h>
+#include <stdexcept>
+#include <sys/resource.h>
 
 #include <time.h> 
 #include "Threads.h" 
@@ -65,6 +72,7 @@ class Server{
 		Server(Configuration* configuration);
 		int choose_thread();
 		bool run();
+		void daemonize();
 };
 
 #endif

@@ -1,6 +1,6 @@
 /*
- *   portspoof       Service signature obfucastor 
- *   Copyright (C) 12012 Piotr Duszyński <piotr[at]duszynski.eu>
+ *   Portspoof  - Service Signature Emulator  / Exploitation Framework Frontend   
+ *   Copyright (C) 2012 Piotr Duszyński <piotr[at]duszynski.eu>
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the
@@ -16,22 +16,24 @@
  *   with this program; if not, see <http://www.gnu.org/licenses>.
  * 
  *   Linking portspoof statically or dynamically with other modules is making
- *   a combined work based on portspoof. Thus, the terms and conditions of
+ *   a combined work based on Portspoof. Thus, the terms and conditions of
  *   the GNU General Public License cover the whole combination.
  * 
- *   In addition, as a special exception, the copyright holder of portspoof
- *   gives you permission to combine portspoof with free software programs or
+ *   In addition, as a special exception, the copyright holder of Portspoof
+ *   gives you permission to combine Portspoof with free software programs or
  *   libraries that are released under the GNU LGPL. You may copy
  *   and distribute such a system following the terms of the GNU GPL for
- *   portspoof and the licenses of the other code concerned.
+ *   Portspoof and the licenses of the other code concerned.
  * 
- *   Note that people who make modified versions of portspoof are not obligated
+ *   Note that people who make modified versions of Portspoof are not obligated
  *   to grant this special exception for their modified versions; it is their
  *   choice whether to do so. The GNU General Public License gives permission
  *   to release a modified version without this exception; this exception
  *   also makes it possible to release a modified version which carries
  *   forward this exception.
  */
+
+// TODO: TO BE ENTIRELY REWRITTEN!
 
 #include "revregex.h"
 
@@ -42,10 +44,10 @@
 char * revregex_bracket(char * str,int start_offset,int end_offset, int* retlen) //index: '[' ... ']' 
 {
 	//TODO hex support
-	int bslash='\\';
-	int word='w';
-	int digit='d';
-	int range='-';
+	char bslash='\\';
+	char word='w';
+	char digit='d';
+	char range='-';
 
 	//flags
 	char nnot=0;
@@ -273,13 +275,13 @@ char * revregex_bracket(char * str,int start_offset,int end_offset, int* retlen)
 char * fill_specialchars(char * str,int* param_len, int start_offset,int end_offset)
 {
 	
-	int bslash='\\';
-	int word='w';
-	int digit='d';
-	int dot='.';
-	int newline='n';
-	int creturn='r';
-	int tab='t';
+	char bslash='\\';
+	char word='w';
+	char digit='d';
+	char dot='.';
+	char newline='n';
+	char creturn='r';
+	char tab='t';
 	
 	
 	char* tmp;	// tmp string for merging
@@ -357,17 +359,17 @@ char * fill_specialchars(char * str,int* param_len, int start_offset,int end_off
 	memset(fin,0,finlen);
 	memcpy(fin,tmp,finlen-1);
 	*param_len=finlen-1;
-	
+	free(tmp);
 		return fin;
 }
 
 char* revregex(char * param_str,int* param_len,int start_offset,int end_offset) // with brackets
 {
-	int lnaw='(';
-	int rnaw=')';
-	int lbrak='[';
-	int rbrak=']';
-	int bslash='\\';
+	char lnaw='(';
+	char rnaw=')';
+	char lbrak='[';
+	char rbrak=']';
+	char bslash='\\';
 	
 	
 	char* str; //main string
@@ -512,7 +514,7 @@ int ishex(char* ch)
 
 char * escape_hex(char* str,int* final_len)
 {
-	int bslash='\\';
+	char bslash='\\';
 	int i=0,i2=0;
 	
 	int length=strlen(str);
@@ -562,60 +564,6 @@ char * escape_hex(char* str,int* final_len)
 	
 }
 
-/*
-
-char * clear_spaces(char* str)
-{
-	
-	int len=0;
-	int flag=1;
-	int i=0;
-	int j=0;
-	char* str2;
-	
-	len=strlen(str);
-    if (!(str2 = malloc((len+1) * sizeof(char))))
-        exit(1);	
-
-	memset(str2,0,len+1);
-	
-	for(i;i<len;i++)
-	{
-			
-		if(str[i]==' ' && flag==1)
-			{
-			str2[j]=str[i];
-			j++;
-			flag=0;
-			}
-		else if(str[i]==' ')
-			flag=0;
-		else
-			flag=1;
-			
-		if(flag)	
-		{
-			str2[j]=str[i];
-			j++;
-		}
-	
-	}
-	
-	fprintf(stdout,"size %d\n",j);
-	
-	char* strfin;
-    if (!(strfin = malloc((j + 1) * sizeof(char))))
-        exit(1);
-
-	memset(strfin,0,j+1);
-	memcpy(strfin,str2,j);
-
-	free(str2);
-	
-	return strfin;
-	
-}
-*/
 
 std::vector<char> process_signature(std::string str)
 {
@@ -655,6 +603,8 @@ std::vector<char> process_signature(std::string str)
 	
 	for(int i=0; i<final_len;i++)
 		result_vector.push_back(str5[i]);
+
+	free(str5);
 
 	return result_vector;
 	

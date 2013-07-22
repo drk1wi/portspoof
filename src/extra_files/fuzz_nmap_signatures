@@ -1,0 +1,4 @@
+550 4m2v4 (__FUZZ__)
++OK Lotus Notes POP3 server version lLlfMoHcd ready j* on __FUZZ__/xxx.\r\n
+220 __FUZZ__ ESMTP OpenSMTPD\r\n
+HTTP/1.0 200 OK\n<HTML><HEAD><TITLE>__FUZZ__'s desktop</TITLE></HEAD>\n<BODY>\n<APPLET CODE=vncviewer/VNCViewer.class ARCHIVE=vncviewer.jar WIDTH=44 HEIGHT=44>\n\t<param name=PORT value=4444>\n</APPLET>\n</BODY></HTML>\n

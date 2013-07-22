@@ -1,4 +1,47 @@
+/*
+ *   Portspoof  - Service Signature Emulator  / Exploitation Framework Frontend   
+ *   Copyright (C) 2012 Piotr Duszyński <piotr[at]duszynski.eu>
+ *
+ *   This program is free software; you can redistribute it and/or modify it
+ *   under the terms of the GNU General Public License as published by the
+ *   Free Software Foundation; either version 2 of the License, or (at your
+ *   option) any later version.
+ * 
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *   See the GNU General Public License for more details.
+ * 
+ *   You should have received a copy of the GNU General Public License along
+ *   with this program; if not, see <http://www.gnu.org/licenses>.
+ * 
+ *   Linking portspoof statically or dynamically with other modules is making
+ *   a combined work based on Portspoof. Thus, the terms and conditions of
+ *   the GNU General Public License cover the whole combination.
+ * 
+ *   In addition, as a special exception, the copyright holder of Portspoof
+ *   gives you permission to combine Portspoof with free software programs or
+ *   libraries that are released under the GNU LGPL. You may copy
+ *   and distribute such a system following the terms of the GNU GPL for
+ *   Portspoof and the licenses of the other code concerned.
+ * 
+ *   Note that people who make modified versions of Portspoof are not obligated
+ *   to grant this special exception for their modified versions; it is their
+ *   choice whether to do so. The GNU General Public License gives permission
+ *   to release a modified version without this exception; this exception
+ *   also makes it possible to release a modified version which carries
+ *   forward this exception.
+ */
+
+ 
+
 #include "Utils.h"
+
+
+pthread_cond_t log_cond = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t log_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+
 void Utils::hexdump(void *mem, unsigned int len)
 {
     unsigned int i, j;
@@ -50,20 +93,20 @@ std::vector<char> Utils::wrapNMAP(string wrapper,std::vector<char> payload)
 	string str;
 	std::vector<char> result_vector;
 	
-	ss<<wrapper.substr(0,wrapper.find("__FUZZ__"));
+	ss<<wrapper.substr(0,wrapper.find(FUZZING_KEYWORD));
 	str=ss.str();
 	
-	for(int i=0; i<str.length();i++)
+	for(unsigned int i=0; i<str.length();i++)
 		result_vector.push_back(str[i]);	
 	
 	result_vector.insert(result_vector.end(),payload.begin(),payload.end());
 	
 	ss.str("");
-	ss<<wrapper.substr(wrapper.find("__FUZZ__")+strlen("__FUZZ__"),wrapper.size());
+	ss<<wrapper.substr(wrapper.find(FUZZING_KEYWORD)+strlen(FUZZING_KEYWORD),wrapper.size());
 	
 	str=ss.str();
 	
-	for(int i=0; i<str.length();i++)
+	for(unsigned int i=0; i<str.length();i++)
 		result_vector.push_back(str[i]);		
 	
 	return result_vector;
@@ -151,4 +194,45 @@ char * Utils::get_substring_value(char* str)
 	memset(substr,0,eoffset-soffset);
 	memcpy(substr,str+soffset+1,eoffset-soffset-1);
 	return substr;	
+}
+
+
+void Utils::log_create(const char* file){
+  
+  FILE *fp = fopen(file, "a");
+    if (fp == NULL) {
+      fp = fopen(file, "w");
+    }
+  fclose(fp);
+  return;
+  
+}
+
+void Utils::log_write(Configuration* configuration,const char* msg) {
+
+  pthread_mutex_lock(&log_mutex);
+
+  if(configuration->getConfigValue(OPT_LOG_FILE))
+  {
+    FILE *fp = fopen(configuration->getLogFile().c_str(), "a");
+    if (fp == NULL) {
+        fprintf(stdout,"Error opening file: %s \n",configuration->getLogFile().c_str());
+      exit(1);
+    }
+    
+    fprintf(fp,"%s",msg);
+    fclose(fp);
+    
+  } 
+  
+  if(!(configuration->getConfigValue(OPT_SYSLOG_DIS)))
+  {
+  openlog(SYSLOG_NAME, LOG_PID|LOG_CONS, LOG_USER);
+  syslog(LOG_INFO," %s",msg);
+  closelog();
+  }
+  pthread_mutex_unlock(&log_mutex);
+  
+  return;
+
 }
