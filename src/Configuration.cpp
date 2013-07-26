@@ -100,13 +100,14 @@ bool Configuration::processArgs(int argc, char** argv)
 			break;
 		case 's':
 			this->signaturefile  = std::string(optarg);
+			fprintf(stdout,"-> Using user defined  signature file %s\n",this->signaturefile.c_str());
 			this->opts[OPT_SIG_FILE]=1;
 			
 			break;
 		case 'c':
 			this->configfile  = std::string(optarg);
 			this->opts[OPT_CONFIG_FILE]=1;
-			fprintf(stdout,"-> Using user defined regex. signature file %s\n",this->configfile.c_str());
+			fprintf(stdout,"-> Using user defined configuration file %s\n",this->configfile.c_str());
 			break;
 		case 'v':
 		this->opts[OPT_DEBUG]=1;

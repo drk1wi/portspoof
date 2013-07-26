@@ -54,11 +54,11 @@ int main(int argc, char **argv)
 	if(configuration->processArgs(argc,argv))
 		exit(1);
 		
-	server = new Server(configuration);
 
 	if(configuration->getConfigValue(OPT_RUN_AS_D))
-		server->daemonize();
+		Utils::daemonize(configuration);
 
+	server = new Server(configuration);
 	server->run();
 
 	return 0;

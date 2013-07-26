@@ -6,8 +6,8 @@ case "$1" in
 start)
 	
              if !  pidof portspoof >/dev/null; then
-                   /usr/local/bin/portspoof -D -c /usr/local/etc/portspoof.conf -s /usr/local/etc/portspoof_signatures 
                    echo "Starting Portspoof..."
+                   /usr/local/bin/portspoof -D -c /usr/local/etc/portspoof.conf -s /usr/local/etc/portspoof_signatures
              else
                     echo "Portspoof already running.."
              fi
@@ -17,7 +17,7 @@ start)
 stop)
 	
                if pidof portspoof >/dev/null; then
-                    killall -9 portspoof  >/dev/null
+                    killall -9 /usr/local/bin/portspoof  >/dev/null
                     echo "Portspoof stopped.."
                else
                     echo "Portspoof not running.."

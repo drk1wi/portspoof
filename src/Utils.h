@@ -80,6 +80,8 @@ class Utils {
 		static std::vector<char> str2vector( std::string& s);
 		static void log_create(const char* file);
 		static void log_write(Configuration* configuration,const char* msg);
+		static void daemonize(Configuration* configuration);
+
 
 		
 };

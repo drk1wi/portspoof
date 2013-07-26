@@ -72,7 +72,6 @@ class Server{
 		Server(Configuration* configuration);
 		int choose_thread();
 		bool run();
-		void daemonize();
 };
 
 #endif
