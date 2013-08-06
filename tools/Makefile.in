@@ -168,9 +168,9 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-EXTRA_DIST = portspoof.conf signatures 
+EXTRA_DIST = portspoof.conf portspoof_signatures 
 confdir = $(sysconfdir)/portspoof
-sysconf_DATA = portspoof.conf signatures
+sysconf_DATA = portspoof.conf portspoof_signatures
 all: all-am
 
 .SUFFIXES:

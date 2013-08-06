@@ -63,22 +63,21 @@ bool Configuration::getConfigValue(int value)
 void  Configuration::usage(void)
 {
 	fprintf(stdout,"Usage: portspoof [OPTION]...\n"
-	"Portspoof - service signature emulator / exploitation framework.\n\n"
+	"Portspoof - service emulator / frontend exploitation framework.\n\n"
 	  "-i			  ip : Bind to a particular  IP address\n"
 	  "-p			  port : Bind to a particular PORT number\n"
-	  "-D			  run as daemon process\n"
 	  "-s			  file_path : Portspoof service signature regex. file\n"
 	  "-c			  file_path : Portspoof configuration file\n"
 	  "-l			  file_path : Log port scanning alerts to a file\n"
-	  "-d			  Disable syslog\n"
-	  "-v			  Be verbose\n"
 	  "-f			  file_path : FUZZER_MODE - fuzzing payload file list \n"
 	  "-n			  file_path : FUZZER_MODE - wrapping signatures file list\n"
 	  "-1			  FUZZER_MODE - generate fuzzing payloads internally\n"
-	  "-3			  FUZZER_MODE -Generate random byte values !\n"
-	  "-2			  switch to simple reply mode (doesn't work from Nmap)!\n"
-	  "-h			  display this help and exit\n\n"
-	"Without any OPTION - use default values and continue\n");
+	  "-3			  FUZZER_MODE - generate random byte values !\n"
+	  "-2			  switch to simple reply mode (doesn't work for Nmap)!\n"
+	  "-D			  run as daemon process\n"
+	  "-d			  disable syslog\n"
+	  "-v			  be verbose\n"
+	  "-h			  display this help and exit\n");
 	
 	exit(1);
 }
@@ -100,7 +99,7 @@ bool Configuration::processArgs(int argc, char** argv)
 			break;
 		case 's':
 			this->signaturefile  = std::string(optarg);
-			fprintf(stdout,"-> Using user defined  signature file %s\n",this->signaturefile.c_str());
+			fprintf(stdout,"-> Using user defined signature file %s\n",this->signaturefile.c_str());
 			this->opts[OPT_SIG_FILE]=1;
 			
 			break;
@@ -139,16 +138,12 @@ bool Configuration::processArgs(int argc, char** argv)
 			break;
 		case '1':
 			this->opts[OPT_FUZZ_INTERNAL]=1;
-			fprintf(stdout,"-> Generate fuzzing payloads internally!\n");
+			fprintf(stdout,"-> Generating fuzzing payloads internally!\n");
 			break;
 		case '2':
 			this->opts[OPT_NOT_NMAP_SCANNER]=1;
 			fprintf(stdout,"-> Switching to simple reply mode (anything apart from Nmap)!\n");
 			break;
-		case '3':
-			this->opts[OPT_FUZZ_RANDOM]=1;
-			fprintf(stdout,"-> Random int fuzzing!\n");
-			break;			
 		case 'h':
 			this->usage();
 			break;
@@ -162,7 +157,7 @@ bool Configuration::processArgs(int argc, char** argv)
 
 	if(this->opts==0)
 	{
-		fprintf(stdout,"-> No parameters - using default values.\n");
+		fprintf(stdout,"-> No parameters - switching to simple 'open port' mode.\n");
 	}
 			
 	if(this->getConfigValue(OPT_FUZZ_NMAP) ||this->getConfigValue(OPT_FUZZ_WORDLIST) || this->getConfigValue(OPT_FUZZ_INTERNAL))
@@ -175,10 +170,10 @@ bool Configuration::processArgs(int argc, char** argv)
 	if(this->fuzzing_mode == 0)
 	{
 
-	if(this->processSignatureFile())
+	if(this->opts[OPT_SIG_FILE] && this->processSignatureFile())
 		exit(1);
 		
-	if(this->readConfigFile())
+	if(this->opts[OPT_CONFIG_FILE] && this->readConfigFile())
 		exit(1);
 
 	}

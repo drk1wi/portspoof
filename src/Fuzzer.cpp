@@ -117,11 +117,14 @@ std::vector<char> Fuzzer::GenerateFuzzPayload()
 	std::string str;
 	
 		
-	if(this->configuration->getConfigValue(OPT_FUZZ_RANDOM))
+	if(this->configuration->getConfigValue(OPT_FUZZ_INTERNAL))
 		{
-		
-		for(int i=0;i<255;i++)
-		result_vector.push_back(i); 
+					
+		srand((unsigned)time(0)); 	
+		int size=rand()%1000;
+
+		for(int i=0;i<size;i++)
+		result_vector.push_back(rand()%255); 
 			return result_vector;
 			
 		}
