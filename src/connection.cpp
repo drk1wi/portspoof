@@ -79,7 +79,7 @@ void* process_connection(void *arg)
 	
 	while(1) {
 		
-		usleep(100);
+		sleep(1);
 		for(int i = 0; i < MAX_CLIENT_PER_THREAD; i++)
 		{
 				
