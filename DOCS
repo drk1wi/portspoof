@@ -1,32 +1,36 @@
-Portspoof Linux install notes
+Portspoof documentation notes
+
+INSTALLATION:
 
 1. Compile the software:
 
-	./configure
-	make
-	sudo make install
+	$./configure
+	$ make
+	$ sudo make install
 
 	OR
 
-	g++ -lpthread -Wall -g Configuration.cpp  connection.cpp   Portspoof.cpp revregex.cpp Utils.cpp Fuzzer.cpp Server.cpp -o portspoof
+	$ g++ -lpthread -Wall -g Configuration.cpp  connection.cpp   Portspoof.cpp revregex.cpp Utils.cpp Fuzzer.cpp Server.cpp -o portspoof
 
 
 2. Configure your firewall rules:
 
 	Linux :
 
-	# iptables -A PREROUTING -i eth0 -p tcp -m tcp --dport 8080:10000 -j REDIRECT --to-ports 4444
-	 Portspoof by default will listen on port ALL_INTERFACES:4444
+	Configure iptables:
 
-	 This FW rules will result in service obfuscation for port range from 8080 to 10000
-	$ /usr/sbin/portspoof -c /etc/portsoof/portspoof.conf -s /etc/portsoof/portspoof_signatures 
+	# iptables -A PREROUTING -i eth0 -p tcp -m tcp --dport 1:65535 -j REDIRECT --to-ports 4444
+	# iptables-restore < iptables-config (system_files directory)
 
-	OR
+	Run Portspoof with service emulation:
+	$ portspoof -c portspoof.conf -s portspoof_signatures -D
 
-	Use example iptables-config file from the system_files directory.
+	Run Portspoof in "open port" mode:
+	$  portspoof -D
+
 
 
 3. Add portspoof invocation to your system's startup scripts.
 
-	Modify or use the default init.d script from the system_files directory
+	Modify or use the default init.d script from the 'system_files' directory
 	
