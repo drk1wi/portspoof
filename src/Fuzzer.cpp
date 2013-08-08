@@ -159,7 +159,7 @@ std::vector<char>  Fuzzer::GetFUZZ()
 	{
 		
 	
-		if(this->counter%this->nmapfuzzsignatures.size()==0)
+		if((this->configuration->getConfigValue(OPT_FUZZ_NMAP) == 0) || this->counter%this->nmapfuzzsignatures.size()==0)
 		{
 	
 			char buf_file[BUFSIZE];
@@ -174,11 +174,12 @@ std::vector<char>  Fuzzer::GetFUZZ()
 			str=std::string(buf_file);
 			str.erase(str.size() - 1);//remove \n
 			this->input_line=Utils::str2vector(str);
-	
 		}
 	
 		this->counter++;
-	
+
+		if(this->configuration->getConfigValue(OPT_FUZZ_NMAP) == 0)	
+		return this->input_line;
 	}
 	else if(this->configuration->getConfigValue(OPT_FUZZ_INTERNAL))
 	{	

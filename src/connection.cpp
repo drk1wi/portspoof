@@ -102,7 +102,7 @@ void* process_connection(void *arg)
 					#else
 					
 					if ( getsockopt (threads[tid].clients[i], SOL_IP, SO_ORIGINAL_DST, (struct sockaddr*)&peer_sockaddr,(socklen_t*) (socklen_t*) &peer_sockaddr_len )){
-								perror("Getsockopt failed");
+								perror("Getsockopt failed: Have you set up your IPTABLES rules correctly ?");
 								goto close_socket;
 							}
 					else

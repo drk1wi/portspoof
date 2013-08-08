@@ -17,7 +17,7 @@ start)
 stop)
 	
                if pidof portspoof >/dev/null; then
-                    killall -9 /usr/local/bin/portspoof  >/dev/null
+                    killall portspoof  >/dev/null
                     echo "Portspoof stopped.."
                else
                     echo "Portspoof not running.."

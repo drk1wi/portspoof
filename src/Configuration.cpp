@@ -72,7 +72,6 @@ void  Configuration::usage(void)
 	  "-f			  file_path : FUZZER_MODE - fuzzing payload file list \n"
 	  "-n			  file_path : FUZZER_MODE - wrapping signatures file list\n"
 	  "-1			  FUZZER_MODE - generate fuzzing payloads internally\n"
-	  "-3			  FUZZER_MODE - generate random byte values !\n"
 	  "-2			  switch to simple reply mode (doesn't work for Nmap)!\n"
 	  "-D			  run as daemon process\n"
 	  "-d			  disable syslog\n"
@@ -87,7 +86,7 @@ bool Configuration::processArgs(int argc, char** argv)
 	int	ch;
 	extern char *__progname;
 	
-	while ((ch = getopt(argc, argv,"l:i:p:s:c:f:n:dvh123D")) != -1) {
+	while ((ch = getopt(argc, argv,"l:i:p:s:c:f:n:dvh12D")) != -1) {
 		switch (ch) {
 		case 'i':
 			this->bind_ip = std::string(optarg);
@@ -129,6 +128,11 @@ bool Configuration::processArgs(int argc, char** argv)
 		case 'f':
 		this->opts[OPT_FUZZ_WORDLIST]=1;
 			this->fuzzpayload_file=std::string(optarg);
+			if(this->opts[OPT_FUZZ_INTERNAL])
+			{
+				fprintf(stdout,"Error: -1 flag cannot be used with -f \n\n", __progname);
+				exit(0);
+			}
 			fprintf(stdout,"-> Reading fuzzing payloads from a file %s!\n",this->fuzzpayload_file.c_str());
 			break;
 		case 'n':
@@ -138,7 +142,13 @@ bool Configuration::processArgs(int argc, char** argv)
 			break;
 		case '1':
 			this->opts[OPT_FUZZ_INTERNAL]=1;
+			if(this->opts[OPT_FUZZ_WORDLIST])
+			{
+				fprintf(stdout,"Error: -f flag cannot be used with -1 \n\n", __progname);
+				exit(0);
+			}
 			fprintf(stdout,"-> Generating fuzzing payloads internally!\n");
+
 			break;
 		case '2':
 			this->opts[OPT_NOT_NMAP_SCANNER]=1;
