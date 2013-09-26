@@ -42,8 +42,6 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
-#include <openssl/aes.h>
-#include <openssl/evp.h>
 #include <string.h>
 #include <string>
 #include <sstream>
