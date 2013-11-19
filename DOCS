@@ -19,7 +19,7 @@ Portspoof documentation notes
 
 	Configure iptables:
 
-	# iptables -A PREROUTING -i eth0 -p tcp -m tcp --dport 1:65535 -j REDIRECT --to-ports 4444
+	# iptables -t nat -A PREROUTING -i eth0 -p tcp -m tcp --dport 1:65535 -j REDIRECT --to-ports 4444
 	# iptables-restore < iptables-config (system_files directory)
 
 	Run Portspoof with service emulation:
