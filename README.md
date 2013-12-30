@@ -5,7 +5,7 @@
 ### Short description:
 
 The portspoof program is designed to enhance OS security through emulation of legitimate service signatures on otherwise closed ports. 
-It is meant to be a lightweight, fast, portable and secure addition to the any firewall system or security infrastructure.
+It is meant to be a lightweight, fast, portable and secure addition to the any firewall system or security appliance.
 The general goal of the program is to make the port scanning software (Nmap/Unicornscan/etc) process slow  and output very difficult to interpret, thus making the attack reconnaissance phase a challenging and bothersome task.
 	 
 ###General benefits of using this software are:
