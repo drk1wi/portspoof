@@ -1,53 +1,119 @@
-/*
- *   Portspoof  - Service Signature Emulator  / Exploitation Framework Frontend   
- *   Copyright (C) 2012 Piotr Duszyński <piotr[at]duszynski.eu>
- *
- *   This program is free software; you can redistribute it and/or modify it
- *   under the terms of the GNU General Public License as published by the
- *   Free Software Foundation; either version 2 of the License, or (at your
- *   option) any later version.
- * 
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *   See the GNU General Public License for more details.
- * 
- *   You should have received a copy of the GNU General Public License along
- *   with this program; if not, see <http://www.gnu.org/licenses>.
- * 
- *   Linking portspoof statically or dynamically with other modules is making
- *   a combined work based on Portspoof. Thus, the terms and conditions of
- *   the GNU General Public License cover the whole combination.
- * 
- *   In addition, as a special exception, the copyright holder of Portspoof
- *   gives you permission to combine Portspoof with free software programs or
- *   libraries that are released under the GNU LGPL. You may copy
- *   and distribute such a system following the terms of the GNU GPL for
- *   Portspoof and the licenses of the other code concerned.
- * 
- *   Note that people who make modified versions of Portspoof are not obligated
- *   to grant this special exception for their modified versions; it is their
- *   choice whether to do so. The GNU General Public License gives permission
- *   to release a modified version without this exception; this exception
- *   also makes it possible to release a modified version which carries
- *   forward this exception.
- */
+#include <stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <openssl/aes.h>
+#include <openssl/evp.h>
+#include <string.h>
+#include <string>
+#include <sstream>
+#include <iostream>
+#include <vector>
+#include <syslog.h>
+#include <pthread.h>
+#include <unistd.h>
 
-// TODO: TO BE ENTIRELY REWRITTEN!
+using namespace std;
+typedef vector<char> wektor;
 
-#include "revregex.h"
 
- int signatures[SIGNATURES_SIZE];
- int num_signatures=30;
- struct signature **arr_lines2;
-
-char * revregex_bracket(char * str,int start_offset,int end_offset, int* retlen) //index: '[' ... ']' 
+wektor str2vector(string s)
 {
+	wektor result_vector;
+	for(int i=0; i<s.length();i++)
+		result_vector.push_back(s[i]);
+		
+	return result_vector;
+	
+}
+
+wektor cutvector(wektor str,int start_offset, int end_offset)
+{
+
+	wektor result_vector;
+	for(int i=start_offset;i<=end_offset;i++)
+			result_vector.push_back(str[i]);
+
+	
+		return result_vector;
+
+}
+
+wektor mergevector(wektor str1,wektor str2)
+{
+
+	wektor result_vector;
+
+	for(int i=0;i<str1.size();i++)
+		result_vector.push_back(str1[i]);
+	
+	for(int i=0;i<str2.size();i++)
+		result_vector.push_back(str2[i]);
+
+	return result_vector;
+
+}
+
+void revregx_error(wektor &regex)
+{
+
+fprintf(stdout,"Regex error : !!");			
+for(int k=0;k<regex.size();k++)
+	cout<<regex[k];
+cout<<endl;
+
+}
+
+void print_vector(wektor &wektor)
+{
+for(int k=0;k<wektor.size();k++)
+	cout<<wektor[k];
+cout<<endl;
+}
+
+int char2hex(char hb,char lb) //set to 2 chars
+{
+	unsigned int value = 0;
+	char ch = hb;
+	int i=2;
+		   
+		while(i--) {
+		if (ch >= '0' && ch <= '9')
+			value = (value << 4) + (ch - '0');
+		 else if (ch >= 'A' && ch <= 'F')
+			value = (value << 4) + (ch - 'A' + 10);
+         else if (ch >= 'a' && ch <= 'f')
+			value = (value << 4) + (ch - 'a' + 10);	  
+		else
+            return value;    
+	    ch = lb;
+		}
+	  
+	return value;
+	
+}
+
+int ishex(char val)
+{
+	
+	if (val >= '0' && val <= '9')
+		return 1;
+	 else if (val >= 'A' && val <= 'F')
+		return 1;
+     else if (val >= 'a' && val <= 'f')
+		return 1;
+	else
+        return 0;
+
+}
+
+wektor revregex_process_bracket(wektor str,int start_offset,int end_offset) //index: '[' ... ']' 
+{
+	wektor result_vector;
 	//TODO hex support
-	char bslash='\\';
-	char word='w';
-	char digit='d';
-	char range='-';
+	int bslash='\\';
+	int word='w';
+	int digit='d';
+	int range='-';
 
 	//flags
 	char nnot=0;
@@ -224,15 +290,15 @@ char * revregex_bracket(char * str,int start_offset,int end_offset, int* retlen)
 
 	}
 	
-	
 	// simple support - TODO to extend
 	if(endmetachar=='*')
 		finsize=rand()%10;
 	else if(endmetachar =='+')
 		finsize=1+rand()%9;
 		
+
 	// DEBUG f
-	//fprintf(stdout,"\n###\n");
+	fprintf(stdout,"\n###\n");
 		
 	
 	//TODO to be corrected
@@ -252,66 +318,48 @@ char * revregex_bracket(char * str,int start_offset,int end_offset, int* retlen)
 			
 		}
 	}
-			
-			
-	char *finstr=(char*)malloc((finsize+1)*sizeof(char));
-	memset(finstr,0,(finsize+1)*sizeof(char));
 	
-	if(chari)
-	{
-		int tmp;
-		i=0;
+	int tmp;
+	i=0;
+
 		for(i;i<finsize;i++)
 		{
 			tmp=rand()%chari;
-			finstr[i]=characterstmp[tmp];	
+			result_vector.push_back(characterstmp[tmp]);
 		}
-	}
 	
-	*retlen=finsize;
-	return finstr;
+	return result_vector;
 }
 
-char * fill_specialchars(char * str,int* param_len, int start_offset,int end_offset)
+wektor fill_specialchars(wektor str,int start_offset,int end_offset)
 {
 	
-	char bslash='\\';
-	char word='w';
-	char digit='d';
-	char dot='.';
-	char newline='n';
-	char creturn='r';
-	char tab='t';
+	int bslash='\\';
+	int word='w';
+	int digit='d';
+	int dot='.';
+	int newline='n';
+	int creturn='r';
+	int tab='t';
 	
-	
-	char* tmp;	// tmp string for merging
-	int tmplen=end_offset-start_offset;
-	int tmpi=0;
-		
-	
-    if (!(tmp = (char*)malloc(tmplen * sizeof(char))))
-        exit(1);	
-	memset(tmp,0,tmplen);
-	
+	wektor result_vector;
 
 	int i=start_offset;
 	
-	for(i;i<end_offset;i++)
+	for(i;i<=end_offset;i++)
 	{
 			if(str[i]==bslash && i+1!=end_offset && str[i+1]==word )
 			{
-					tmp[tmpi]=97+rand()%25;	
-					tmpi++;
+					result_vector.push_back(97+rand()%25);	
 					i++;
 					
-					if(i+1!=end_offset && (str[i+1]=='+' ||str[i+1]=='*') )
+					if(i+1!=end_offset && (str[i+1]=='+' || str[i+1]=='*') )
 						i++;
 					
 			}
 			else if(str[i]==bslash && i+1!=end_offset && str[i+1]==digit )
 			{
-					tmp[tmpi]=48+rand()%10;
-					tmpi++;		
+					result_vector.push_back(48+rand()%10);
 					i++;
 					
 					if(i+1!=end_offset && (str[i+1]=='+' ||str[i+1]=='*') )
@@ -320,294 +368,212 @@ char * fill_specialchars(char * str,int* param_len, int start_offset,int end_off
 			}
 			else if(str[i]==bslash && i+1!=end_offset && str[i+1]==newline )
 			{
-					tmp[tmpi]='\n';
-					tmpi++;
+					result_vector.push_back('\n');
 					i++;	
 			}
 			else if(str[i]==bslash && i+1!=end_offset && str[i+1]==creturn )
 			{
-					tmp[tmpi]='\r';
-					tmpi++;
+					result_vector.push_back('\r');
 					i++;	
 			}
 			else if(str[i]==bslash && i+1!=end_offset && str[i+1]==tab )
 			{
-					tmp[tmpi]='\t';
-					tmpi++;
+					result_vector.push_back('\t');
 					i++;	
 			}
 			else if(str[i]==dot && i!=start_offset && str[i-1]!=bslash)
-			{
-
-					tmp[tmpi]=97+rand()%25;	
-					tmpi++;	
-			}		
+					result_vector.push_back(97+rand()%25);	
 			else
-			{
-				tmp[tmpi]=str[i];
-				tmpi++;
-			}		
+				result_vector.push_back(str[i]);
+
 			
 	}
 	
-	char* fin;
-	int finlen=tmpi+1;
-	
-    if (!(fin = (char*)malloc(finlen * sizeof(char))))
-        exit(1);	
-
-	memset(fin,0,finlen);
-	memcpy(fin,tmp,finlen-1);
-	*param_len=finlen-1;
-	free(tmp);
-		return fin;
+	return result_vector;
 }
 
-char* revregex(char * param_str,int* param_len,int start_offset,int end_offset) // with brackets
+wektor escape_hex(wektor str,int start_offset,int end_offset)
 {
+
+	wektor result_vector;
+	int bslash='\\';
+	
+	int i=start_offset;
+	
+	for(i;i<=end_offset;i++)
+	{
+		if(str[i]==bslash){
+			
+		 	if(str[i+1]=='x' && i+2!=end_offset+1 && ishex(str[i+2]) && i+3!=end_offset+1 && ishex(str[i+3]))
+				{
+					result_vector.push_back(char2hex(str[i+2],str[i+3]));
+					i+=3;
+				}
+
+		}
+		else
+			result_vector.push_back(str[i]);
+			
+				
+	}
+	
+	return result_vector;
+	
+}
+
+/*
+char * clear_spaces(char* str)
+{
+	
+	int len=0;
+	int flag=1;
+	int i=0;
+	int j=0;
+	char* str2;
+	
+	len=strlen(str);
+    if (!(str2 = malloc((len+1) * sizeof(char))))
+        exit(1);	
+
+	memset(str2,0,len+1);
+	
+	for(i;i<len;i++)
+	{
+			
+		if(str[i]==' ' && flag==1)
+			{
+			str2[j]=str[i];
+			j++;
+			flag=0;
+			}
+		else if(str[i]==' ')
+			flag=0;
+		else
+			flag=1;
+			
+		if(flag)	
+		{
+			str2[j]=str[i];
+			j++;
+		}
+	
+	}
+	
+	fprintf(stdout,"size %d\n",j);
+	
+	char* strfin;
+    if (!(strfin = malloc((j + 1) * sizeof(char))))
+        exit(1);
+
+	memset(strfin,0,j+1);
+	memcpy(strfin,str2,j);
+
+	free(str2);
+	
+	return strfin;
+	
+}
+*/
+
+wektor revregexn(wektor str)
+{
+
+	//defines
 	char lnaw='(';
 	char rnaw=')';
 	char lbrak='[';
 	char rbrak=']';
 	char bslash='\\';
-	
-	
-	char* str; //main string
-	int str_len=*param_len;
-	int str_end_offset=end_offset;
-	
-	char* tmp;	// tmp string for merging
-	int tmplen;
-	
-    if (!(str = (char*)malloc((str_len+1) * sizeof(char))))
-        exit(1);	
-	memset(str,0,str_len+1);
-	memcpy(str,param_str+start_offset,str_len);
-	
-	// start
-	int i; 
-	int j;
-	int retlen;
-	char* retstr;
-	repeat1:
-	for(i=start_offset;i<=str_end_offset;i++) // remove () from string
-	{
-		if(str[i]==lnaw && i!=start_offset && str[i-1]!=bslash)
-		{
-			j=i;
-			for(j;j<str_end_offset;j++)
-			{
-				if(str[j]==rnaw && str[j-1]!=bslash ){
-					
-					//fprintf(stdout,"#(%d %d)\n",i,j);
-					//revregex(str,j-i,i+1,j);
-					
-					tmplen=str_len - 2 ;
-					
-					if (!(tmp = (char*)malloc( ( tmplen +	1) * sizeof(char)))) // alloc without the brackets
-				        exit(1);	
-					memset(tmp,0,( tmplen +	1));
-					
-					//get rid of ()
-					memcpy(tmp,str,i); // copy up to index i
-					memcpy(tmp+i,str+i+1,j-i); // copy i-j
-					memcpy(tmp+j-1,str+j+1,str_len-j-1);
-					
-					//fprintf(stdout,"# offset change: %d\n", retlen-(j-i));
-					free(str);
-					str=tmp;
-					str_len=str_len-2;
-					str_end_offset=str_end_offset-2;
-					goto repeat1;	
-				}
 
-				
-			}
-			
-		}
-		
-	}
-	
-	//fprintf(stdout,"#%s\n",str);
-	
-	
-	
-	repeat2:
-	i=start_offset;
-	for(i=start_offset;i<=str_end_offset;i++)
-	{
-		if(str[i]==lbrak && i!=start_offset && str[i-1]!=bslash) // find left bracket
-		{
-			j=i;
-			for(j;j<str_end_offset;j++) //find right bracket (without control char)
-			{
-				if(str[j]==rbrak && str[j-1]!=bslash ){
-					
+	std::vector<char> result_vector=str;
+	std::vector<char> tmp;
 
-					//fprintf(stdout,"# [%d %c %d %c ]\n",i,str[i],j,str[j]);
-					retstr=revregex_bracket(str,i,j,&retlen);					
+	repeat_remove:
+	tmp.clear();
+	
+	for(int i=0;i<result_vector.size();i++) // remove parenthises
+	{
+		if(result_vector[i]==lnaw && ( (i == 0 ) || result_vector[i-1]!=bslash))
+		{
+
+			for(int j=i;j<result_vector.size();)
+			{
+				if(result_vector[j]==rnaw && result_vector[j-1]!=bslash ){
 					
-					// merge it
-				
-					tmplen=str_len - (j-i) + retlen;
-						
-						if (!(tmp = (char*)malloc(tmplen))) 
-					        exit(1);	
-						memset(tmp,0,tmplen);
-						memcpy(tmp,str,i); // copy up to index i
-						memcpy(tmp+i,retstr,retlen); // copy new string
-						memcpy(tmp+i+retlen,str+j+2,str_len-j-1); // copy after index j without control
-						free(str);
-						str=tmp;
-						str_len=tmplen;
-						str_end_offset=str_end_offset+retlen - (j-i);
-						goto repeat2;	
-						
+					tmp=mergevector(tmp,cutvector(result_vector,0,i-1));
+					tmp=mergevector(tmp,cutvector(result_vector,i+1,j-1));
+					tmp=mergevector(tmp,cutvector(result_vector,j+1,result_vector.size()-1));
+					result_vector=tmp;
+					goto repeat_remove;
 					}
 
+				j++;
+
+				if(j==result_vector.size())
+				{
+				revregx_error(result_vector);
+				break;
+				}
 				
 			}
-			
+
 		}
-		
+		else if(result_vector[i]==rnaw && result_vector[i-1]!=bslash)
+		{	revregx_error(result_vector);
+			break;
+		}
+
+
 	}
 
-	*param_len=str_len;
-	return str;
-}
+	repeat_remove2:
+	tmp.clear();
+	wektor tmpwekt;
+	for(int i=0;i<result_vector.size();i++) // remove brackets
+	{
+		if(result_vector[i]==lbrak && ( (i == 0 ) || result_vector[i-1]!=bslash))
+		{
 
-int char2hex(char* ptr)
-{
-	unsigned int value = 0;
-	char ch = *ptr;
-	int i=2;
-		   
-		while(i--) {
-		if (ch >= '0' && ch <= '9')
-			value = (value << 4) + (ch - '0');
-		 else if (ch >= 'A' && ch <= 'F')
-			value = (value << 4) + (ch - 'A' + 10);
-         else if (ch >= 'a' && ch <= 'f')
-			value = (value << 4) + (ch - 'a' + 10);	  
-		else
-            return value;    
-	    ch = *(++ptr);
-		}
-	  
-	return value;
-	
-}
-
-int ishex(char* ch)
-{
-	
-	if (*ch >= '0' && *ch <= '9')
-		return 1;
-	 else if (*ch >= 'A' && *ch <= 'F')
-		return 1;
-     else if (*ch >= 'a' && *ch <= 'f')
-		return 1;
-	else
-        return 0;
-
-}
-
-char * escape_hex(char* str,int* final_len)
-{
-	char bslash='\\';
-	int i=0,i2=0;
-	
-	int length=strlen(str);
-	char *str2 = (char*)malloc(length+1);
-	memset(str2,0,length+1);
-	
-	while(*(str+i)!='\0'){
-		if(*(str+i)==bslash){
-			
-		 	if(*(str+i+1)!='\0' && *(str+i+1)=='0'){
-				*(str2+i2)=0;
-				i2++;
-				i++;
-			}
-			else if(*(str+i+1)!='\0' && *(str+i+1)=='x' && *(str+i+2)!='\0' && ishex(str+i+2) && *(str+i+3)!='\0' && ishex(str+i+3))
-				{
-					//fprintf(stdout,"\\%hhx",char2hex(str+i+2));
-					*(str2+i2)=(char)char2hex(str+i+2);
-					i2++;
-					i+=3;
-
-				}
-			else
+			for(int j=i;j<result_vector.size();)
 			{
-				//fprintf(stdout,"%c",*(str+i));
-			}
-		}
-		else{
-			*(str2+i2)=*(str+i);
-			i2++;
-			
-		}
-		
-	
-		i++;
-	}
-	
-	*final_len=i2;	
-	char* strfin;
-    if (!(strfin = (char*)malloc((i2 + 1) * sizeof(char))))
-        exit(1);
+				if(result_vector[j]==rbrak && result_vector[j-1]!=bslash ){
+					
+					tmpwekt=revregex_process_bracket(result_vector,i,j);
+					tmp=mergevector(tmp,cutvector(result_vector,0,i-1));
+					tmp=mergevector(tmp,tmpwekt);
+					tmp=mergevector(tmp,cutvector(result_vector,j+2,result_vector.size()-1));
+					result_vector=tmp;
+					goto repeat_remove2;
+					}
 
-	memset(strfin,0,i2+1);
-	memcpy(strfin,str2,i2);
-	free(str2);
-	return strfin;
-	
+				j++;
+
+				if(j==result_vector.size())
+				{
+				revregx_error(result_vector);
+				break;
+				}
+			}
+
+		}
+		else if(result_vector[i]==rbrak&& result_vector[i-1]!=bslash)
+		{	revregx_error(result_vector);
+			break;
+		}
+
+	}
+	return result_vector;
 }
 
 
 std::vector<char> process_signature(std::string str)
 {
-	//cout<<str;
-	//cout.flush();
 	
-	size_t length = str.length();
-	char *str2 =(char*) malloc(length+1);
-	memset(str2,0,length+1);
-	memcpy(str2,str.c_str(),length+1);		
-	int final_len=length;
-	char *str3=revregex(str2,&final_len,0,length-1);	
-	char* str4=fill_specialchars(str3,&final_len,0,final_len);
-	char* str5=escape_hex(str4,&final_len);
-	free(str2);
-	free(str3);
-	free(str4);
-	
-	/*
-	fprintf(stdout,"\n##hex##\n");
-	int t=0;
-	for(;t<final_len;t++)
-	{
-			if(*(str5+t)==0)
-				fprintf(stdout,"\\00");
-			else if(*(str5+t)=='\n')
-				fprintf(stdout,"\\n");
-			else if(*(str5+t)=='\r')
-				fprintf(stdout,"\\r");
-			else
-				fprintf(stdout,"\\%x",*(str5+t));
-	}
-	fprintf(stdout,"\n");
-	*/
-
 	std::vector<char> result_vector;
-	
-	for(int i=0; i<final_len;i++)
-		result_vector.push_back(str5[i]);
-
-	free(str5);
+	result_vector=revregexn(str);
+    result_vector=fill_specialchars(result_vector,0,result_vector.size()-1);
+    result_vector=escape_hex(result_vector,0,result_vector.size()-1);
 
 	return result_vector;
 	
 }
-
-
