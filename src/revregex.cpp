@@ -12,6 +12,7 @@
 #include <pthread.h>
 #include <unistd.h>
 
+
 using namespace std;
 typedef vector<char> wektor;
 
