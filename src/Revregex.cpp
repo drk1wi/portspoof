@@ -571,7 +571,7 @@ std::vector<char> process_signature(std::string str)
 {
 	
 	std::vector<char> result_vector;
-	result_vector=revregexn(str);
+	result_vector=revregexn(str2vector(str));
     result_vector=fill_specialchars(result_vector,0,result_vector.size()-1);
     result_vector=escape_hex(result_vector,0,result_vector.size()-1);
 
