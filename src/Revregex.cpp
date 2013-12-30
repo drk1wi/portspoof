@@ -299,7 +299,7 @@ wektor revregex_process_bracket(wektor str,int start_offset,int end_offset) //in
 		
 
 	// DEBUG f
-	fprintf(stdout,"\n###\n");
+	//fprintf(stdout,"\n###\n");
 		
 	
 	//TODO to be corrected
@@ -320,6 +320,8 @@ wektor revregex_process_bracket(wektor str,int start_offset,int end_offset) //in
 		}
 	}
 	
+	if(chari)
+	{
 	int tmp;
 	i=0;
 
@@ -329,6 +331,8 @@ wektor revregex_process_bracket(wektor str,int start_offset,int end_offset) //in
 			result_vector.push_back(characterstmp[tmp]);
 		}
 	
+	}
+
 	return result_vector;
 }
 
@@ -571,9 +575,18 @@ std::vector<char> process_signature(std::string str)
 {
 	
 	std::vector<char> result_vector;
+
+	   try {
+
 	result_vector=revregexn(str2vector(str));
     result_vector=fill_specialchars(result_vector,0,result_vector.size()-1);
     result_vector=escape_hex(result_vector,0,result_vector.size()-1);
+    		} 
+       catch(...){
+       	cout<<"Fatal error occured while processing signatures. Plz. open a github ticker for following regex:"<<endl;
+       	cout<<str<<endl;
+       	exit(1);
+       }
 
 	return result_vector;
 	
