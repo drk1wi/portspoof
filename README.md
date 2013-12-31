@@ -4,10 +4,15 @@
 
 ### Short description:
 
-The portspoof program is designed to enhance OS security through emulation of legitimate service signatures on otherwise closed ports. 
-It is meant to be a lightweight, fast, portable and secure addition to the any firewall system or security infrastructure.
-The general goal of the program is to make the port scanning software (Nmap/Unicornscan/etc) process slow  and output very difficult to interpret, thus making the attack reconnaissance phase a challenging and bothersome task.
-	 
+The Portspoof program primary goal is to enhance OS security, through:
+	- simulating open ports, thus it is diffucult to determine if a valid software is listening on a particular port (check out the screenshot)
+	- emulating bogus services on all open ports by sending valid service signatures to your offenders scanning software.
+
+	As a result:
+	- half-open port scans are no longer deterministic and one has to service probe all ports
+	- service probes always return a valid service
+	- port scanners end up with 65535 valid signatures to analyze
+
 ###General benefits of using this software are:
 * Protection against well known port scanners (all scanning results are chaotic and difficult to interpret)
 * Possibility to use your current firewall rules to decide for which hosts "port spoofing" applies

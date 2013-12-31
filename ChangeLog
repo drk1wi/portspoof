@@ -1,3 +1,9 @@
+1.1 - 1/01/2014 - Linux
+* Minor release.
+* Updated reverse regular expression generation engine (used for generting bogus service signatures).
+* Over 9000 service signatures in the portspoof_signatures file.
+* Better memory management.
+
 1.0 - 01/08/2013 - Linux
 * Major release. 
 * Ported to C++. 
