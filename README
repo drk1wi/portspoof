@@ -2,36 +2,26 @@ Portspoof software overview
 
 Short description:
 
-	*Art of Annoyance*
+	*Art of annoyance*
 
-	The Portspoof program primary goal is to enhance OS security, through:
-	- simulating open ports, thus it is diffucult to determine if a valid software is listening on a particular port (check out the screenshot)
-	- emulating bogus services on all open ports by sending valid service signatures to your offenders scanning software.
-
-	As a result:
-	- half-open port scans are no longer deterministic and one has to service probe all ports
-	- service probes always return a valid service
-	- port scanners end up with 65535 valid signatures to analyze
+	The Portspoof program primary goal is to enhance OS security through a new service emulation technique that renders all standard port scanning results useless.
 
 	*Art of Active (Offensive) Defense*
 
-	Portspoof can be used as an 'Exploitation Framework Frontend', that turns your system into responsive and aggressive machine. 
-	In practice this usually means exploiting your attackers' tools and exploits. This approach is purely based on Active (Offensive) Defense concepts.
+	Portspoof can be used as an 'Exploitation Framework Frontend', that turns your system into responsive and aggressive machine. In practice this usually means exploiting your attackers' tools and exploits. This approach is purely based on Active (Offensive) Defense concepts.
 
 
-	*General*
-
-	Porsoof is meant to be a lightweight, fast, portable and secure addition to the any firewall system or security infrastructure.
+	It is meant to be a lightweight, fast, portable and secure addition to the any firewall system or security infrastructure.
 	The general goal of the program is to make the port scanning software (Nmap/Unicornscan/etc) process slow  and output very difficult to interpret, 
 	thus making the attack reconnaissance phase a challenging and bothersome task.
 	 
 	 The most important features that Portspoof has:
 
 	- Portspoof is a userland software and does not require root privileges ! 
-	- Binds to just one tcp port per a running instance (no bind per every open port!)
+	- Binds to just one tcp port per a running instance 
 	- Easily customizable through iptables rules 
 	- Marginal CPU/memory usage (multithreaded) 
-	- More than 9000 dynamic service signatures are supported ! 
+	- More than 8000 dynamic service signatures are supported ! 
 	- Will help you to automate your Active Defense attacks against your attackers tools and scripts
 	
 	http://portspoof.org/
