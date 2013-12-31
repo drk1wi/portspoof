@@ -58,7 +58,7 @@
 #include <arpa/inet.h>
 
 
-#include "revregex.h"
+#include "Revregex.h"
 #include "Configuration.h"
 #include "Server.h"
 

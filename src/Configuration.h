@@ -87,7 +87,7 @@
 #include "Threads.h"
 
 
-#include "revregex.h" 
+#include "Revregex.h" 
 #include "connection.h"
 
 using namespace std;
