@@ -353,41 +353,44 @@ wektor fill_specialchars(wektor str,int start_offset,int end_offset)
 	
 	for(i;i<=end_offset;i++)
 	{
-			if(str[i]==bslash && i+1!=end_offset && str[i+1]==word )
+			if(str[i]==bslash && i+1<=end_offset && str[i+1]==word  && ( i == start_offset ||  str[i-1] != bslash ) )
 			{
 					result_vector.push_back(97+rand()%25);	
 					i++;
-					
-					if(i+1!=end_offset && (str[i+1]=='+' || str[i+1]=='*') )
-						i++;
+					if(i+1<=end_offset && (str[i+1]=='+' || str[i+1]=='*') )
+						i+=2;	
 					
 			}
-			else if(str[i]==bslash && i+1!=end_offset && str[i+1]==digit )
+			else if(str[i]==bslash && i+1<=end_offset && str[i+1]==digit && ( i == start_offset ||  str[i-1] != bslash ) )
 			{
 					result_vector.push_back(48+rand()%10);
 					i++;
 					
-					if(i+1!=end_offset && (str[i+1]=='+' ||str[i+1]=='*') )
-						i++;	
+					if(i+1<=end_offset && (str[i+1]=='+' || str[i+1]=='*') )
+						i=i+2;	
 				
 			}
-			else if(str[i]==bslash && i+1!=end_offset && str[i+1]==newline )
+			else if(str[i]==bslash && i+1<=end_offset && str[i+1]==newline && ( i == start_offset ||  str[i-1] != bslash ) )
 			{
 					result_vector.push_back('\n');
 					i++;	
 			}
-			else if(str[i]==bslash && i+1!=end_offset && str[i+1]==creturn )
+			else if(str[i]==bslash && i+1<=end_offset && str[i+1]==creturn && ( i == start_offset ||  str[i-1] != bslash ) )
 			{
 					result_vector.push_back('\r');
 					i++;	
 			}
-			else if(str[i]==bslash && i+1!=end_offset && str[i+1]==tab )
+			else if(str[i]==bslash && i+1<=end_offset && str[i+1]==tab && ( i == start_offset ||  str[i-1] != bslash ) )
 			{
 					result_vector.push_back('\t');
 					i++;	
 			}
-			else if(str[i]==dot && i!=start_offset && str[i-1]!=bslash)
+			else if(str[i]==dot && ( i == start_offset ||  str[i-1] != bslash ) )
+			{
 					result_vector.push_back(97+rand()%25);	
+					if(i<=end_offset && (str[i+1]=='+' || str[i+1]=='*') )
+						i++;	
+			}
 			else
 				result_vector.push_back(str[i]);
 
@@ -407,7 +410,7 @@ wektor escape_hex(wektor str,int start_offset,int end_offset)
 	
 	for(i;i<=end_offset;i++)
 	{
-		if(str[i]==bslash){
+		if(str[i]==bslash && ( i == start_offset ||  str[i-1] != bslash )){
 			
 		 	if(str[i+1]=='x' && i+2!=end_offset+1 && ishex(str[i+2]) && i+3!=end_offset+1 && ishex(str[i+3]))
 				{
@@ -489,21 +492,56 @@ wektor revregexn(wektor str)
 	char lbrak='[';
 	char rbrak=']';
 	char bslash='\\';
+	bool isinbracketi=false;
+	bool isinbracketj=false;
+	bool isescapedi=false;
+	bool isescapedj=false;
 
 	std::vector<char> result_vector=str;
 	std::vector<char> tmp;
 
 	repeat_remove:
 	tmp.clear();
-	
+	isinbracketi=false;
+	isescapedi = false;
+
 	for(int i=0;i<result_vector.size();i++) // remove parenthises
 	{
-		if(result_vector[i]==lnaw && ( (i == 0 ) || result_vector[i-1]!=bslash))
+		if(result_vector[i]==lbrak && i-1>=0 && result_vector[i-1]!=bslash )
+		isinbracketi=true;
+		if(result_vector[i]==rbrak && result_vector[i-1]!=bslash )
+		isinbracketi=false;
+
+		if(result_vector[i]==bslash)
+			isescapedi = !isescapedi;
+		else
+			isescapedi = false;
+		
+		//cout<<"i:"<<isescapedi;
+
+		if( result_vector[i]==lnaw && !isinbracketi &&  (i==0 || result_vector[i-1]!=bslash ) && !isescapedi )
 		{
+
+			isinbracketj=false;
+			isescapedj = isescapedi;
 
 			for(int j=i;j<result_vector.size();)
 			{
-				if(result_vector[j]==rnaw && result_vector[j-1]!=bslash ){
+
+
+				if(result_vector[j]==lbrak && j-1>=0 && result_vector[j-1]!=bslash)
+					isinbracketj=true;
+				if(result_vector[j]==rbrak && result_vector[j-1]!=bslash)
+					isinbracketj=false;
+
+				if(result_vector[j]==bslash)
+					isescapedj = !isescapedj;
+				else
+					isescapedj = false;
+
+				//cout<<"j:"<<isescapedj;
+
+				if(result_vector[j]==rnaw && !isinbracketi && !isinbracketj && !isescapedj ){
 					
 					tmp=mergevector(tmp,cutvector(result_vector,0,i-1));
 					tmp=mergevector(tmp,cutvector(result_vector,i+1,j-1));
@@ -514,18 +552,25 @@ wektor revregexn(wektor str)
 
 				j++;
 
+				/*
 				if(j==result_vector.size())
 				{
+
+				if(configuration->getConfigValue(OPT_DEBUG))
 				revregx_error(result_vector);
-				break;
+
 				}
+				*/
 				
 			}
 
 		}
-		else if(result_vector[i]==rnaw && result_vector[i-1]!=bslash)
-		{	revregx_error(result_vector);
-			break;
+		else if(result_vector[i]==rnaw && result_vector[i-1]!=bslash && !isinbracketi)
+		{	
+			/*
+			if(configuration->getConfigValue(OPT_DEBUG))
+			revregx_error(result_vector);
+			*/
 		}
 
 
@@ -533,15 +578,31 @@ wektor revregexn(wektor str)
 
 	repeat_remove2:
 	tmp.clear();
+	isescapedi = false;
+
 	wektor tmpwekt;
 	for(int i=0;i<result_vector.size();i++) // remove brackets
 	{
-		if(result_vector[i]==lbrak && ( (i == 0 ) || result_vector[i-1]!=bslash))
+
+		if(result_vector[i]==bslash)
+			isescapedi = !isescapedi;
+		else
+			isescapedi = false;
+
+		if(result_vector[i]==lbrak && ( (i == 0 ) || result_vector[i-1]!=bslash) && !isescapedi) 
 		{
+
+		isescapedj = isescapedi;
 
 			for(int j=i;j<result_vector.size();)
 			{
-				if(result_vector[j]==rbrak && result_vector[j-1]!=bslash ){
+
+				if(result_vector[j]==bslash)
+					isescapedj = !isescapedj;
+				else
+					isescapedj = false;
+
+				if(result_vector[j]==rbrak && !isescapedj){
 					
 					tmpwekt=revregex_process_bracket(result_vector,i,j);
 					tmp=mergevector(tmp,cutvector(result_vector,0,i-1));
@@ -553,22 +614,22 @@ wektor revregexn(wektor str)
 
 				j++;
 
+				/*
 				if(j==result_vector.size())
 				{
 				revregx_error(result_vector);
-				break;
 				}
+				*/
+				
 			}
-
 		}
-		else if(result_vector[i]==rbrak&& result_vector[i-1]!=bslash)
-		{	revregx_error(result_vector);
-			break;
-		}
+	}	
 
-	}
+	
 	return result_vector;
 }
+
+
 
 
 std::vector<char> process_signature(std::string str)
