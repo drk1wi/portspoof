@@ -10,7 +10,7 @@ Portspoof documentation notes
 
 	OR
 
-	$ g++ -lpthread -Wall -g Configuration.cpp  connection.cpp   Portspoof.cpp revregex.cpp Utils.cpp Fuzzer.cpp Server.cpp -o portspoof
+	$ g++ -lpthread -Wall -g Configuration.cpp  connection.cpp   Portspoof.cpp Revregex.cpp Utils.cpp Fuzzer.cpp Server.cpp -o portspoof
 
 
 2. Configure your firewall rules:
@@ -20,14 +20,13 @@ Portspoof documentation notes
 	Configure iptables:
 
 	# iptables -t nat -A PREROUTING -i eth0 -p tcp -m tcp --dport 1:65535 -j REDIRECT --to-ports 4444
-	# iptables-restore < iptables-config (system_files directory)
+	# iptables-restore < iptables-config (system_files directory) # remember to change the interface name!
 
 	Run Portspoof with service emulation:
 	$ portspoof -c portspoof.conf -s portspoof_signatures -D
 
-	Run Portspoof in "open port" mode:
+	Run Portspoof in daemon "open port" mode:
 	$  portspoof -D
-
 
 
 3. Add portspoof invocation to your system's startup scripts.
