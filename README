@@ -11,14 +11,14 @@ Short description:
 	Instead of informing an attacker that a particular port is CLOSED or FILTERED a system with Portspoof will return SYN+ACK for every port connection attempt.
 
 	As a result it is impractical to use stealth (SYN, ACK, etc.) port scanning against your system, since all ports are always reported as OPEN.
-	Therefore, it difficult to determine if a valid software is listening on a particular port by just sweeping through a particular port range (check out the screenshots).
+	Therefore, it is difficult to determine if a valid software is listening on a particular port (check out the screenshots).
 
  	-  Every open TCP port emulates a services
 
 	Portspoof has a huge dynamic service signature database, that will be used to generate valid service signatures and feed them to your offenders scanning software.
 
 	Scanning software usually tries to determine a service version that is running on an open port. This step is mandatory if one would want to identify port numbers on which you are running your services on a system behing the Portspoof.
-	For this reason Portspoof will respond to every service probe with a valid service signature, that is dynamically generated based on a service signature regular expression database.
+	Portspoof will respond to every service probe with a valid service signature, that is dynamically generated based on a service signature regular expression database.
 	As a result an attacker will not be able to determine which port numbers your system is truly using. 	
 
  	By using those two techniques together:
@@ -29,7 +29,7 @@ Short description:
 	*Art of Active (Offensive) Defense*
 
 	Portspoof can be used as an 'Exploitation Framework Frontend', that turns your system into responsive and aggressive machine. In practice this usually means exploiting your attackers' tools and exploits. 
-	At the moment there are few example exploits in the configuration file (portspof.conf)
+	At the moment there are few example exploits in the configuration file (portspoof.conf)
 
 
 	Portspoof is meant to be a lightweight, fast, portable and secure addition to the any firewall system or security system.

@@ -16,7 +16,7 @@ The Portspoof program primary goal is to enhance OS security through a set of fe
 Instead of informing an attacker that a particular port is CLOSED or FILTERED a system with Portspoof will return SYN+ACK for every port connection attempt.
 
 As a result it is impractical to use stealth (SYN, ACK, etc.) port scanning against your system, since all ports are always reported as OPEN.
-Therefore, it difficult to determine if a valid software is listening on a particular port by just sweeping through a particular port range (check out the screenshots).
+Therefore, it is difficult to determine if a valid software is listening on a particular port (check out the screenshots).
 
 **2. Every open TCP port emulates a services**
 
