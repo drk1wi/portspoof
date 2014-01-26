@@ -16,7 +16,7 @@ function pickInterface {
 }
 
 function setUpIptables {
-	runningPorts=(`netstat -an |grep -E "tcp\ ".*LISTEN|grep -v 127.0.0.1|awk '{print $4}'|sed s/"0.0.0.0:"//|sort -n`)
+	runningPorts=(`netstat -an |grep -E "tcp\ ".*LISTEN|grep -v 127.0.0.1|awk '{print $4}'|sed s/.*://|sort -n`)
 	if [ ${runningPorts[0]} -ne 1 ] && [ ${runningPorts[0]} -ne 2 ]; then
 		underPort=$((${runningPorts[0]}-1))
 		counter=0
