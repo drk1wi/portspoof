@@ -4,11 +4,11 @@
 CFLASGS="${CFLAGS=}"
 
 AC_PREREQ(2.61)
-AC_INIT([portspoof], [1.0], [piotr[at]duszynski.eu])
+AC_INIT([portspoof], [1.2], [piotr[at]duszynski.eu])
 AC_CONFIG_AUX_DIR(auto)
 AC_CONFIG_MACRO_DIR([m4])
 
-AM_INIT_AUTOMAKE(portspoof,1.0)
+AM_INIT_AUTOMAKE(portspoof,1.2)
 AC_CONFIG_SRCDIR([src/Portspoof.cpp])
 AC_CONFIG_HEADER([src/config.h])
 AC_DEFINE([_GNU_SOURCE], [1], [Use GNU source])
