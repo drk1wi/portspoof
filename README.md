@@ -73,11 +73,4 @@ Consult the INSTALL file.
 * TODO - What I am planning to implement in the upcoming versions
 * FAQ - Bug reporting and frequently asked questions
 
-###Project Support
-
-If you like the soft a beer would be much appreciated ;)
-
-DogeCoin: DQiFbhbXDQ1VWR5qUPi8f6ECdn1Do45LuB
-BitCoin:  17gfBSbWeREEkyyA8F6V7v5ruFksxqnhBD
-LiteCoin: LPWMSPQv6J9zYQ7jRq7ZPv21TsoMHMnKKR
 
