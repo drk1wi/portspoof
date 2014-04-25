@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
-#include <openssl/aes.h>
-#include <openssl/evp.h>
 #include <string.h>
 #include <string>
 #include <sstream>
@@ -385,7 +383,7 @@ wektor fill_specialchars(wektor str,int start_offset,int end_offset)
 					result_vector.push_back('\t');
 					i++;	
 			}
-			else if(str[i]==dot && ( i == start_offset ||  str[i-1] != bslash ) )
+			else if(str[i]==dot && i+1<=end_offset && ( i == start_offset || str[i-1] != bslash ) )
 			{
 					result_vector.push_back(97+rand()%25);	
 					if(i<=end_offset && (str[i+1]=='+' || str[i+1]=='*') )
@@ -429,59 +427,6 @@ wektor escape_hex(wektor str,int start_offset,int end_offset)
 	
 }
 
-/*
-char * clear_spaces(char* str)
-{
-	
-	int len=0;
-	int flag=1;
-	int i=0;
-	int j=0;
-	char* str2;
-	
-	len=strlen(str);
-    if (!(str2 = malloc((len+1) * sizeof(char))))
-        exit(1);	
-
-	memset(str2,0,len+1);
-	
-	for(i;i<len;i++)
-	{
-			
-		if(str[i]==' ' && flag==1)
-			{
-			str2[j]=str[i];
-			j++;
-			flag=0;
-			}
-		else if(str[i]==' ')
-			flag=0;
-		else
-			flag=1;
-			
-		if(flag)	
-		{
-			str2[j]=str[i];
-			j++;
-		}
-	
-	}
-	
-	fprintf(stdout,"size %d\n",j);
-	
-	char* strfin;
-    if (!(strfin = malloc((j + 1) * sizeof(char))))
-        exit(1);
-
-	memset(strfin,0,j+1);
-	memcpy(strfin,str2,j);
-
-	free(str2);
-	
-	return strfin;
-	
-}
-*/
 
 wektor revregexn(wektor str)
 {
