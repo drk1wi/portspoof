@@ -2,6 +2,6 @@
 
 EXTRA_DIST = portspoof.conf portspoof_signatures 
 
-confdir= "/$sysconfdir/portspoof/""
+confdir= $(sysconfdir)/portspoof
 
 sysconf_DATA=portspoof.conf portspoof_signatures

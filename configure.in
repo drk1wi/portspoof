@@ -4,11 +4,11 @@
 CFLASGS="${CFLAGS=}"
 
 AC_PREREQ(2.61)
-AC_INIT([portspoof], [1.2], [piotr[at]duszynski.eu])
+AC_INIT([portspoof], [1.0], [piotr[at]duszynski.eu])
 AC_CONFIG_AUX_DIR(auto)
 AC_CONFIG_MACRO_DIR([m4])
 
-AM_INIT_AUTOMAKE(portspoof,1.2)
+AM_INIT_AUTOMAKE(portspoof,1.0)
 AC_CONFIG_SRCDIR([src/Portspoof.cpp])
 AC_CONFIG_HEADER([src/config.h])
 AC_DEFINE([_GNU_SOURCE], [1], [Use GNU source])
@@ -45,10 +45,6 @@ AC_TYPE_SIZE_T
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([inet_ntoa memset socket])
-
-# Check for directories
-
-test "$sysconfdir" = '${prefix}/etc' && sysconfdir=/etc
 
 AC_CONFIG_FILES([Makefile src/Makefile tools/Makefile])
 AC_OUTPUT
