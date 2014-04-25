@@ -132,13 +132,14 @@ void* process_connection(void *arg)
 							}
 					else
             		original_port = ntohs(peer_sockaddr.sin_port);
-					
+					get_ipstr(threads[tid].clients[i], ipstr);
+
 					#endif
 				
 					//LOG
 					msg=(char*)malloc(MAX_LOG_MSG_LEN);
 					memset(msg,0,MAX_LOG_MSG_LEN);
-					snprintf(msg,MAX_LOG_MSG_LEN,"%d # Port_probe # REMOVING_SOCKET # source_ip:%s # dst_port:%d  \n",(int)timestamp,(char*)inet_ntoa(peer_sockaddr.sin_addr),original_port);//" port:%d src_ip%s\n", original_port,;
+					snprintf(msg,MAX_LOG_MSG_LEN,"%d # Port_probe # REMOVING_SOCKET # source_ip:%s # dst_port:%d  \n",ipstr,original_port);//" port:%d src_ip%s\n", original_port,;
 					Utils::log_write(configuration,msg);
 					free(msg);
 					//
@@ -180,13 +181,14 @@ void* process_connection(void *arg)
 							}
 					else
             		original_port = ntohs(peer_sockaddr.sin_port);
-					
+					get_ipstr(threads[tid].clients[i], ipstr);
+
 					#endif
 				
 					//LOG
 					msg =(char*)malloc(MAX_LOG_MSG_LEN);
 					memset(msg,0,MAX_LOG_MSG_LEN);
-					snprintf(msg,MAX_LOG_MSG_LEN,"%d # Port_probe # REMOVING_SOCKET # source_ip:%s # dst_port:%d  \n",(int)timestamp,(char*)inet_ntoa(peer_sockaddr.sin_addr),original_port);//" port:%d src_ip%s\n", original_port,;
+					snprintf(msg,MAX_LOG_MSG_LEN,"%d # Port_probe # REMOVING_SOCKET # source_ip:%s # dst_port:%d  \n",(int)timestamp,ipstr,original_port);//" port:%d src_ip%s\n", original_port,;
 					Utils::log_write(configuration,msg);
 					free(msg);
 					//	
@@ -212,8 +214,8 @@ void* process_connection(void *arg)
 				if ( getsockopt (threads[tid].clients[i], SOL_IP, SO_ORIGINAL_DST, (struct sockaddr*)&peer_sockaddr, (socklen_t*) &peer_sockaddr_len ))
 						perror("Getsockopt failed");
 
-		        original_port = ntohs(peer_sockaddr.sin_port);
 		        get_ipstr(threads[tid].clients[i], ipstr);
+		        original_port = ntohs(peer_sockaddr.sin_port);
 				//
 				#endif
 							  	
