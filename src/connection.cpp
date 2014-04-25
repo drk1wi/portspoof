@@ -136,7 +136,7 @@ void* process_connection(void *arg)
 					//LOG
 					msg=(char*)malloc(MAX_LOG_MSG_LEN);
 					memset(msg,0,MAX_LOG_MSG_LEN);
-					snprintf(msg,MAX_LOG_MSG_LEN,"%d # Port_probe # REMOVING_SOCKET # source_ip:%s # dst_port:%d  \n",ipstr,original_port);//" port:%d src_ip%s\n", original_port,;
+					snprintf(msg,MAX_LOG_MSG_LEN,"%d # Port_probe # REMOVING_SOCKET # source_ip:%s # dst_port:%d  \n",(int)timestamp,ipstr,original_port);//" port:%d src_ip%s\n", original_port,;
 					Utils::log_write(configuration,msg);
 					free(msg);
 					//
