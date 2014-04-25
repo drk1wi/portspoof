@@ -8,10 +8,6 @@ Portspoof documentation notes
 	$ make
 	$ sudo make install
 
-	OR
-
-	$ g++ -lpthread -Wall -g Configuration.cpp  connection.cpp   Portspoof.cpp Revregex.cpp Utils.cpp Fuzzer.cpp Server.cpp -o portspoof
-
 
 2. Configure your firewall rules:
 
@@ -23,7 +19,7 @@ Portspoof documentation notes
 	# iptables-restore < iptables-config (system_files directory) # remember to change the interface name!
 
 	Run Portspoof with service emulation:
-	$ portspoof -c portspoof.conf -s portspoof_signatures -D
+	$ portspoof -c /etc/portspoof.conf -s /etc/portspoof_signatures -D
 
 	Run Portspoof in daemon "open port" mode:
 	$  portspoof -D
