@@ -4972,6 +4972,10 @@ fi
 done
 
 
+# Check for directories
+
+test "$sysconfdir" = '${prefix}/etc' && sysconfdir=/etc
+
 ac_config_files="$ac_config_files Makefile src/Makefile tools/Makefile"
 
 cat >confcache <<\_ACEOF
