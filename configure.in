@@ -46,5 +46,17 @@ AC_TYPE_SIZE_T
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([inet_ntoa memset socket])
 
+# Check for directories
+
+test "$sysconfdir" = '${prefix}/etc' && sysconfdir=/etc
+
+TARGET="$sysconfdir/portspoof/"
+if test ! -d $TARGET; then
+			mkdir $TARGET
+fi	
+
++  AT_CHECK([mkdir "$dir" "$TMPDIR" && touch "$file.ac" || exit 77])
+
+
 AC_CONFIG_FILES([Makefile src/Makefile tools/Makefile])
 AC_OUTPUT

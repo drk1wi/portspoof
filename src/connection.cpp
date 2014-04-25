@@ -46,6 +46,30 @@
 #include "connection.h"
 #include "Configuration.h"
 
+/*
+ipstr has to be of length INET_ADDRSTRLEN
+or INET6_ADDRSTRLEN
+*/
+int get_ipstr(int fd, char *ipstr)
+{
+  socklen_t len;
+  struct sockaddr_storage addr;
+
+  len = sizeof(struct sockaddr_storage);
+  getpeername(fd, (struct sockaddr *)&addr, &len);
+
+  if (addr.ss_family == AF_INET)
+  {
+    struct sockaddr_in *s = (struct sockaddr_in *)&addr;
+    inet_ntop(AF_INET, &s->sin_addr, ipstr, INET_ADDRSTRLEN);
+  }
+  else
+  { // AF_INET6
+    struct sockaddr_in6 *s = (struct sockaddr_in6 *)&addr;
+    inet_ntop(AF_INET6, &s->sin6_addr, ipstr, INET6_ADDRSTRLEN);
+  }
+  return 1;
+}
 
 void nonblock(int sockfd)
 {
@@ -67,7 +91,6 @@ void nonblock(int sockfd)
 void* process_connection(void *arg)
 {
 	int tid =  *((int*)(&arg));
-	//int len;  
 	string str;
 	char buffer[1000];//TODO: to be fixed
 	int original_port=DEFAULT_PORT;
@@ -76,6 +99,8 @@ void* process_connection(void *arg)
 	struct sockaddr_in peer_sockaddr;
 	int peer_sockaddr_len=sizeof(struct sockaddr_in);
 	char* msg;
+    char ipstr[INET6_ADDRSTRLEN];
+	memset(ipstr, '\0', INET6_ADDRSTRLEN);
 	
 	while(1) {
 		
@@ -106,14 +131,15 @@ void* process_connection(void *arg)
 								goto close_socket;
 							}
 					else
-					original_port = ntohs(peer_sockaddr.sin_port);
+            original_port = ntohs(peer_sockaddr.sin_port);
+            get_ipstr(threads[tid].clients[i], ipstr);
 					
 					#endif
 				
 					//LOG
 					msg=(char*)malloc(MAX_LOG_MSG_LEN);
 					memset(msg,0,MAX_LOG_MSG_LEN);
-					snprintf(msg,MAX_LOG_MSG_LEN,"%d # Port_probe # REMOVING_SOCKET # source_ip:%s # dst_port:%d  \n",(int)timestamp,(char*)inet_ntoa(peer_sockaddr.sin_addr),original_port);//" port:%d src_ip%s\n", original_port,;
+					snprintf(msg,MAX_LOG_MSG_LEN,"%d # Port_probe # REMOVING_SOCKET # source_ip:%s # dst_port:%d  \n",(int)timestamp,ipstr,original_port);//" port:%d src_ip%s\n", original_port,;
 					Utils::log_write(configuration,msg);
 					free(msg);
 					//
@@ -154,14 +180,15 @@ void* process_connection(void *arg)
 								goto close_socket2;
 							}
 					else
-					original_port = ntohs(peer_sockaddr.sin_port);
+            original_port = ntohs(peer_sockaddr.sin_port);
+            get_ipstr(threads[tid].clients[i], ipstr);
 					
 					#endif
 				
 					//LOG
 					msg =(char*)malloc(MAX_LOG_MSG_LEN);
 					memset(msg,0,MAX_LOG_MSG_LEN);
-					snprintf(msg,MAX_LOG_MSG_LEN,"%d # Port_probe # REMOVING_SOCKET # source_ip:%s # dst_port:%d  \n",(int)timestamp,(char*)inet_ntoa(peer_sockaddr.sin_addr),original_port);//" port:%d src_ip%s\n", original_port,;
+					snprintf(msg,MAX_LOG_MSG_LEN,"%d # Port_probe # REMOVING_SOCKET # source_ip:%s # dst_port:%d  \n",(int)timestamp,ipstr,original_port);//" port:%d src_ip%s\n", original_port,;
 					Utils::log_write(configuration,msg);
 					free(msg);
 					//	
@@ -180,20 +207,22 @@ void* process_connection(void *arg)
 					
 				#ifdef OSX
 				//  BSD
-							original_port = ntohs(peer_sockaddr.sin_port);
+				original_port = ntohs(peer_sockaddr.sin_port);
 				//
 				#else
 				// Linux
 				if ( getsockopt (threads[tid].clients[i], SOL_IP, SO_ORIGINAL_DST, (struct sockaddr*)&peer_sockaddr, (socklen_t*) &peer_sockaddr_len ))
 						perror("Getsockopt failed");
-				original_port = ntohs(peer_sockaddr.sin_port);
+
+		        original_port = ntohs(peer_sockaddr.sin_port);
+		        get_ipstr(threads[tid].clients[i], ipstr);
 				//
 				#endif
 							  	
 				//LOG
 				char* msg=(char*)malloc(MAX_LOG_MSG_LEN);
 				memset(msg,0,MAX_LOG_MSG_LEN);
-				snprintf(msg,MAX_LOG_MSG_LEN,"%d # Service_probe # SIGNATURE_SEND # source_ip:%s # dst_port:%d  \n",(int)timestamp,(char*)inet_ntoa(peer_sockaddr.sin_addr),original_port);//" port:%d src_ip%s\n", original_port,;
+				snprintf(msg,MAX_LOG_MSG_LEN,"%d # Service_probe # SIGNATURE_SEND # source_ip:%s # dst_port:%d  \n",(int)timestamp,ipstr,original_port);//" port:%d src_ip%s\n", original_port,;
 				Utils::log_write(configuration,msg);
 				free(msg);
 				//
