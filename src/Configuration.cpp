@@ -186,6 +186,9 @@ bool Configuration::processArgs(int argc, char** argv)
 	if(this->opts[OPT_CONFIG_FILE] && this->readConfigFile())
 		exit(1);
 
+	if(this->generateBufferSize())
+		exit(1);
+
 	}
 
 	return 0;
@@ -265,6 +268,17 @@ std::vector<char> Configuration::mapPort2Signature(unsigned short port)
 	return this->portsignatureemap[port];
 }
 
+
+unsigned int Configuration::mapPort2Buffer(unsigned short port)
+{	
+	
+	if(this->opts[OPT_FUZZ_NMAP] || this->opts[OPT_FUZZ_INTERNAL] || this->opts[OPT_FUZZ_WORDLIST])
+		return MAX_BUFFER_SIZE;
+	else
+		return this->portbuffermap[port];
+}
+
+
 bool Configuration::processSignatureFile()
 {
 	
@@ -294,6 +308,16 @@ bool Configuration::processSignatureFile()
 	return 0;
 					
 }
+
+
+bool Configuration::generateBufferSize()
+{
+	srand((unsigned)time(0)); 	
+	for(int i=0;i<MAX_PORTS;i++)
+	portbuffermap.insert(make_pair(i,rand()%MAX_BUFFER_SIZE))
+	return 0;
+}
+
 
 bool Configuration::readConfigFile()
 {

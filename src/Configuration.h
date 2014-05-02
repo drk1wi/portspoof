@@ -94,6 +94,7 @@ using namespace std;
 
 
 typedef map < unsigned short, std::vector<char> > Port_Signature_Map;
+typedef map < unsigned short, unsigned int > Port_BufferSize_Map;
 typedef vector < string > Raw_Signatures_Vector;
 typedef vector < string > Nmap_Fuzz_Vector;
 class Fuzzer;
@@ -118,6 +119,7 @@ class Configuration {
 		std::string nmapfuzzsignatures_file;
 		std::string fuzzpayload_file;
 		Port_Signature_Map portsignatureemap;
+		Port_BufferSize_Map portbuffermap;
 		Raw_Signatures_Vector rawsignatures;
 		
 		
@@ -127,8 +129,10 @@ class Configuration {
  		bool processArgs(int argc, char** argv);
 		bool readConfigFile();
 		std::vector<char> mapPort2Signature(unsigned short port);
+		unsigned int mapPort2Buffer(unsigned short port);
+
 		bool processSignatureFile();
-		
+		bool generateBufferSize();
 		//getters
 		std::string getConfigFile();
 		std::string getSignatureFile();

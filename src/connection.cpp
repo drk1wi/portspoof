@@ -89,7 +89,8 @@ void* process_connection(void *arg)
 {
 	int tid =  *((int*)(&arg));
 	string str;
-	char buffer[1000];//TODO: to be fixed
+	char buffer[MAX_BUFFER_SIZE];
+	unsigned int buffer_size=0;
 	int original_port=DEFAULT_PORT;
 	int n = 0;
 	time_t timestamp;
@@ -113,7 +114,10 @@ void* process_connection(void *arg)
 				if(configuration->getConfigValue(OPT_NOT_NMAP_SCANNER))
 					n = 1; // just reply...
 				else
-					n = recv(threads[tid].clients[i], buffer,1000, 0);	
+				{
+					buffer_size=configuration->mapPort2Buffer(original_port);
+					n = recv(threads[tid].clients[i], buffer,buffer_size, 0);	
+				}
 			 		
 			
 				// deal with different recv buffer size
