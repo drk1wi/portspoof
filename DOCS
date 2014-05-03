@@ -4,7 +4,7 @@ Portspoof documentation notes
 
 1. Compile the software:
 
-	$ ./configure (use )
+	$ ./configure (use --sysconfdir=/etc/ to store configuration files in /etc/ )
 	$ make
 	$ make install
 
