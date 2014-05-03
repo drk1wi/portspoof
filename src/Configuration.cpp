@@ -297,7 +297,7 @@ bool Configuration::processSignatureFile()
 	
 				  // set  random mapping
 				  srand((unsigned)time(0)); 	
-				  for(int i=0;i<MAX_PORTS;i++)
+				  for(int i=0;i<=MAX_PORTS;i++)
 					{
 					portsignatureemap.insert(make_pair(i,process_signature(rawsignatures[rand()%rawsignatures.size()])));
 					//portsignatureemap.insert(make_pair(i,process_signature(rawsignatures[i%rawsignatures.size()])));
@@ -313,8 +313,9 @@ bool Configuration::processSignatureFile()
 bool Configuration::generateBufferSize()
 {
 	srand((unsigned)time(0)); 	
-	for(int i=0;i<MAX_PORTS;i++)
-	portbuffermap.insert(make_pair(i,rand()%MAX_BUFFER_SIZE))
+	for(int i=0;i<=MAX_PORTS;i++)
+	portbuffermap.insert(make_pair(i,rand()%MAX_BUFFER_SIZE));
+	
 	return 0;
 }
 

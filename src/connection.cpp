@@ -116,7 +116,7 @@ void* process_connection(void *arg)
 				else
 				{
 					buffer_size=configuration->mapPort2Buffer(original_port);
-					n = recv(threads[tid].clients[i], buffer,buffer_size, 0);	
+					n = recv(threads[tid].clients[i],buffer,buffer_size, 0);	
 				}
 			 		
 			
@@ -149,6 +149,7 @@ void* process_connection(void *arg)
 					if(configuration->getConfigValue(OPT_DEBUG))
 					fprintf(stdout,"Thread nr. %d : client %d closed connection\n",tid, threads[tid].clients[i]);
 				
+					//shutdown(threads[tid].clients[i],SHUT_WR);
 	        		close(threads[tid].clients[i]);
 				
 					pthread_mutex_lock(&new_connection_mutex);
@@ -265,6 +266,7 @@ void* process_connection(void *arg)
 				
 				if(send(threads[tid].clients[i], buffertosend, buffertosendsize,0)==-1)
 					perror("Send to socket failed");
+				
 				
 				close(threads[tid].clients[i]);
 				

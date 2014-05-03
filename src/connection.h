@@ -67,7 +67,7 @@
 
 #define SO_ORIGINAL_DST 80
 #define TCPSTATES
-#define MAX_BUFFER_SIZE 1000
+#define MAX_BUFFER_SIZE 65536
 
 extern pthread_cond_t new_connection_cond;
 extern pthread_mutex_t new_connection_mutex;
