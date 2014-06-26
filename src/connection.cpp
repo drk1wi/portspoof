@@ -77,12 +77,13 @@ void nonblock(int sockfd)
 		perror("fcntl(F_GETFL)\n");
 		exit(1);
 	}
-	opts = (opts | O_NONBLOCK);
+	opts = (opts|O_NONBLOCK );
 	if(fcntl(sockfd, F_SETFL, opts) < 0) 
 	{
 		perror("fcntl(F_SETFL)\n");
 		exit(1);
 	}
+
 }
 
 void* process_connection(void *arg)
@@ -99,7 +100,12 @@ void* process_connection(void *arg)
 	char* msg;
     char ipstr[INET6_ADDRSTRLEN];
 	memset(ipstr, '\0', INET6_ADDRSTRLEN);
-	
+    fd_set read_mask;
+	struct timeval tv;
+	int select_return;
+	tv.tv_sec = 1;
+	tv.tv_usec = 0;
+
 	while(1) {
 		
 		sleep(1);
@@ -115,10 +121,22 @@ void* process_connection(void *arg)
 					n = 1; // just reply...
 				else
 				{
-					buffer_size=configuration->mapPort2Buffer(original_port);
-					n = recv(threads[tid].clients[i],buffer,buffer_size, 0);	
+					nonblock(threads[tid].clients[i]);
+					FD_ZERO(&read_mask);
+					FD_SET(threads[tid].clients[i], &read_mask);
+  				    
+  				    select_return = select(threads[tid].clients[i], &read_mask, (fd_set *)0, (fd_set *)0, &tv);
+
+					if(select_return <= 0) /* [timeout=0, -1= ERROR] is returned */
+					{
+						n=1;
+					}
+					else
+					{
+						buffer_size=configuration->mapPort2Buffer(original_port);
+						n = recv(threads[tid].clients[i],buffer,buffer_size, 0);	
+					}
 				}
-			 		
 			
 				// deal with different recv buffer size
 				if(n == 0){
