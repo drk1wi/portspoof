@@ -1,5 +1,17 @@
 #!/bin/sh
-# Starts and stops Portspoof daemon
+# Startup script for the Portspoof daemon using iptables
+#
+### BEGIN INIT INFO
+# Provides:          portspoof
+# Required-Start:    $local_fs
+# Required-Stop:     $local_fs
+# Should-Start:      $network $syslog iptables
+# Should-Stop:       $network $syslog iptables
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start/stop Portspoof daemon
+# Description:       Start/stop Portspoof daemon
+### END INIT INFO
 
 setup_iptables() {
   # Allowed ports
