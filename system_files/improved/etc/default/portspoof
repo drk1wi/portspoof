@@ -1,0 +1,8 @@
+PS_UNFILTEREDPORTS="53 80 443 49152:65535"
+PS_INTERFACES="eth0"
+PS_LISTENPORT=4444
+
+setup_custom_rules() {
+  # Disable LAN spoofing
+  #iptables -t nat -A PREPORTSPOOF -s 192.168.0.0/24 -j RETURN
+}

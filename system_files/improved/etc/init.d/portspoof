@@ -13,11 +13,26 @@
 # Description:       Start/stop Portspoof daemon
 ### END INIT INFO
 
-setup_iptables() {
-  # Allowed ports
-  unfilteredPorts="53 80 443 49152:65534"
-  interfaces="eth0"
+# Fallback configuration
+DAEMON=/usr/local/bin/portspoof
+CONFIG=/usr/local/etc/portspoof.conf
+SIGNATURES=/usr/local/etc/portspoof_signatures
 
+PS_UNFILTEREDPORTS="0:65535"
+PS_INTERFACES="eth0"
+PS_LISTENPORT=4444
+
+setup_custom_rules() { :; }
+
+# Exit if the daemon is not installed
+[ -x "$DAEMON" ] || exit 0
+
+. /lib/lsb/init-functions
+
+# Load variable configuration file if present
+[ -r /etc/default/portspoof ] && . /etc/default/portspoof
+
+setup_iptables() {
   iptables -t nat -N PREPORTSPOOF 2> /dev/null
   iptables -t nat -F PREPORTSPOOF
 
@@ -25,19 +40,18 @@ setup_iptables() {
   iptables -t nat -F PORTSPOOF
 
   iptables -t nat -A PORTSPOOF -p tcp -j LOG --log-prefix 'PORTSPOOF ' --log-level 4
-  iptables -t nat -A PORTSPOOF -p tcp -j REDIRECT --to-ports 4444
+  iptables -t nat -A PORTSPOOF -p tcp -j REDIRECT --to-ports ${PS_LISTENPORT}
   iptables -t nat -A PORTSPOOF -p udp -j LOG --log-prefix 'PORTSPOOF ' --log-level 4
-  iptables -t nat -A PORTSPOOF -p udp -j REDIRECT --to-ports 4444
+  iptables -t nat -A PORTSPOOF -p udp -j REDIRECT --to-ports ${PS_LISTENPORT}
 
-  # Disable LAN spoofing
-  #iptables -t nat -A PREPORTSPOOF -s 192.168.0.0/24 -j RETURN
+  setup_custom_rules
 
   rules=$(iptables -t nat -vnL PREROUTING --line-numbers|grep "/\* PORTSPOOF-REDIRECT \*/"|awk '{ print $1 }'|tac)
   for rule in ${rules}; do
     iptables -t nat -D PREROUTING ${rule}
   done
-  for int in ${interfaces}; do
-    for port in ${unfilteredPorts}; do
+  for int in ${PS_INTERFACES}; do
+    for port in ${PS_UNFILTEREDPORTS}; do
       iptables -t nat -A PREPORTSPOOF -i ${int} -p tcp -m tcp --dport ${port} -j RETURN
       iptables -t nat -A PREPORTSPOOF -i ${int} -p udp -m udp --dport ${port} -j RETURN
     done
@@ -53,30 +67,35 @@ case "$1" in
 start)
   if ! pidof portspoof > /dev/null; then
     count=$(iptables -t nat -N PREPORTSPOOF 2>&1|wc -l)
+
+    # This is pretty precarious, but should do the trick.
     if [ "$count" -eq 0 ]; then
+      log_daemon_msg "Setting up iptables rules"
       setup_iptables
     elif [ "$count" -eq 1 ]; then
-      echo "iptables rules already loaded, skipping."
+      log_daemon_msg "iptables rules already loaded, skipping"
     else
-      echo "Failed loading iptables rules."
+      log_failure_msg "Failed loading iptables rules"
     fi
-    echo "Starting Portspoof..."
-    /usr/local/bin/portspoof -D -c /usr/local/etc/portspoof.conf -s /usr/local/etc/portspoof_signatures
+
+    log_daemon_msg "Starting Portspoof" "portspoof"
+    $DAEMON -D -c $CONFIG -s $SIGNATURES
   else
-    echo "Portspoof already running."
+    log_daemon_msg "Portspoof already running."
   fi
 ;;
 
 stop)
   if pidof portspoof > /dev/null; then
     killall portspoof > /dev/null
-    echo "Portspoof stopped."
+    log_daemon_msg "Portspoof stopped"
   else
-    echo "Portspoof not running."
+    log_daemon_msg "Portspoof not running"
   fi
 ;;
 
 reload)
+  log_daemon_msg "Reloading iptables rules"
   setup_iptables
 ;;
 
@@ -86,6 +105,6 @@ restart)
 ;;
 
 *)
-  echo "Usage: $0 {start|stop|reload|restart}"
+  echo "Usage: $0 {start|stop|reload|restart}" >&2
   exit 1
 esac
