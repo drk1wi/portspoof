@@ -19,11 +19,12 @@ DAEMON=/usr/local/bin/portspoof
 CONFIG=/usr/local/etc/portspoof.conf
 SIGNATURES=/usr/local/etc/portspoof_signatures
 
-PS_ARGUMENTS="-D -c $CONFIG -s $SIGNATURES"
 PS_UNFILTEREDPORTS="0:65535"
 PS_INTERFACES="eth0"
 PS_LISTENPORT=4444
 PS_USER=
+# WARNING: do not use the -D (daemon) option, as it will yield the wrong PID
+PS_ARGUMENTS="-c $CONFIG -s $SIGNATURES -p $PS_LISTENPORT"
 
 setup_custom_rules() { :; }
 
@@ -82,6 +83,17 @@ get_pid() {
 
 case "$1" in
 start)
+  # Ensure that the PIDFILE is still valid.
+  pid=$(get_pid)
+  if [ ! -d "/proc/$pid" ]; then
+    log_warning_msg "Invalid PID stored in PIDFILE"
+    rm -f "$PIDFILE" 2> /dev/null
+    if [ "$?" -ne 0 ]; then
+      log_failure_msg "Failed to delete PIDFILE"
+      exit 2
+    fi
+  fi
+
   pid=$(get_pid)
   if [ ! -z "$pid" ]; then
     log_daemon_msg "portspoof is already running"
@@ -100,7 +112,7 @@ start)
       exit 2
     fi
 
-    # Check if the supplied user exists
+    # Check whether the specified user exists
     user_exists=$(id -u "${PS_USER:-root}" &> /dev/null && echo $?)
     [ -z "$user_exists" ] \
       && log_failure_msg "User '${PS_USER:-root}' does not exist" && exit 2
@@ -117,15 +129,27 @@ start)
       && log_failure_msg "Can't read signatures file" "$SIGNATURES" && exit 2
 
     if [ -z "$PS_USER" ]; then
-      log_daemon_msg "Starting portspoof as root"
-      ($DAEMON $PS_ARGUMENTS &) > /dev/null &>&1
-      echo "echo -n \"$!\" > $PIDFILE" | sudo -s
+      log_daemon_msg "Starting portspoof"
+      #($DAEMON $PS_ARGUMENTS &) > /dev/null &>&1
+      nohup $DAEMON $PS_ARGUMENTS > /dev/null 2>&1 &
+      #$DAEMON $PS_ARGUMENTS &
+      pid="$!"
+      echo "echo -n \"$pid\" > $PIDFILE" | sudo -s
     else
       log_daemon_msg "Starting portspoof as ${PS_USER}"
-      (sudo -n -u "$PS_USER" $DAEMON $PS_ARGUMENTS &) > /dev/null &>&1
-      echo "echo -n \"$!\" > $PIDFILE" | sudo -s
+      #(sudo -n -u "$PS_USER" $DAEMON $PS_ARGUMENTS &) > /dev/null &>&1
+      nohup sudo -n -u "$PS_USER" $DAEMON $PS_ARGUMENTS > /dev/null 2>&1 &
+      #sudo -n -u "$PS_USER" $DAEMON $PS_ARGUMENTS &
+      pid="$!"
+      echo "echo -n \"$pid\" > $PIDFILE" | sudo -s
     fi
-    exit 0
+
+    pid=$(get_pid)
+    if [ ! -d "/proc/$pid" ]; then
+      rm -f "$PIDFILE" 2> /dev/null
+      log_failure_msg "Portspoof failed to start"
+      exit 2
+    fi
   fi
 ;;
 
@@ -133,11 +157,12 @@ stop)
   pid=$(get_pid)
   if [ ! -z "$pid" ]; then
     kill $pid
-    case "$?" in
+    retval=$?
+    rm -f "$PIDFILE" &> /dev/null
+    case "$retval" in
       0) log_daemon_msg "portspoof stopped" ;;
       *) log_failure_msg "Failed to stop portspoof"; exit 2 ;;
     esac
-    rm -f "$PIDFILE"
   else
     log_daemon_msg "portspoof not running"
   fi
