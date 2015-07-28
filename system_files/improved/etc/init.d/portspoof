@@ -99,18 +99,19 @@ start)
     log_daemon_msg "portspoof is already running"
     exit 1
   else
-    count=$(iptables -t nat -N PREPORTSPOOF 2>&1 | wc -l)
-
-    # This is rather precarious, but should do the trick.
-    if [ "$count" -eq 0 ]; then
-      log_daemon_msg "Setting up iptables rules"
-      setup_iptables
-    elif [ "$count" -eq 1 ]; then
-      log_daemon_msg "iptables rules already loaded, skipping"
-    else
-      log_failure_msg "Failed loading iptables rules"
-      exit 2
-    fi
+    # Setup iptables rules
+    iptables -t nat -N PREPORTSPOOF 2> /dev/null
+    case "$?" in
+      0)
+        log_daemon_msg "Setting up iptables rules"
+        setup_iptables
+      ;;
+      1) log_daemon_msg "iptables rules already loaded, skipping" ;;
+      *)
+        log_failure_msg "Failed loading iptables rules; check your permissions"
+        exit 3
+      ;;
+    esac
 
     # Check whether the specified user exists
     user_exists=$(id -u "${PS_USER:-root}" &> /dev/null && echo $?)
