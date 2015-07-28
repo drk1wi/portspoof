@@ -144,7 +144,7 @@ start)
       pid="$!"
       echo "echo -n \"$pid\" > $PIDFILE" | sudo -s
     fi
-
+    sleep 2
     pid=$(get_pid)
     if [ ! -d "/proc/$pid" ]; then
       rm -f "$PIDFILE" 2> /dev/null
