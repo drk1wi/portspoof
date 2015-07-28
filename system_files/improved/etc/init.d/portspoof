@@ -81,8 +81,7 @@ get_pid() {
   fi
 }
 
-case "$1" in
-start)
+do_start() {
   # Ensure that the PIDFILE is still valid.
   pid=$(get_pid)
   if [ ! -d "/proc/$pid" ]; then
@@ -116,18 +115,18 @@ start)
     # Check whether the specified user exists
     user_exists=$(id -u "${PS_USER:-root}" &> /dev/null && echo $?)
     [ -z "$user_exists" ] \
-      && log_failure_msg "User '${PS_USER:-root}' does not exist" && exit 2
+      && log_failure_msg "User '${PS_USER:-root}' does not exist" && exit 124
 
     # Check whether the user can execute the daemon
     has_permission=$(sh -c "sudo -n -u \"${PS_USER:-root}\" test -x $DAEMON && echo y" 2> /dev/null)
     [ -z "$has_permission" ] \
-      && log_failure_msg "User '${PS_USER}' cannot execute $DAEMON" && exit 2
+      && log_failure_msg "User '${PS_USER}' cannot execute $DAEMON" && exit 126
 
     # Check whether config files can be read
     [ ! -r "$CONFIG" ] \
-      && log_failure_msg "Can't read configuration file" "$CONFIG" && exit 2
+      && log_failure_msg "Can't read configuration file" "$CONFIG" && exit 126
     [ ! -r "$SIGNATURES" ] \
-      && log_failure_msg "Can't read signatures file" "$SIGNATURES" && exit 2
+      && log_failure_msg "Can't read signatures file" "$SIGNATURES" && exit 126
 
     if [ -z "$PS_USER" ]; then
       log_daemon_msg "Starting portspoof"
@@ -152,9 +151,9 @@ start)
       exit 2
     fi
   fi
-;;
+}
 
-stop)
+do_stop() {
   pid=$(get_pid)
   if [ ! -z "$pid" ]; then
     kill $pid
@@ -167,22 +166,28 @@ stop)
   else
     log_daemon_msg "portspoof not running"
   fi
-;;
+}
 
-reload)
+do_reload() {
   log_daemon_msg "Reloading iptables rules"
   setup_iptables
-;;
+}
 
-restart)
-  $0 stop
-  $0 start
-;;
+do_restart() {
+  do_stop
+  [ "$?" -eq 0 ] && do_start
+}
 
+case "$1" in
+start) do_start ;;
+stop) do_stop ;;
+reload) do_reload ;;
+restart) do_restart ;;
 status)
-  status_of_proc -p "${PIDFILE}" $DAEMON portspoof
+  retval=0
+  status_of_proc -p "${PIDFILE}" $DAEMON portspoof || retval=$?
+  exit $retval
 ;;
-
 *)
   log_action_msg "Usage: $0 {start|stop|reload|restart|status}"
   exit 1
