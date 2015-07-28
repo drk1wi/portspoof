@@ -76,7 +76,7 @@ setup_iptables() {
 get_pid() {
   if [ -e "$PIDFILE" ]; then
     [ ! -r "$PIDFILE" ] \
-      && log_warning_msg "Failed to lookup PID" "$PIDFILE" && exit 2
+      && log_failure_msg "Failed to read PIDFILE" "$PIDFILE" && exit 2
     echo $(cat "$PIDFILE")
   fi
 }
@@ -92,9 +92,9 @@ start)
       log_failure_msg "Failed to delete PIDFILE"
       exit 2
     fi
+    pid=
   fi
 
-  pid=$(get_pid)
   if [ ! -z "$pid" ]; then
     log_daemon_msg "portspoof is already running"
     exit 1
