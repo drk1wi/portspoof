@@ -1,6 +1,11 @@
+#DAEMON=/usr/local/bin/portspoof
+#CONFIG=/usr/local/etc/portspoof.conf
+#SIGNATURES=/usr/local/etc/portspoof_signatures
+#PS_ARGUMENTS="-D -c $CONFIG -s $SIGNATURES"
 PS_UNFILTEREDPORTS="53 80 443 49152:65535"
 PS_INTERFACES="eth0"
 PS_LISTENPORT=4444
+#PS_USER=portspoof
 
 setup_custom_rules() {
   # Disable LAN spoofing

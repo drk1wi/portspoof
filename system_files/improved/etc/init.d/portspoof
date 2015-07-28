@@ -9,18 +9,21 @@
 # Should-Stop:       $network $syslog iptables
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Start/stop Portspoof daemon
-# Description:       Start/stop Portspoof daemon
+# Short-Description: Start/stop portspoof daemon
+# Description:       Start/stop portspoof daemon
 ### END INIT INFO
 
 # Fallback configuration
+PIDFILE=/var/run/portspoof.pid
 DAEMON=/usr/local/bin/portspoof
 CONFIG=/usr/local/etc/portspoof.conf
 SIGNATURES=/usr/local/etc/portspoof_signatures
 
+PS_ARGUMENTS="-D -c $CONFIG -s $SIGNATURES"
 PS_UNFILTEREDPORTS="0:65535"
 PS_INTERFACES="eth0"
 PS_LISTENPORT=4444
+PS_USER=
 
 setup_custom_rules() { :; }
 
@@ -31,6 +34,10 @@ setup_custom_rules() { :; }
 
 # Load variable configuration file if present
 [ -r /etc/default/portspoof ] && . /etc/default/portspoof
+
+get_prerouting_rule() {
+  echo $(iptables -t nat -vnL PREROUTING --line-numbers 2> /dev/null | grep "/\* PORTSPOOF-REDIRECT \*/" | awk '{ print $1 }' | head -1)
+}
 
 setup_iptables() {
   iptables -t nat -N PREPORTSPOOF 2> /dev/null
@@ -46,10 +53,12 @@ setup_iptables() {
 
   setup_custom_rules
 
-  rules=$(iptables -t nat -vnL PREROUTING --line-numbers|grep "/\* PORTSPOOF-REDIRECT \*/"|awk '{ print $1 }'|tac)
-  for rule in ${rules}; do
+  rule=$(get_prerouting_rule)
+  while [ ! -z "$rule" ]; do
     iptables -t nat -D PREROUTING ${rule}
+    rule=$(get_prerouting_rule)
   done
+
   for int in ${PS_INTERFACES}; do
     for port in ${PS_UNFILTEREDPORTS}; do
       iptables -t nat -A PREPORTSPOOF -i ${int} -p tcp -m tcp --dport ${port} -j RETURN
@@ -63,12 +72,24 @@ setup_iptables() {
   done
 }
 
+get_pid() {
+  if [ -e "$PIDFILE" ]; then
+    [ ! -r "$PIDFILE" ] \
+      && log_warning_msg "Failed to lookup PID" "$PIDFILE" && exit 2
+    echo $(cat "$PIDFILE")
+  fi
+}
+
 case "$1" in
 start)
-  if ! pidof portspoof > /dev/null; then
-    count=$(iptables -t nat -N PREPORTSPOOF 2>&1|wc -l)
+  pid=$(get_pid)
+  if [ ! -z "$pid" ]; then
+    log_daemon_msg "portspoof is already running"
+    exit 1
+  else
+    count=$(iptables -t nat -N PREPORTSPOOF 2>&1 | wc -l)
 
-    # This is pretty precarious, but should do the trick.
+    # This is rather precarious, but should do the trick.
     if [ "$count" -eq 0 ]; then
       log_daemon_msg "Setting up iptables rules"
       setup_iptables
@@ -76,21 +97,49 @@ start)
       log_daemon_msg "iptables rules already loaded, skipping"
     else
       log_failure_msg "Failed loading iptables rules"
+      exit 2
     fi
 
-    log_daemon_msg "Starting Portspoof" "portspoof"
-    $DAEMON -D -c $CONFIG -s $SIGNATURES
-  else
-    log_daemon_msg "Portspoof already running."
+    # Check if the supplied user exists
+    user_exists=$(id -u "${PS_USER:-root}" &> /dev/null && echo $?)
+    [ -z "$user_exists" ] \
+      && log_failure_msg "User '${PS_USER:-root}' does not exist" && exit 2
+
+    # Check whether the user can execute the daemon
+    has_permission=$(sh -c "sudo -n -u \"${PS_USER:-root}\" test -x $DAEMON && echo y" 2> /dev/null)
+    [ -z "$has_permission" ] \
+      && log_failure_msg "User '${PS_USER}' cannot execute $DAEMON" && exit 2
+
+    # Check whether config files can be read
+    [ ! -r "$CONFIG" ] \
+      && log_failure_msg "Can't read configuration file" "$CONFIG" && exit 2
+    [ ! -r "$SIGNATURES" ] \
+      && log_failure_msg "Can't read signatures file" "$SIGNATURES" && exit 2
+
+    if [ -z "$PS_USER" ]; then
+      log_daemon_msg "Starting portspoof as root"
+      ($DAEMON $PS_ARGUMENTS &) > /dev/null &>&1
+      echo "echo -n \"$!\" > $PIDFILE" | sudo -s
+    else
+      log_daemon_msg "Starting portspoof as ${PS_USER}"
+      (sudo -n -u "$PS_USER" $DAEMON $PS_ARGUMENTS &) > /dev/null &>&1
+      echo "echo -n \"$!\" > $PIDFILE" | sudo -s
+    fi
+    exit 0
   fi
 ;;
 
 stop)
-  if pidof portspoof > /dev/null; then
-    killall portspoof > /dev/null
-    log_daemon_msg "Portspoof stopped"
+  pid=$(get_pid)
+  if [ ! -z "$pid" ]; then
+    kill $pid
+    case "$?" in
+      0) log_daemon_msg "portspoof stopped" ;;
+      *) log_failure_msg "Failed to stop portspoof"; exit 2 ;;
+    esac
+    rm -f "$PIDFILE"
   else
-    log_daemon_msg "Portspoof not running"
+    log_daemon_msg "portspoof not running"
   fi
 ;;
 
@@ -104,7 +153,11 @@ restart)
   $0 start
 ;;
 
+status)
+  status_of_proc -p "${PIDFILE}" $DAEMON portspoof
+;;
+
 *)
-  echo "Usage: $0 {start|stop|reload|restart}" >&2
+  log_action_msg "Usage: $0 {start|stop|reload|restart|status}"
   exit 1
 esac
