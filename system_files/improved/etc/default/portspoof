@@ -1,0 +1,15 @@
+#DAEMON=/usr/local/bin/portspoof
+#CONFIG=/usr/local/etc/portspoof.conf
+#SIGNATURES=/usr/local/etc/portspoof_signatures
+PS_UNFILTEREDPORTS="53 80 443 49152:65535"
+PS_INTERFACES="eth0"
+PS_LISTENPORT=4444
+PS_USER=daemon
+
+# WARNING: do not use the -D (daemon) option, as it will yield the wrong PID
+#PS_ARGUMENTS="-c $CONFIG -s $SIGNATURES"
+
+setup_custom_rules() {
+  # Disable LAN spoofing
+  #iptables -t nat -A PREPORTSPOOF -s 192.168.0.0/24 -j RETURN
+}
