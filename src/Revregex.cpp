@@ -62,9 +62,11 @@ cout<<endl;
 
 }
 
-void print_vector(wektor &wektor)
+void print_vector(wektor &wektor,int s,int e)
 {
-for(int k=0;k<wektor.size();k++)
+int sf =s;
+int ef = e;
+for(int k=sf;k<ef;k++)
 	cout<<wektor[k];
 cout<<endl;
 }
@@ -138,7 +140,8 @@ wektor revregex_process_bracket(wektor str,int start_offset,int end_offset) //in
 	}
 	
 	// DEBUG
-	//fprintf(stdout,"%d %d",i,end_offset);
+	//fprintf(stdout,"Start off:%d  End off:%d\n",i,end_offset);
+	//print_vector(str,i,end_offset);
 	
 	for(i;i<lend_offset;i++)
 	{
@@ -306,12 +309,17 @@ wektor revregex_process_bracket(wektor str,int start_offset,int end_offset) //in
 	{
 		if(nnot==0 && characters[i])
 		{
+			if((i =='[') || (i==']'))
+				continue;
+
 			characterstmp[chari]=i;
 			chari++;
 			//fprintf(stdout,"%c",i);
 		}
 		else if(nnot && characters[i]==0)
 		{
+			if((i =='[') || (i==']'))
+				continue;
 			characterstmp[chari]=i;
 			chari++;
 			
@@ -450,6 +458,9 @@ wektor revregexn(wektor str)
 	isinbracketi=false;
 	isescapedi = false;
 
+	//cout<<"start1: \n";
+	//print_vector(result_vector,0,result_vector.size());
+
 	for(int i=0;i<result_vector.size();i++) // remove parenthises
 	{
 		if(result_vector[i]==lbrak && i-1>=0 && result_vector[i-1]!=bslash )
@@ -462,7 +473,6 @@ wektor revregexn(wektor str)
 		else
 			isescapedi = false;
 		
-		//cout<<"i:"<<isescapedi;
 
 		if( result_vector[i]==lnaw && !isinbracketi &&  (i==0 || result_vector[i-1]!=bslash ) && !isescapedi )
 		{
@@ -484,7 +494,6 @@ wektor revregexn(wektor str)
 				else
 					isescapedj = false;
 
-				//cout<<"j:"<<isescapedj;
 
 				if(result_vector[j]==rnaw && !isinbracketi && !isinbracketj && !isescapedj ){
 					
@@ -510,7 +519,7 @@ wektor revregexn(wektor str)
 			}
 
 		}
-		else if(result_vector[i]==rnaw && result_vector[i-1]!=bslash && !isinbracketi)
+		else if(result_vector[i]==rnaw && i>0 && result_vector[i-1]!=bslash && !isinbracketi)
 		{	
 			/*
 			if(configuration->getConfigValue(OPT_DEBUG))
@@ -521,10 +530,12 @@ wektor revregexn(wektor str)
 
 	}
 
+
 	repeat_remove2:
 	tmp.clear();
 	isescapedi = false;
-
+	//cout<<"start2: \n";
+	//print_vector(result_vector,0,result_vector.size());
 	wektor tmpwekt;
 	for(int i=0;i<result_vector.size();i++) // remove brackets
 	{
@@ -548,7 +559,7 @@ wektor revregexn(wektor str)
 					isescapedj = false;
 
 				if(result_vector[j]==rbrak && !isescapedj){
-					
+					//cout<<i<<" "<<j<<endl;
 					tmpwekt=revregex_process_bracket(result_vector,i,j);
 					tmp=mergevector(tmp,cutvector(result_vector,0,i-1));
 					tmp=mergevector(tmp,tmpwekt);
@@ -597,3 +608,4 @@ std::vector<char> process_signature(std::string str)
 	return result_vector;
 	
 }
+
