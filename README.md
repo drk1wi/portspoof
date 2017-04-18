@@ -1,4 +1,4 @@
-#Portspoof [![Build Status](https://secure.travis-ci.org/drk1wi/portspoof.png)](https://secure.travis-ci.org/drk1wi/portspoof.png)
+# Portspoof [![Build Status](https://secure.travis-ci.org/drk1wi/portspoof.png)](https://secure.travis-ci.org/drk1wi/portspoof.png)
 
 ## Effective defense against port scanners
 
@@ -6,7 +6,7 @@
 
 
 
-####*Art of Annoyance*
+#### *Art of Annoyance*
 
 
 The Portspoof program primary goal is to enhance OS security through a set of few techniques:
@@ -34,7 +34,7 @@ By using those two techniques together:
 * it takes more than 8hours and 200MB of sent data in order to properly go through the reconessaince phase for your system (nmap -sV -p - equivalent).
 	
 
-####*Art of Active (Offensive) Defense*
+#### *Art of Active (Offensive) Defense*
 
 Portspoof can be used as an 'Exploitation Framework Frontend', that turns your system into responsive and aggressive machine. In practice this usually means exploiting your attackers' tools and exploits. 
 At the moment there are few example exploits in the configuration file (portspoof.conf)
@@ -44,7 +44,7 @@ Portspoof is meant to be a lightweight, fast, portable and secure addition to th
 The general goal of the program is to make the reconessaince phase slow and bothersome for your attackers as much it is only possible.
 This is quite a change to the standard 5s Nmap scan, that will give a full view of your systems running services.
 
-####*Features*
+#### *Features*
 
 The most important features that Portspoof has:
 
@@ -55,18 +55,18 @@ The most important features that Portspoof has:
 - marginal CPU and memory usage (multithreaded) 
 - more than 9000 dynamic service signatures to feed your attackers scanning software ! 
 
-###Author: Piotr Duszynski (piotr[at]duszynski.eu) 
+### Author: Piotr Duszynski (piotr[at]duszynski.eu) 
 http://portspoof.org/
 
 Follow me at @drk1wi
 
-###License
+### License
 Consult the COPYING file.
 
-###Compile instructions
+### Compile instructions
 Consult the INSTALL file.
 
-###Other important files 
+### Other important files 
 
 * AUTHORS - File with Author contact info
 * Changelog - What I have implemented
