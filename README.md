@@ -2,8 +2,6 @@ Portspoof software overview
 
 Short description:
 
-	*Art of Annoyance*
-
 	The Portspoof program primary goal is to enhance OS security through a set of new techniques:
 
 	-  All TCP ports are always open
@@ -12,8 +10,7 @@ Short description:
 
 	As a result it is impractical to use stealth (SYN, ACK, etc.) port scanning against your system, since all ports are always reported as OPEN.
 
-`~#` **`nmap -p 1-20 127.0.0.1`**
-
+		**`nmap -p 1-20 127.0.0.1`**
         Starting Nmap 6.47 ( http://nmap.org )
         Nmap scan report for 127.0.0.1
         Host is up (0.0018s latency).
@@ -48,8 +45,7 @@ Short description:
 	Portspoof will respond to every service probe with a valid service signature, that is dynamically generated based on a service signature regular expression database.
 	As a result an attacker will not be able to determine which port numbers your system is truly using. 	
 
-`~#` **`nmap -F -sV 127.0.0.1`**
-
+	 	**`nmap -F -sV 127.0.0.1`**
         Starting Nmap 6.47 ( http://nmap.org )
         Stats: 0:00:30 elapsed; 0 hosts completed (1 up), 1 undergoing Service Scan
         Nmap scan report for 127.0.0.1
@@ -158,6 +154,7 @@ Short description:
 
 
  	By using those two techniques together:
+ 	
  	- your attackers will have a tough time while trying to identify your real services.
  	- the only way to determine if a service is emulated is through a protocol probe (imagine probing protocols for 65k open ports!).
  	- it takes more than 8hours and 200MB of sent data in order to properly go through the reconessaince phase for your system ( nmap -sV -p - equivalent).
