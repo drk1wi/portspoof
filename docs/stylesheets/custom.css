@@ -1,0 +1,49 @@
+.container .navbar {
+    
+    border-top: solid 1px #CCCCCC;
+    color: #808080;
+    background:#355568;
+    height: 48px;
+    
+
+}
+
+.container .navlinks{
+    
+    margin-top: 5px;
+    background: white;
+    border-bottom: solid 1px #CCCCCC;
+
+}
+
+.container .navbar h1 {
+    
+    text-decoration: none;
+    color: white;
+    font-weight: normal
+
+}
+
+.container .navlinks ul {
+    list-style: none;
+    margin: 0px 0px 0px 0px;
+    padding-right: 5px;
+    text-align:right;
+
+}
+.container .navlinks ul li {
+    display: inline;
+    font-size: 18px;
+    padding-right: 5px;
+}
+.container .navlinks ul li a {
+    padding-left: 5px;
+    text-decoration: none;
+    color: black;
+    font-weight: normal;
+
+}
+.container .navlinks ul li a:hover {
+    color: grey;
+
+}
