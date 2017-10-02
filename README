@@ -1,19 +1,16 @@
-Portspoof software overview
+Portspoof software overview (http://drk1wi.github.io/portspoof/)
 
-Short description:
+**Short description:**
 
-	*Art of Annoyance*
+The Portspoof program primary goal is to enhance OS security through a set of following techniques:
 
-	The Portspoof program primary goal is to enhance OS security through a set of new techniques:
+ - All 65535 TCP ports are always open
 
-	-  All TCP ports are always open
-	
-	Instead of informing an attacker that a particular port isa CLOSED or FILTERED state Portspoof will return SYN+ACK for every port connection attempt.
+        Instead of informing an attacker that a particular port is in a CLOSED or FILTERED state Portspoof will return SYN+ACK for every port connection attempt ... and no it does not bind to every possible port ;-)
+        
+ As a result it is impractical to use stealth (SYN, ACK, etc.) port scanning against your system, since all ports are always reported as OPEN:
 
-	As a result it is impractical to use stealth (SYN, ACK, etc.) port scanning against your system, since all ports are always reported as OPEN.
-
-	nmap -p 1-20 127.0.0.1
-
+                **`nmap -p 1-20 127.0.0.1`**
         Starting Nmap 6.47 ( http://nmap.org )
         Nmap scan report for 127.0.0.1
         Host is up (0.0018s latency).
@@ -40,16 +37,15 @@ Short description:
         20/tcp open  ftp-data
 
 
- 	-  Every open TCP port emulates a services
+ - Every open TCP port emulates a services
 
-	Portspoof has a huge database of dynamic service signatures, that will be used to fool scanners to believe there's a legitimate service running.
+        Portspoof has a huge database of dynamic service signatures, that will be used to generate fake banners and fool scanners.
 
-	Scanning software usually tries to determine a service version that is running on an open port. 
-	Portspoof will respond to every service probe with a valid service signature, that is dynamically generated based on a service signature regular expression database.
-	As a result an attacker will not be able to determine which port numbers your system is truly using. 	
+        Scanning software usually tries to determine a service version that is running on an open port. Portspoof will respond to every service probe with a valid service signature, that is dynamically generated based on a service signature regular expression database.
+        
+        As a result an attacker will not be able to determine which port numbers your system is truly using:    
 
-	nmap -F -sV 127.0.0.1
-
+                **`nmap -F -sV 127.0.0.1`**
         Starting Nmap 6.47 ( http://nmap.org )
         Stats: 0:00:30 elapsed; 0 hosts completed (1 up), 1 undergoing Service Scan
         Nmap scan report for 127.0.0.1
@@ -157,47 +153,50 @@ Short description:
         49157/tcp open  sip              AVM FRITZ!Box |
 
 
- 	By using those two techniques together:
- 	- your attackers will have a tough time while trying to identify your real services.
- 	- the only way to determine if a service is emulated is through a protocol probe (imagine probing protocols for 65k open ports!).
- 	- it takes more than 8hours and 200MB of sent data in order to properly go through the reconessaince phase for your system ( nmap -sV -p - equivalent).
-	
-	*Art of Active (Offensive) Defense*
+        By using those two techniques together:
+        
+        - your attackers will have a tough time while trying to identify your real services.
+        - the only way to determine if a service is emulated is through a protocol probe (imagine probing protocols for 65k open ports!).
+        - it takes more than 8hours and 200MB of sent data in order to properly go through the reconessaince phase for your system ( nmap -sV -p - equivalent).
+        
+        ***Art of Active (Offensive) Defense***
 
-	Portspoof can be used as an 'Exploitation Framework Frontend', that turns your system into responsive and aggressive machine. In practice this usually means exploiting your attackers' tools and exploits. 
-	At the moment there are few example exploits in the configuration file (portspoof.conf)
+        Portspoof can be used as an 'Exploitation Framework Frontend', that turns your system into responsive and aggressive machine. In practice this usually means exploiting your attackers' tools and exploits...
+        *At the moment there are few example exploits in the configuration file (portspoof.conf)*
 
 
-	Portspoof is meant to be a lightweight, fast, portable and secure addition to the any firewall system or security system.
-	The general goal of the program is to make the reconessaince phase slow and bothersome for your attackers as much it is only possible.
-	This is quite a change to the standard 5s Nmap scan, that will give a full view of your systems running services.
 
-	 The most important features that this software has:
 
-	- it will add some real pain to your attackers reconessaince phase.
-	- it is a userland software and does not require root privileges ! 
-	- it binds to just ONE tcp port per a running instance !
-	- it is easily customizable through your iptables rules 
-	- marginal CPU and memory usage (multithreaded) 
-	- more than 9000 dynamic service signatures to feed your attackers scanning software ! 
-	
-	http://portspoof.org/
-	
-	Author: Piotr Duszynski (piotr [at] duszynski.eu) #
+        Portspoof is meant to be a lightweight, fast, portable and secure addition to any firewall system or security system.
+        
+        The general goal of the program is to make the reconessaince phase slow and bothersome for your attackers as much it is only possible.
+        This is quite a change to the standard 5s Nmap scan, that will give a full view of your systems running services.
+
+         The most important features that this software has:
+
+        - it will add some real pain to your attackers reconessaince phase.
+        - it is a userland software and does not require root privileges ! 
+        - it binds to just ONE tcp port per a running instance !
+        - it is easily customizable through your iptables rules 
+        - marginal CPU and memory usage (multithreaded) 
+        - more than 9000 dynamic service signatures to feed your attackers scanning software ! 
+        
+        
+        Author: Piotr Duszynski (piotr [at] duszynski.eu) #
 
 License
 
-	Consult the COPYING file.
+        Consult the COPYING file.
 
 Compile instructions
-	
-	Consult the DOCS file.
+        
+        Consult the DOC file.
 
 Other important files 
 
-	AUTHORS		File with Author contact info
-	Changelog   What I have implemented
-	FAQ			Bug reporting and frequently asked questions
-	DOCS 		Documentation file
+        AUTHORS         File with Author contact info
+        Changelog   What I have implemented
+        FAQ                 Bug reporting and frequently asked questions
+        DOC             Documentation file
 
 
