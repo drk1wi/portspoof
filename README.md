@@ -37,7 +37,7 @@ The Portspoof program primary goal is to enhance OS security through a set of fo
         20/tcp open  ftp-data
 
 
- - Every open TCP port emulates a services
+ - Every open TCP port emulates a service
 
 	Portspoof has a huge database of dynamic service signatures, that will be used to generate fake banners and fool scanners.
 
