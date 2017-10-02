@@ -1,4 +1,4 @@
-Portspoof software overview
+Portspoof software overview (http://drk1wi.github.io/portspoof/)
 
 Short description:
 
@@ -187,13 +187,13 @@ License
 
 Compile instructions
 	
-	Consult the DOCS file.
+	Consult the DOC file.
 
 Other important files 
 
 	AUTHORS		File with Author contact info
-	Changelog   What I have implemented
-	FAQ			Bug reporting and frequently asked questions
+	Changelog       What I have implemented
+	FAQ		Bug reporting and frequently asked questions
 	DOCS 		Documentation file
 
 
