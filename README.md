@@ -187,7 +187,7 @@ License
 
 Compile instructions
 	
-	Consult the DOC file.
+	Consult the DOC file (https://github.com/drk1wi/portspoof/blob/master/DOC)
 
 Other important files 
 
