@@ -185,7 +185,7 @@ License
 
 	Consult the COPYING file.
 
-Compile instructions
+Compile and runtime instructions
 	
 	Consult the DOC file (https://github.com/drk1wi/portspoof/blob/master/DOC)
 
