@@ -1,4 +1,4 @@
-Portspoof software overview (http://drk1wi.github.io/portspoof/)
+Portspoof software overview (https://drk1wi.github.io/portspoof/)
 
 **Short description:**
 
@@ -11,7 +11,7 @@ The Portspoof program primary goal is to enhance OS security through a set of fo
  	As a result it is impractical to use stealth (SYN, ACK, etc.) port scanning against your system, since all ports are always reported as OPEN:
 
 		**`nmap -p 1-20 127.0.0.1`**
-        Starting Nmap 6.47 ( http://nmap.org )
+        Starting Nmap 6.47 ( https://nmap.org )
         Nmap scan report for 127.0.0.1
         Host is up (0.0018s latency).
         PORT   STATE SERVICE
@@ -46,7 +46,7 @@ The Portspoof program primary goal is to enhance OS security through a set of fo
 	As a result an attacker will not be able to determine which port numbers your system is truly using: 	
 
 	 	**`nmap -F -sV 127.0.0.1`**
-        Starting Nmap 6.47 ( http://nmap.org )
+        Starting Nmap 6.47 ( https://nmap.org )
         Stats: 0:00:30 elapsed; 0 hosts completed (1 up), 1 undergoing Service Scan
         Nmap scan report for 127.0.0.1
         Host is up (0.21s latency).
