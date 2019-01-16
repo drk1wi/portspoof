@@ -179,7 +179,7 @@ The Portspoof program primary goal is to enhance OS security through a set of fo
       - more than 9000 dynamic service signatures to feed your attackers scanning software ! 
 	
 	
-Author: Piotr Duszynski (piotr [at] duszynski.eu) #
+Author:  Piotr Duszyński ([@drk1wi](https://twitter.com/drk1wi)).
 
 License
 
