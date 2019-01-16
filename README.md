@@ -1,4 +1,4 @@
-# ..Portspoof..
+# Portspoof
 
 Portspoof software overview (http://drk1wi.github.io/portspoof/)
 
