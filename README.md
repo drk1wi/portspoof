@@ -1,8 +1,8 @@
 # Portspoof
 
-Portspoof software overview (http://drk1wi.github.io/portspoof/)
+Portspoof software overview (https://drk1wi.github.io/portspoof/)
 
-**Short description:**
+** Short description:**
 
 The Portspoof program primary goal is to enhance OS security through a set of following techniques:
 
@@ -161,7 +161,7 @@ The Portspoof program primary goal is to enhance OS security through a set of fo
  	- the only way to determine if a service is emulated is through a protocol probe (imagine probing protocols for 65k open ports!).
  	- it takes more than 8hours and 200MB of sent data in order to properly go through the reconessaince phase for your system ( nmap -sV -p - equivalent).
 	
-	***Art of Active (Offensive) Defense***
+	*** Art of Active (Offensive) Defense***
 
 	Portspoof can be used as an 'Exploitation Framework Frontend', that turns your system into responsive and aggressive machine. In practice this usually means exploiting your attackers' tools and exploits...
 	*At the moment there are few example exploits in the configuration file (portspoof.conf)*
