@@ -45,7 +45,6 @@
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <netinet/in.h>
-#include <sys/sysctl.h>
 #include <netdb.h>
 #include <sys/types.h>
 #include <sys/stat.h>
