@@ -6,7 +6,7 @@ Portspoof documentation notes
 
 	$ ./configure (use --sysconfdir=/etc/ to store configuration files in /etc/ )
 	$ make
-	$ make install
+	$ sudo make install
 
 
 2. Configure your firewall rules:
@@ -73,8 +73,8 @@ payloads.txt:
 <script>prompt(1)</script>
 --
 
-nc portspoof.org 1 will result in : <script>alert(1)</script>
-nc portspoof.org 2 will result in : <script>alert(1)</script>
+nc portspoof.host 1 will result in : <script>alert(1)</script>
+nc portspoof.host 2 will result in : <script>alert(1)</script>
 ...
 
 
