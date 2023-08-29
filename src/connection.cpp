@@ -38,6 +38,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
+#include <linux/sockios.h>
 #include <time.h> 
 #include "Threads.h"
 #include "connection.h"
@@ -127,15 +128,24 @@ void* process_connection(void *arg)
   				    
   				    select_return = select(threads[tid].clients[i], &read_mask, (fd_set *)0, (fd_set *)0, &tv);
 
-					if(select_return <= 0) /* [timeout=0, -1= ERROR] is returned */
-					{
-						n=1;
-					}
-					else
-					{
-						buffer_size=configuration->mapPort2Buffer(original_port);
-						n = recv(threads[tid].clients[i],buffer,buffer_size, 0);	
-					}
+					 if (select_return < 0) /* [timeout=0, -1= ERROR] is returned */
+                {
+                    n = -1;
+                } 
+           else {
+                    n = 0;
+                    int data_to_be_read_size = 0;
+
+                    if (ioctl(threads[tid].clients[i], FIONREAD, &data_to_be_read_size) < 0) {
+                        perror("ioctl failed");
+                    }
+
+                    if (data_to_be_read_size > 0) {
+                        buffer_size = data_to_be_read_size;
+                        n = recv(threads[tid].clients[i], buffer, buffer_size, 0);
+                    }
+
+                }
 				}
 			
 				// deal with different recv buffer size
