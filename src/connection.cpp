@@ -128,117 +128,36 @@ void* process_connection(void *arg)
   				    
   				    select_return = select(threads[tid].clients[i], &read_mask, (fd_set *)0, (fd_set *)0, &tv);
 
-					if(select_return <= 0) /* [timeout=0, -1= ERROR] is returned */
+					if(select_return < 0) /* [timeout=0, -1= ERROR] is returned */
 					{
-						n=1;
+						n=-1;
 					}
 					else
 					{
-						buffer_size=configuration->mapPort2Buffer(original_port);
-						n = recv(threads[tid].clients[i],buffer,buffer_size, 0);	
+						     n = 0;
+				                    int data_to_be_read_size = 0;
+			
+				                    if (ioctl(threads[tid].clients[i], FIONREAD, &data_to_be_read_size) < 0) {
+				                        perror("ioctl failed");
+				                    }
+				
+				                    if (data_to_be_read_size > 0) {
+				                        buffer_size = data_to_be_read_size;
+				                        n = recv(threads[tid].clients[i], buffer, buffer_size, 0);
+				                    }
 					}
 				}
 			
-				// deal with different recv buffer size
-				if(n == 0){
 				
-					#ifdef OSX
-							original_port = ntohs(peer_sockaddr.sin_port);
-					#else
-					
-					if ( getsockopt (threads[tid].clients[i], SOL_IP, SO_ORIGINAL_DST, (struct sockaddr*)&peer_sockaddr,(socklen_t*) (socklen_t*) &peer_sockaddr_len )){
-								perror("Getsockopt failed: Have you set up your IPTABLES rules correctly ?");
-								goto close_socket;
-							}
-					else
-            		original_port = ntohs(peer_sockaddr.sin_port);
-					get_ipstr(threads[tid].clients[i], ipstr);
 
-					#endif
-				
-					//LOG
-					msg=(char*)malloc(MAX_LOG_MSG_LEN);
-					memset(msg,0,MAX_LOG_MSG_LEN);
-					snprintf(msg,MAX_LOG_MSG_LEN,"%d # Port_probe # REMOVING_SOCKET # source_ip:%s # dst_port:%d  \n",(int)timestamp,ipstr,original_port);//" port:%d src_ip%s\n", original_port,;
-					Utils::log_write(configuration,msg);
-					free(msg);
-					//
-				
-					close_socket:
-					if(configuration->getConfigValue(OPT_DEBUG))
-					fprintf(stdout,"Thread nr. %d : client %d closed connection\n",tid, threads[tid].clients[i]);
-				
-					//shutdown(threads[tid].clients[i],SHUT_WR);
-	        		close(threads[tid].clients[i]);
-				
-					pthread_mutex_lock(&new_connection_mutex);
-					threads[tid].clients[i] = 0;
-					threads[tid].client_count--;
-					pthread_mutex_unlock(&new_connection_mutex);
-				
-				}
-				else if(n < 0){
-
-						
-					if(errno == EAGAIN)
-					{
-						continue; // Nmap NULL probe (no data) -> skip && go to another socket (client)
-					}
-					else if(errno == 104) // Client terminted connection -> get rid of the socket now!
-					{}
-					else
-					fprintf(stdout,"errno: %d\n", errno);    
-					
-					#ifdef OSX
-					
-
-						original_port = ntohs(peer_sockaddr.sin_port);
-					
-					#else
-					
-					if ( getsockopt (threads[tid].clients[i], SOL_IP, SO_ORIGINAL_DST, (struct sockaddr*)&peer_sockaddr,(socklen_t*)  &peer_sockaddr_len )){
-								perror("Getsockopt failed");
-								goto close_socket2;
-							}
-					else
-            		original_port = ntohs(peer_sockaddr.sin_port);
-					get_ipstr(threads[tid].clients[i], ipstr);
-
-					#endif
-				
-					//LOG
-					msg =(char*)malloc(MAX_LOG_MSG_LEN);
-					memset(msg,0,MAX_LOG_MSG_LEN);
-					snprintf(msg,MAX_LOG_MSG_LEN,"%d # Port_probe # REMOVING_SOCKET # source_ip:%s # dst_port:%d  \n",(int)timestamp,ipstr,original_port);//" port:%d src_ip%s\n", original_port,;
-					Utils::log_write(configuration,msg);
-					free(msg);
-					//	
-					
-					close_socket2:
-					close(threads[tid].clients[i]); 			
-					
-					pthread_mutex_lock(&new_connection_mutex);
-					threads[tid].clients[i] = 0;
-					threads[tid].client_count--;
-					pthread_mutex_unlock(&new_connection_mutex);
-					
-				}
-				else
-				{
-					
-				#ifdef OSX
-				//  BSD
-				original_port = ntohs(peer_sockaddr.sin_port);
-				//
-				#else
 				// Linux
 				if ( getsockopt (threads[tid].clients[i], SOL_IP, SO_ORIGINAL_DST, (struct sockaddr*)&peer_sockaddr, (socklen_t*) &peer_sockaddr_len ))
 						perror("Getsockopt failed");
 
-		        get_ipstr(threads[tid].clients[i], ipstr);
-		        original_port = ntohs(peer_sockaddr.sin_port);
-				//
-				#endif
+			        get_ipstr(threads[tid].clients[i], ipstr);
+			        original_port = ntohs(peer_sockaddr.sin_port);
+				
+				
 							  	
 				//LOG
 				char* msg=(char*)malloc(MAX_LOG_MSG_LEN);
@@ -296,7 +215,7 @@ void* process_connection(void *arg)
 				threads[tid].client_count--;
 				pthread_mutex_unlock(&new_connection_mutex);
 
-				}
+				
 
 
 			}
