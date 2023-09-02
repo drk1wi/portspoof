@@ -38,6 +38,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
+#include <linux/sockios.h>
 #include <time.h> 
 #include "Threads.h"
 #include "connection.h"
@@ -114,189 +115,126 @@ void* process_connection(void *arg)
 				
 			if(threads[tid].clients[i] != 0)
 			{
-		     
-				timestamp = time(NULL); 
-				
-				if(configuration->getConfigValue(OPT_NOT_NMAP_SCANNER))
-					n = 1; // just reply...
-				else
-				{
-					nonblock(threads[tid].clients[i]);
-					FD_ZERO(&read_mask);
-					FD_SET(threads[tid].clients[i], &read_mask);
-  				    
-  				    select_return = select(threads[tid].clients[i], &read_mask, (fd_set *)0, (fd_set *)0, &tv);
 
-					if(select_return <= 0) /* [timeout=0, -1= ERROR] is returned */
-					{
-						n=1;
-					}
-					else
-					{
-						buffer_size=configuration->mapPort2Buffer(original_port);
-						n = recv(threads[tid].clients[i],buffer,buffer_size, 0);	
-					}
-				}
-			
-				// deal with different recv buffer size
-				if(n == 0){
-				
-					#ifdef OSX
-							original_port = ntohs(peer_sockaddr.sin_port);
-					#else
-					
-					if ( getsockopt (threads[tid].clients[i], SOL_IP, SO_ORIGINAL_DST, (struct sockaddr*)&peer_sockaddr,(socklen_t*) (socklen_t*) &peer_sockaddr_len )){
-								perror("Getsockopt failed: Have you set up your IPTABLES rules correctly ?");
-								goto close_socket;
-							}
-					else
-            		original_port = ntohs(peer_sockaddr.sin_port);
-					get_ipstr(threads[tid].clients[i], ipstr);
+                timestamp = time(NULL);
+                nonblock(threads[tid].clients[i]);
+                FD_ZERO(&read_mask);
+                FD_SET(threads[tid].clients[i], &read_mask);
+                select_return = select(threads[tid].clients[i], &read_mask, (fd_set *) nullptr, (fd_set *) nullptr,
+                                       &tv);
 
-					#endif
-				
-					//LOG
-					msg=(char*)malloc(MAX_LOG_MSG_LEN);
-					memset(msg,0,MAX_LOG_MSG_LEN);
-					snprintf(msg,MAX_LOG_MSG_LEN,"%d # Port_probe # REMOVING_SOCKET # source_ip:%s # dst_port:%d  \n",(int)timestamp,ipstr,original_port);//" port:%d src_ip%s\n", original_port,;
-					Utils::log_write(configuration,msg);
-					free(msg);
-					//
-				
-					close_socket:
-					if(configuration->getConfigValue(OPT_DEBUG))
-					fprintf(stdout,"Thread nr. %d : client %d closed connection\n",tid, threads[tid].clients[i]);
-				
-					//shutdown(threads[tid].clients[i],SHUT_WR);
-	        		close(threads[tid].clients[i]);
-				
-					pthread_mutex_lock(&new_connection_mutex);
-					threads[tid].clients[i] = 0;
-					threads[tid].client_count--;
-					pthread_mutex_unlock(&new_connection_mutex);
-				
-				}
-				else if(n < 0){
 
-						
-					if(errno == EAGAIN)
-					{
-						continue; // Nmap NULL probe (no data) -> skip && go to another socket (client)
-					}
-					else if(errno == 104) // Client terminted connection -> get rid of the socket now!
-					{}
-					else
-					fprintf(stdout,"errno: %d\n", errno);    
-					
-					#ifdef OSX
-					
+                if (select_return < 0) /* [timeout=0, -1= ERROR] is returned */
+                {
+                    n = -1;
+                } else {
+                    n = 0;
+                    int data_to_be_read_size = 0;
 
-						original_port = ntohs(peer_sockaddr.sin_port);
-					
-					#else
-					
-					if ( getsockopt (threads[tid].clients[i], SOL_IP, SO_ORIGINAL_DST, (struct sockaddr*)&peer_sockaddr,(socklen_t*)  &peer_sockaddr_len )){
-								perror("Getsockopt failed");
-								goto close_socket2;
-							}
-					else
-            		original_port = ntohs(peer_sockaddr.sin_port);
-					get_ipstr(threads[tid].clients[i], ipstr);
+                    if (ioctl(threads[tid].clients[i], FIONREAD, &data_to_be_read_size) < 0) {
+                        perror("ioctl failed");
+                    }
 
-					#endif
-				
-					//LOG
-					msg =(char*)malloc(MAX_LOG_MSG_LEN);
-					memset(msg,0,MAX_LOG_MSG_LEN);
-					snprintf(msg,MAX_LOG_MSG_LEN,"%d # Port_probe # REMOVING_SOCKET # source_ip:%s # dst_port:%d  \n",(int)timestamp,ipstr,original_port);//" port:%d src_ip%s\n", original_port,;
-					Utils::log_write(configuration,msg);
-					free(msg);
-					//	
-					
-					close_socket2:
-					close(threads[tid].clients[i]); 			
-					
-					pthread_mutex_lock(&new_connection_mutex);
-					threads[tid].clients[i] = 0;
-					threads[tid].client_count--;
-					pthread_mutex_unlock(&new_connection_mutex);
-					
-				}
-				else
-				{
-					
-				#ifdef OSX
-				//  BSD
-				original_port = ntohs(peer_sockaddr.sin_port);
-				//
-				#else
-				// Linux
-				if ( getsockopt (threads[tid].clients[i], SOL_IP, SO_ORIGINAL_DST, (struct sockaddr*)&peer_sockaddr, (socklen_t*) &peer_sockaddr_len ))
-						perror("Getsockopt failed");
+                    if (data_to_be_read_size > 0) {
+                        buffer_size = data_to_be_read_size;
+                        n = recv(threads[tid].clients[i], buffer, buffer_size, 0);
+                    }
 
-		        get_ipstr(threads[tid].clients[i], ipstr);
-		        original_port = ntohs(peer_sockaddr.sin_port);
-				//
-				#endif
-							  	
-				//LOG
-				char* msg=(char*)malloc(MAX_LOG_MSG_LEN);
-				memset(msg,0,MAX_LOG_MSG_LEN);
-				snprintf(msg,MAX_LOG_MSG_LEN,"%d # Service_probe # SIGNATURE_SEND # source_ip:%s # dst_port:%d  \n",(int)timestamp,ipstr,original_port);//" port:%d src_ip%s\n", original_port,;
-				Utils::log_write(configuration,msg);
-				free(msg);
-				//
-			
-			  	if(configuration->getConfigValue(OPT_DEBUG))
-				{
-					fprintf(stdout,"\n---\nThread nr.%d for port %d \n", tid,original_port);
-				}
-			
-				std::vector<char> vectsignature=configuration->mapPort2Signature(original_port);
-			
-				int buffertosendsize=vectsignature.size();
-				char* buffertosend= (char*)malloc(buffertosendsize);
-				
-				for(int j=0; j<buffertosendsize;j++)
-					buffertosend[j]=vectsignature[j];
-					
-			  	if(configuration->getConfigValue(OPT_DEBUG))
-				{
-					
-				
-				fprintf(stdout,"signature sent -> ");	
-				for(int t=0;t<buffertosendsize;t++)
-				{
-						if(*(buffertosend+t)==0)
-							fprintf(stdout,"\\00");
-						else if(*(buffertosend+t)=='\n')
-							fprintf(stdout,"\\n");
-						else if(*(buffertosend+t)=='\r')
-							fprintf(stdout,"\\r");
-						else
-							fprintf(stdout,"\\%x",*(buffertosend+t));
-				}
-				fprintf(stdout,"\n---\n");
-			
-				}
-				fflush(stdout);
-	            
-				
-				if(send(threads[tid].clients[i], buffertosend, buffertosendsize,0)==-1)
-					perror("Send to socket failed");
-				
-				
-				close(threads[tid].clients[i]);
-				
-				free(buffertosend);
-				
-				pthread_mutex_lock(&new_connection_mutex);
-				threads[tid].clients[i] = 0;
-				threads[tid].client_count--;
-				pthread_mutex_unlock(&new_connection_mutex);
+                }
 
-				}
 
+
+                int error_code;
+                socklen_t error_code_size = sizeof(error_code);
+                getsockopt(threads[tid].clients[i], SOL_SOCKET, SO_ERROR, &error_code, &error_code_size);
+
+                if (error_code) {
+
+                    if (getsockopt(threads[tid].clients[i], SOL_IP, SO_ORIGINAL_DST, (struct sockaddr *) &peer_sockaddr,
+                                   (socklen_t *) (socklen_t *) &peer_sockaddr_len)) {
+                        perror("Getsockopt failed: Have you set up your IPTABLES rules correctly ?");
+                        goto close_socket;
+                    } else
+                        original_port = ntohs(peer_sockaddr.sin_port);
+
+
+                    close_socket:
+                    if (configuration->getConfigValue(OPT_DEBUG))
+                        fprintf(stdout, "Thread nr. %d : client %d closed connection\n", tid, threads[tid].clients[i]);
+
+                    close(threads[tid].clients[i]);
+
+                    pthread_mutex_lock(&new_connection_mutex);
+                    threads[tid].clients[i] = 0;
+                    threads[tid].client_count--;
+                    pthread_mutex_unlock(&new_connection_mutex);
+
+                }  else {
+
+
+                    // Linux
+                    if ( getsockopt (threads[tid].clients[i], SOL_IP, SO_ORIGINAL_DST, (struct sockaddr*)&peer_sockaddr, (socklen_t*) &peer_sockaddr_len ))
+                        perror("Getsockopt failed");
+
+                    get_ipstr(threads[tid].clients[i], ipstr);
+                    original_port = ntohs(peer_sockaddr.sin_port);
+                    //
+
+                    //LOG
+                    char* msg=(char*)malloc(MAX_LOG_MSG_LEN);
+                    memset(msg,0,MAX_LOG_MSG_LEN);
+                    snprintf(msg,MAX_LOG_MSG_LEN,"%d # Service_probe # SIGNATURE_SEND # source_ip:%s # dst_port:%d  \n",(int)timestamp,ipstr,original_port);//" port:%d src_ip%s\n", original_port,;
+                    Utils::log_write(configuration,msg);
+                    free(msg);
+                    //
+
+                    if(configuration->getConfigValue(OPT_DEBUG))
+                    {
+                        fprintf(stdout,"\n---\nThread nr.%d for port %d \n", tid,original_port);
+                    }
+
+                    std::vector<char> vectsignature=configuration->mapPort2Signature(original_port);
+
+                    int buffertosendsize=vectsignature.size();
+                    char* buffertosend= (char*)malloc(buffertosendsize);
+
+                    for(int j=0; j<buffertosendsize;j++)
+                        buffertosend[j]=vectsignature[j];
+
+                    if(configuration->getConfigValue(OPT_DEBUG))
+                    {
+
+
+                        fprintf(stdout,"signature sent -> ");
+                        for(int t=0;t<buffertosendsize;t++)
+                        {
+                            if(*(buffertosend+t)==0)
+                                fprintf(stdout,"\\00");
+                            else if(*(buffertosend+t)=='\n')
+                                fprintf(stdout,"\\n");
+                            else if(*(buffertosend+t)=='\r')
+                                fprintf(stdout,"\\r");
+                            else
+                                fprintf(stdout,"\\%x",*(buffertosend+t));
+                        }
+                        fprintf(stdout,"\n---\n");
+
+                    }
+                    fflush(stdout);
+
+
+                    if(send(threads[tid].clients[i], buffertosend, buffertosendsize,0)==-1)
+                        perror("Send to socket failed");
+
+                    close(threads[tid].clients[i]);
+
+                    free(buffertosend);
+                    pthread_mutex_lock(&new_connection_mutex);
+                    threads[tid].clients[i] = 0;
+                    threads[tid].client_count--;
+                    pthread_mutex_unlock(&new_connection_mutex);
+
+                }
 
 			}
 			else
