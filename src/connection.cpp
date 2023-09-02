@@ -157,15 +157,12 @@ void* process_connection(void *arg)
                     } else
                         original_port = ntohs(peer_sockaddr.sin_port);
 
-                    get_ipstr(threads[tid].clients[i], threads[tid].client_src_ip[i], ipstr);
 
                     close_socket:
                     if (configuration->getConfigValue(OPT_DEBUG))
                         fprintf(stdout, "Thread nr. %d : client %d closed connection\n", tid, threads[tid].clients[i]);
 
                     close(threads[tid].clients[i]);
-
-                    fingerp.addTimedOutConnection(threads[tid].client_src_ip[i], original_port);
 
                     pthread_mutex_lock(&new_connection_mutex);
                     threads[tid].clients[i] = 0;
