@@ -181,19 +181,14 @@ The Portspoof program primary goal is to enhance OS security through a set of fo
       - more than 9000 dynamic service signatures to feed your attackers scanning software ! 
 	
 	
-Author:  Piotr Duszyński ([@drk1wi](https://twitter.com/drk1wi)).
+Author: 
+-------
+Piotr Duszyński ([@drk1wi](https://twitter.com/drk1wi)).
 
-License
+Commercial Usage
+-------
+Portspoof is licensed under [this License](https://github.com/drk1wi/portspoof/blob/master/COPYRIGHT.GPL) . 
 
-	Consult the COPYING file.
+For commercial, legitimate applications, please contact the author for the appropriate licensing arrangements.
 
-Compile and runtime instructions
-	
-	Consult the DOC file (https://github.com/drk1wi/portspoof/blob/master/DOC)
 
-Other important files 
-
-	AUTHORS		File with Author contact info
-	Changelog   What I have implemented
-	FAQ		    Bug reporting and frequently asked questions
-	DOC 		Documentation file
