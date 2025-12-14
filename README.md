@@ -31,6 +31,8 @@ The primary goal of the Portspoof program is to enhance OS security through a se
 *   **Lightweight & Secure:** Runs in userland (no root privileges required!), binds to just **ONE** TCP port per running instance, and has marginal CPU/memory usage.
 *   **Massive Signature Database:** More than 9000 dynamic service signatures to feed your attackers' scanning software!
 
+---
+
 ### Portspoof Pro (Enterprise)
 
 For enterprise environments, **Portspoof Pro** is an advanced **Active Deception Platform** built to turn dark IP space into a high-fidelity detection grid. While the open-source version handles single-host obfuscation, Pro focuses on network-wide active defense and structured threat intelligence.
