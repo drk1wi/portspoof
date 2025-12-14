@@ -160,7 +160,7 @@ std::vector<char> Utils::unescape(std::vector<char> & s)
 }
 
 
-char * Utils::get_substring_value(char* str)
+std::string Utils::get_substring_value(char* str)
 {
 	int i=0;
 	int soffset=-1,eoffset=-1;
@@ -190,10 +190,7 @@ char * Utils::get_substring_value(char* str)
 			exit(1);
 	}
 				
-	char *substr=(char*)malloc(eoffset-soffset);
-	memset(substr,0,eoffset-soffset);
-	memcpy(substr,str+soffset+1,eoffset-soffset-1);
-	return substr;	
+	return std::string(str + soffset + 1, eoffset - soffset - 1);
 }
 
 

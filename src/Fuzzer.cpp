@@ -75,23 +75,24 @@ bool Fuzzer::PrepareFuzzer()
 	
 	if(this->configuration->getConfigValue(OPT_FUZZ_NMAP))
 	{
-		
-	FILE *fp = fopen(this->nmapfuzzsignatures_file.c_str(), "r");
-	if (fp == NULL) {
-		  fprintf(stdout,"Error opening nmap signature file: %s \n",this->nmapfuzzsignatures_file.c_str());
-		return 1;
-	}
+		std::ifstream file(this->nmapfuzzsignatures_file.c_str());
+		if (!file.is_open()) {
+			fprintf(stdout,"Error opening nmap signature file: %s \n",this->nmapfuzzsignatures_file.c_str());
+			return 1;
+		}
 
-	char buf_file[BUFSIZE];
-	while (fgets(buf_file, BUFSIZE, fp))
-	nmapfuzzsignatures.push_back(std::string(buf_file));
-	fclose(fp);
-	fprintf(stdout,"-> Nmap signatures read: %d \n",this->nmapfuzzsignatures.size());
-    
+		std::string line;
+		while (getline( file, line ))
+		{
+			this->nmapfuzzsignatures.push_back(line);
+		}
+		
+		fprintf(stdout,"-> Nmap signatures read: %zu \n",this->nmapfuzzsignatures.size());
+		
+		return 0;
 	}
 	
 	return 0;
-			
 }
 
 std::vector<char> Fuzzer::intToBytes(int paramInt)

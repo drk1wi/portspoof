@@ -38,7 +38,9 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
+#ifdef __linux__
 #include <linux/sockios.h>
+#endif
 #include <time.h> 
 #include "Threads.h"
 #include "connection.h"
@@ -89,7 +91,7 @@ void nonblock(int sockfd)
 
 void* process_connection(void *arg)
 {
-	int tid =  *((int*)(&arg));
+	int tid =  (long)arg;
 	string str;
 	char buffer[MAX_BUFFER_SIZE];
 	unsigned int buffer_size=0;
@@ -137,6 +139,9 @@ void* process_connection(void *arg)
 
                     if (data_to_be_read_size > 0) {
                         buffer_size = data_to_be_read_size;
+                        if (buffer_size > MAX_BUFFER_SIZE) 
+                            buffer_size = MAX_BUFFER_SIZE;
+                            
                         n = recv(threads[tid].clients[i], buffer, buffer_size, 0);
                     }
 

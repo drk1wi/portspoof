@@ -10,21 +10,32 @@
   <meta charset="utf-8">
   <meta name="robots" content="index,follow" />
 
-  <title> Portspoof -  A new approach to fight back port and service scanners.</title>
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-  <meta name="description" content="Mangle your attackers' port scan results effectively. "/>
-  <meta name="keywords" content="port scanning, spoofing, spoof"/>
-  <link rel="shortcut icon" href="media/favicon.ico" type="image/x-icon" />
+  <title>&gt;_ Portspoof - Active Deception</title>
+  <meta name="description" content="Mangle your attackers' port scan results effectively.">
+  <meta name="author" content="Piotr Duszynski">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://drk1wi.github.io/portspoof/">
+  <meta property="og:title" content="Portspoof - Active Deception & Port Emulation">
+  <meta property="og:description" content="Enhance OS security by confusing and slowing down attackers. Mangle port scans with dynamic signatures.">
+  <meta property="og:image" content="https://drk1wi.github.io/portspoof/media/nmap_scan.jpg">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://drk1wi.github.io/portspoof/">
+  <meta property="twitter:title" content="Portspoof - Active Deception & Port Emulation">
+  <meta property="twitter:description" content="Enhance OS security by confusing and slowing down attackers. Mangle port scans with dynamic signatures.">
+  <meta property="twitter:image" content="https://drk1wi.github.io/portspoof/media/nmap_scan.jpg">
 
   <!-- Mobile Specific Metas
   ================================================== -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- CSS
   ================================================== -->
-  <link rel="stylesheet" href="stylesheets/base.css">
-  <link rel="stylesheet" href="stylesheets/skeleton.css">
-  <link rel="stylesheet" href="stylesheets/layout.css">
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <link rel="stylesheet" href="stylesheets/custom.css">
 
   <!--[if lt IE 9]>
@@ -50,13 +61,13 @@
 
 <body>
 
-<div class="container">
+<div class="container-lg">
 
-<div class="sixteen columns navbar">
-  <h1 class="remove-bottom" ># Portspoof  </h1> 
+<div class="navbar">
+  <h1 class="remove-bottom"># Portspoof</h1>
 </div>
 
-<div class='sixteen columns navlinks'>
+<div class='navlinks'>
 <ul>
 <li><a  href="#about">About</a> 
 </li>
@@ -64,16 +75,18 @@
 </li>
 <li><a  href="https://github.com/drk1wi/portspoof/archive/master.zip">Download</a> 
 </li>
+<li><a  href="https://portspoof.io">Enterprise</a> 
+</li>
 <li><a  href="#features">Features</a> 
 </li>
-<li><a  href="#license">License & Log</a> 
+<li><a  href="#license">License</a>
 </li>
-<li><a  href="https://github.com/drk1wi/portspoof/blob/master/DOC">Documentation</a> 
+<li><a  href="https://github.com/drk1wi/portspoof/blob/master/README.md">Documentation</a> 
 </li>
 </ul>
 </div>
 
-<div class="twelve columns offset-by-one content">
+<div class="content">
           &nbsp;
 
 <div class="doc-section" id="about">
@@ -81,45 +94,63 @@
 <h3 >About Portspoof</h3>
 <br>
 
-<p> The Portspoof program primary goal is to enhance your systems security through a set of new camouflage techniques. As a result of applying them your attackers' port scan result will become entirely mangled and to very significant extent meaningless.   </p>
-<strong>Techniques used to achieve this:</strong>
-  <br>  <br>
+<p>The Portspoof program's primary goal is to enhance your system's security through a set of new camouflage techniques. As a result of applying them, your attackers' port scan results will become entirely mangled and, to a very significant extent, meaningless.</p>
 
-  <ul class="square"><li>
-  <strong>All configured TCP ports are always open</strong>
-  </ul></li>
+<h4>Techniques Used to Achieve This:</h4>
 
-  <p>Instead of informing an attacker that a particular port is in a CLOSED or FILTERED state a system running Portspoof will return SYN+ACK for every connection attempt.</p>
+<ul class="square">
+  <li>
+    <strong>All configured TCP ports are always open</strong>
+    <p>Instead of informing an attacker that a particular port is in a CLOSED or FILTERED state, a system running Portspoof will return SYN+ACK for every connection attempt.</p>
+    <p><strong>Result:</strong> It is impractical to use stealth (SYN, ACK, etc.) port scanning against your system, since all ports are always reported as OPEN. With this approach, it is really difficult to determine if valid software is listening on a particular port (check out the screenshots).</p>
+  </li>
 
-  <p><u>Result</u>: As a result it is impractical to use stealth (SYN, ACK, etc.) port scanning against your system, since all ports are always reported as OPEN.
-  With this approach it is really difficult to determine if a valid software is listening on a particular port (check out the screenshots).</p>
-  <ul class="square"><li>
-  <strong>Every open TCP port emulates a valid services</strong>
-  </ul></li>
+  <li>
+    <strong>Every open TCP port emulates valid services</strong>
+    <p>Portspoof has a huge dynamic service signature database that will be used to generate responses to your offenders' scanning software service probes.</p>
+    <p>Scanning software usually tries to determine a service that is running on an open port. This step is mandatory if one would want to identify port numbers on which you are running your services on a system behind Portspoof. For this reason, Portspoof will respond to every service probe with a valid service signature that is dynamically generated based on a service signature regular expression database.</p>
+    <p><strong>Result:</strong> An attacker will not be able to determine which port numbers your system is truly using.</p>
+  </li>
+</ul>
 
-  <p>Portspoof has a huge dynamic service signature database, that will be used to generate responses to your offenders scanning software service probes.</p>
+</div>
 
-  <p>Scanning software usually tries to determine a service that is running on an open port. This step is mandatory if one would want to identify port numbers on which you are running your services on a system behind the Portspoof.
-  For this reason Portspoof will respond to every service probe with a valid service signature, that is dynamically generated based on a service signature regular expression database. </p>
-  <p><u>Result</u>: As a result an attacker will not be able to determine which port numbers your system is truly using. </p>
+<hr class="large" />
 
-<h5><strong>Reverse exploitation with Portspoof:</strong></h5>
-<p>Portspoof can be used as an 'Exploitation Framework Frontend', that turns your system into responsive and aggressive machine. In practice this usually means exploiting your attackers' tools and exploits. </p>
-<p>At the moment there are few example exploits in the configuration file (portspoof.conf). One of them exploits Nmap 6.25 default script.</p>
+<div class="doc-section" id="reverse-exploitation">
+<h3>Reverse Exploitation with Portspoof</h3>
 
-<h5><strong>Overview:</strong></h5>
+<p>Portspoof can be used as an <strong>'Exploitation Framework Frontend'</strong> that turns your system into a responsive and aggressive machine. In practice, this usually means exploiting your attackers' tools and exploits.</p>
 
-<p>Portspoof is meant to be a lightweight, fast, portable and secure addition to the any firewall system or security system.
-The general goal of the program is to make the reconessaince phase slow and bothersome for your attackers as much it is only possible.
-This is quite a change to the standard 5s Nmap scan, that will give a full view of your systems running services.</p>
+<p>At the moment, there are several example exploits in the configuration file (<code>portspoof.conf</code>). One of them exploits Nmap 6.25 default script.</p>
 
-  <p>By using all of the above mentioned techniques together:</br>
-    <ul class="square">
-  <li>your attackers will have a tough time while trying to identify all of your listening services.</li>
-  <li>the only way to determine if a service is emulated is through a protocol probe (imagine probing protocols for 65k open ports!).</li>
-  <li>it takes more than 8 hours and 200MB of sent data in order to get all of the service banners for your system ( nmap -sV -p - equivalent).</li>
-  </ul>
+</div>
 
+<hr class="large" />
+
+<div class="doc-section" id="overview">
+<h3>Overview</h3>
+
+<p>Portspoof is meant to be a lightweight, fast, portable, and secure addition to any firewall system or security system. The general goal of the program is to make the reconnaissance phase slow and bothersome for your attackers as much as possible. This is quite a change from the standard 5-second Nmap scan that will give a full view of your system's running services.</p>
+
+<p><strong>By using all of the above-mentioned techniques together:</strong></p>
+
+<ul class="square">
+  <li>Your attackers will have a tough time trying to identify all of your listening services.</li>
+  <li>The only way to determine if a service is emulated is through a protocol probe (imagine probing protocols for 65k open ports!).</li>
+  <li>It takes more than 8 hours and 200MB of sent data to get all of the service banners for your system (<code>nmap -sV -p -</code> equivalent).</li>
+</ul>
+
+</div>
+
+<hr class="large" />
+
+<div class="doc-section" id="enterprise">
+<h3>Enterprise Solution</h3>
+
+<p>Need production-ready active defense at scale? <strong><a href="https://portspoof.io">Portspoof Pro</a></strong> delivers enterprise-grade deception with centralized management, SIEM integration, and advanced threat intelligence—designed for networks that demand the highest level of security.</p>
+
+</div>
 
 <hr class="large" />
 <div class="doc-section">
@@ -129,17 +160,18 @@ This is quite a change to the standard 5s Nmap scan, that will give a full view 
 </div>
 
 <hr class="large" />
-<h3>Videos</h3>
+
 <div class="doc-section">
+<h3>Videos</h3>
+
 <h4>Nmap scan against system protected by Portspoof:</h4>
 <iframe width="523" height="294" src="https://www.youtube.com/embed/oDBvXSMf3wU?wmode=transparent&rel=0" frameborder="0" allowfullscreen></iframe>
-</p>
+
 <h4>Exploiting your attackers automated exploit scripts with Portspoof:</h4>
 <iframe width="523" height="294" src="https://www.youtube.com/embed/YDnwqy7a1zk?wmode=transparent&rel=0" frameborder="0" allowfullscreen></iframe>
-</p>
+
 <h4>Exploiting your attackers Nmap NSE script with Portspoof:</h4>
 <iframe width="523" height="294" src="https://www.youtube.com/embed/iyTmxRUaQ8M?wmode=transparent&rel=0" frameborder="0" allowfullscreen></iframe>
-</p>
 
 </div>
 
@@ -159,72 +191,24 @@ Check out the <a  href="https://github.com/drk1wi/portspoof/blob/master/DOC">doc
 </div>
 
 
-<hr class="large"/>
-<h3>Log</h3>
-<div class="doc-section" id="license">
-<p> For full log details please visit <a href='https://github.com/drk1wi/portspoof/blob/master/ChangeLog'>https://github.com/drk1wi/portspoof</a></p>
-<p>
-
-<strong>1.1 -  1/01/2014 - Linux</strong></br>
-* Minor release.</br>
-* Updated reverse regular expression generation engine (used for generting bogus service signatures). </br>
-* Over 9000 service signatures in the portspoof_signatures file.. </br>
-* Better memory management.</br>
-</br>
-<strong>1.0 -  02/08/2013 - Linux</strong></br>
-* Major release. </br>
-* Ported to C++. </br>
-* Example NMAP NSE exploit, McAffe UTF7 XSS, etc. exploits added . </br>
-* Fuzzer functionality added.</br>
-* Many minor improvements and enhancements have been made</br>
-</br>
-<strong>0.3 - 28/09/2012 - Linux </strong> </br>
-* Configuration file support. </br>
-* Minor bug fixes and improvements. </br>
-* Droppped BSD support due to time constraints (will resume in future - maybe).</br>
-* 8000 port signatures supported </br>
-</br>
-<strong>0.2 - 11/08/2012 - Linux/BSD </strong></br>
-Note: BSD implementation is still experimental </br>
-* Alerts can be logged for further investigation. </br>
-* Fixed BSD startup bug. </br>
-* Automake files fixed. </br>
-* Other minor bugs fixed. </br>
-</br>
-<strong>0.1 - 02/08/2012 - Linux/BSD</strong></br>
-* First stable release for Linux.</br>
-* Multithreaded.</br>
-* 1866 port signatures supported.</br>
-</p>
-</div>
-
 <hr class="large" />
-<div class="doc-section">
+<div class="doc-section" id="license">
 <h3>License</h3>
 <p>Portspoof is a free software distributed under GNU GPL version 2 license. <p>All the relevant details can be found <a href="https://github.com/drk1wi/portspoof/blob/master/COPYING">here</a></p>
 
           &nbsp;
 
 </div>
+
 <hr class="large" />
-<div class="doc-section">
-<h3>Support</h3>
-<p>If you like Portspoof and would like to support this project then please aid me with a cup of coffee :) </p>
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-<input type="hidden" name="cmd" value="_s-xclick">
-<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
-">
-<input type="image" src="https://www.paypalobjects.com/en_US/GB/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal – The safer, easier way to pay online.">
-<img alt="" border="0" src="https://www.paypalobjects.com/pl_PL/i/scr/pixel.gif" width="1" height="1">
-</form>
 
-</div>
-<hr class="large" />
-<div class='twelve columns offset-by-one'><p><citie>Portspoof - Piotr [at] Duszynski.eu PGP <a href="media/pduszynski.asc">key</a> @2012 All rights reserved </citie></p>
-
+<div class='footer-section'>
+  <p><citie>© 2012-2025 Portspoof - Piotr Duszyński (<a href="https://twitter.com/drk1wi" target="_blank" rel="noopener noreferrer">@drk1wi</a>, <a href="https://sharpsec.io" target="_blank" rel="noopener noreferrer">sharpsec.io</a>)</citie></p>
 </div>
 
 </div>
 
+<!-- Bootstrap 5 JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>

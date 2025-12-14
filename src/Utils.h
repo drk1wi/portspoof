@@ -72,7 +72,7 @@ class Utils {
 
 		static void hexdump(void *mem, unsigned int len);
 		static int isNumeric (const char * s);
-		static char* get_substring_value(char* str);
+		static std::string get_substring_value(char* str);
 		static std::vector<char> wrapNMAP(string wrapper,std::vector<char> payload);
 		static std::vector<char> unescape( std::vector<char>& s);
 		static std::vector<char> str2vector( std::string& s);

@@ -48,7 +48,7 @@ Server::Server(Configuration* configuration)
 	/* create thread pool */
 	for(int i = 0; i < this->configuration->getThreadNr(); i++)
 	{
-		pthread_create(&threads[i].tid, NULL, &process_connection, (void *) i);
+		pthread_create(&threads[i].tid, NULL, &process_connection, (void *)(long)i);
 		threads[i].client_count = 0;
 	}
 		
@@ -158,7 +158,10 @@ return 0;
 
 int Server::choose_thread()
 {
-	int i=this->configuration->getThreadNr()-1;
+	int thread_nr = this->configuration->getThreadNr();
+	if (thread_nr <= 0) return -1;
+
+	int i = thread_nr - 1;
 	int min = i;
 	while(i >=0)
 	{
